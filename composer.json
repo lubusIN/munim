@@ -26,6 +26,9 @@
 	"autoload": {
 		"classmap": [
 			"includes/"
+		],
+		"files": [
+			"vendor/cmb2/init.php"
 		]
 	},
   "scripts": {
