@@ -58,8 +58,11 @@ final class Munimji {
 	 */
 	private function init_hooks() {
 		// Set up init Hook.
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
-		add_action( 'admin_menu', array( __CLASS__, 'register_menu' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
+		add_action( 'admin_menu', array( $this, 'register_menu' ) );
+
+		// Modules.
+		Settings::init();
 	}
 
 	/**
@@ -92,9 +95,9 @@ final class Munimji {
 		// Scripts.
 		wp_register_script(
 			'munimji-script',
-			TO_PLUGIN_URL . '/assets/script.js',
+			MUNIMJI_PLUGIN_URL . '/assets/script.js',
 			array(),
-			filemtime( TO_PLUGIN_DIR . '/assets/script.js' ),
+			filemtime( MUNIMJI_PLUGIN_DIR . '/assets/script.js' ),
 			true
 		);
 		wp_enqueue_script( 'munimji-script' );
@@ -102,9 +105,9 @@ final class Munimji {
 		// Styles.
 		wp_register_style(
 			'munimji',
-			TO_PLUGIN_URL . '/assets/style.css',
+			MUNIMJI_PLUGIN_URL . '/assets/style.css',
 			array(),
-			filemtime( TO_PLUGIN_DIR . '/assets/style.css' )
+			filemtime( MUNIMJI_PLUGIN_DIR . '/assets/style.css' )
 		);
 		wp_enqueue_style( 'munimji' );
 	}
@@ -118,8 +121,25 @@ final class Munimji {
 			'Munimji',
 			'manage_options',
 			'admin.php?page=munimji',
-			'',
+			[ $this, 'render_page' ],
 			'dashicons-analytics'
 		);
+
+		add_submenu_page(
+			'admin.php?page=munimji',
+			'Munimji > Dashboard',
+			'Dashboard',
+			'manage_options',
+			'admin.php?page=munimji'
+		);
+	}
+
+	/**
+	 * Render plugin landing page.
+	 *
+	 * @return void
+	 */
+	public function render_page() {
+		include 'views/dashboard.php';
 	}
 }

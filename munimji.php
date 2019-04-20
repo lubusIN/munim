@@ -49,7 +49,9 @@ if ( ! defined( 'MUNIMJI_PLUGIN_BASENAME' ) ) {
 
 // Autoloader.
 require_once 'vendor/autoload.php';
+require_once 'vendor/cmb2/init.php';
 
+// Bootstrap Munimji.
 use LubusIN\Munimji\Munimji;
 
 /**
