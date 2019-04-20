@@ -58,7 +58,8 @@ final class Munimji {
 	 */
 	private function init_hooks() {
 		// Set up init Hook.
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
+		add_action( 'admin_menu', array( __CLASS__, 'register_menu' ) );
 	}
 
 	/**
@@ -106,5 +107,19 @@ final class Munimji {
 			filemtime( TO_PLUGIN_DIR . '/assets/style.css' )
 		);
 		wp_enqueue_style( 'munimji' );
+	}
+
+	/**
+	 * Register Menu
+	 */
+	public function register_menu() {
+		add_menu_page(
+			__( 'Munimji - Simple Invoicing', 'munimji' ),
+			'Munimji',
+			'manage_options',
+			'admin.php?page=munimji',
+			'',
+			'dashicons-analytics'
+		);
 	}
 }

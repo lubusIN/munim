@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6496168fed5f0f138c5d9b21cbeb8881",
+    "content-hash": "6793caae5d1984f98d5fc9c7b1bb3dbe",
     "packages": [
         {
             "name": "cmb2/cmb2",
-            "version": "v2.6.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CMB2/CMB2.git",
@@ -504,7 +504,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "cmb2/cmb2": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

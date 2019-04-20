@@ -6,7 +6,7 @@
   "homepage": "https://munimji.com",
   "require": {
     "composer/installers": "~1.2",
-    "cmb2/cmb2": "^2.6"
+		"cmb2/cmb2": "dev-master"
   },
   "require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "*",
@@ -26,9 +26,6 @@
 	"autoload": {
 		"classmap": [
 			"includes/"
-		],
-		"files": [
-			"vendor/cmb2/init.php"
 		]
 	},
   "scripts": {
@@ -46,7 +43,7 @@
 		},
 		"installer-paths": {
 			"vendor/{$name}/": [
-				"type:wordpress-plugin"
+					"cmb2/cmb2"
 			]
 		}
   }
