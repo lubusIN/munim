@@ -64,6 +64,7 @@ final class Munimji {
 		// Modules.
 		Settings::init();
 		Clients::init();
+		Invoices::init();
 	}
 
 	/**
