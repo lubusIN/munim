@@ -93,6 +93,22 @@ class Settings {
 
 		$business_info->add_field(
 			array(
+				'name' => 'Email',
+				'id'   => 'email',
+				'type' => 'text_email',
+			)
+		);
+
+		$business_info->add_field(
+			array(
+				'name' => 'Website',
+				'id'   => 'website',
+				'type' => 'text_url',
+			)
+		);
+
+		$business_info->add_field(
+			array(
 				'name' => 'State Of Supply',
 				'id'   => 'state_of_supply',
 				'type' => 'text',
