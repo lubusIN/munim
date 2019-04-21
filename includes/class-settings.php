@@ -85,6 +85,27 @@ class Settings {
 
 		$business_info->add_field(
 			array(
+				'name'         => 'Secondary Logo',
+				'id'           => 'secondary_logo',
+				'type'         => 'file',
+				'options'      => array(
+					'url' => false,
+				),
+				'text'         => array(
+					'add_upload_file_text' => 'Add File',
+				),
+				'query_args'   => array(
+					'type' => array(
+						'image/jpeg',
+						'image/png',
+					),
+				),
+				'preview_size' => 'medium',
+			)
+		);
+
+		$business_info->add_field(
+			array(
 				'name' => 'Address',
 				'id'   => 'address',
 				'type' => 'textarea_small',
