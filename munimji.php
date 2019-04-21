@@ -50,6 +50,7 @@ if ( ! defined( 'MUNIMJI_PLUGIN_BASENAME' ) ) {
 // Autoloader.
 require_once 'vendor/autoload.php';
 require_once 'vendor/cmb2/init.php';
+require_once 'vendor/cmb2-field-post-search-ajax/cmb-field-post-search-ajax.php';
 
 // Bootstrap Munimji.
 use LubusIN\Munimji\Munimji;

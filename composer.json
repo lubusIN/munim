@@ -6,7 +6,8 @@
   "homepage": "https://munimji.com",
   "require": {
     "composer/installers": "~1.2",
-		"cmb2/cmb2": "dev-master"
+		"cmb2/cmb2": "dev-master",
+    "alexis-magina/cmb2-field-post-search-ajax": "dev-master"
   },
   "require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "*",
@@ -43,7 +44,8 @@
 		},
 		"installer-paths": {
 			"vendor/{$name}/": [
-					"cmb2/cmb2"
+					"cmb2/cmb2",
+					"alexis-magina/cmb2-field-post-search-ajax"
 			]
 		}
   }

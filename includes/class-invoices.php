@@ -92,6 +92,38 @@ class Invoices {
 	 */
 	public static function register_cmb() {
 		/**
+		 * Registers main options page menu item and form.
+		 */
+		$args = array(
+			'id'           => 'munimji_invoice_info',
+			'title'        => 'Invoice Info',
+			'object_types' => array( 'munimji_invoice' ),
+			'option_key'   => 'munimji-invoice-info',
+		);
+
+		$invoice_info = new_cmb2_box( $args );
+
+		/**
+		 * Options fields ids only need
+		 * to be unique within this box.
+		 * Prefix is not needed.
+		 */
+		$invoice_info->add_field(
+			array(
+				'name'       => __( 'Client', 'munimji' ),
+				'id'         => 'client',
+				'type'       => 'post_search_ajax',
+				'desc'       => __( '(Start typing client name)', 'munimji' ),
+				'limit'      => 1,
+				'query_args' => array(
+					'post_type'      => array( 'munimji_client' ),
+					'post_status'    => array( 'publish' ),
+					'posts_per_page' => -1,
+				),
+			)
+		);
+
+		/**
 		 * Registers tax items.
 		 */
 		$args = array(
