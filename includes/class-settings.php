@@ -130,6 +130,14 @@ class Settings {
 
 		$business_info->add_field(
 			array(
+				'name' => 'Last Invoice Number',
+				'id'   => 'last_invoice_number',
+				'type' => 'text_small',
+			)
+		);
+
+		$business_info->add_field(
+			array(
 				'name' => 'State Of Supply',
 				'id'   => 'state_of_supply',
 				'type' => 'text',

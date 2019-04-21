@@ -110,6 +110,18 @@ class Invoices {
 		 */
 		$invoice_info->add_field(
 			array(
+				'name'       => 'Number',
+				'id'         => 'number',
+				'type'       => 'text_small',
+				'default_cb' => [ __CLASS__, 'get_number' ],
+				'attributes' => array(
+					'readonly' => 'readonly',
+				),
+			)
+		);
+
+		$invoice_info->add_field(
+			array(
 				'name'       => __( 'Client', 'munimji' ),
 				'id'         => 'client',
 				'type'       => 'post_search_ajax',
@@ -120,6 +132,14 @@ class Invoices {
 					'post_status'    => array( 'publish' ),
 					'posts_per_page' => -1,
 				),
+			)
+		);
+
+		$invoice_info->add_field(
+			array(
+				'name' => 'Date',
+				'id'   => 'date',
+				'type' => 'text_date',
 			)
 		);
 
@@ -224,5 +244,17 @@ class Invoices {
 				'before_field' => '%',
 			)
 		);
+	}
+
+	/**
+	 * Generate invoice number
+	 *
+	 * @return string invoice number
+	 */
+	public static function get_number() {
+		$settings = get_option( 'munimji-settings', array() );
+		$number   = ! empty( $settings ) && isset( $settings['last_invoice_number'] ) ? $settings['last_invoice_number'] + 1 : '0001';
+
+		return $number;
 	}
 }
