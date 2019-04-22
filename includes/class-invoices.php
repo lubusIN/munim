@@ -25,6 +25,7 @@ class Invoices {
 	public static function init() {
 		add_action( 'init', [ __CLASS__, 'register_cpt' ], 0 );
 		add_action( 'cmb2_admin_init', [ __CLASS__, 'register_cmb' ] );
+		add_action( 'wp_insert_post', [ __CLASS__, 'update_number' ], 10, 3 );
 	}
 
 	/**
@@ -98,7 +99,6 @@ class Invoices {
 			'id'           => 'munimji_invoice_info',
 			'title'        => 'Invoice Info',
 			'object_types' => array( 'munimji_invoice' ),
-			'option_key'   => 'munimji-invoice-info',
 		);
 
 		$invoice_info = new_cmb2_box( $args );
@@ -256,5 +256,43 @@ class Invoices {
 		$number   = ! empty( $settings ) && isset( $settings['last_invoice_number'] ) ? $settings['last_invoice_number'] + 1 : '0001';
 
 		return $number;
+	}
+
+	/**
+	 * Update last invoice number
+	 *
+	 * @param  int     $post_id post id.
+	 * @param  WP_Post $post post object.
+	 * @param  bool    $update $updated_settings.
+	 * @return array   settings with updated last invoice number
+	 */
+	public static function update_number( $post_id, $post, $update ) {
+		// Bail out if autosave.
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		// Bailout if its revision.
+		if ( wp_is_post_revision( $post ) ) {
+			return;
+		}
+
+		// Bailout if post type is not munimji_invoice.
+		if ( 'munimji_invoice' !== $post->post_type ) {
+			return;
+		}
+
+		// Bailout if post status is auto-draft.
+		if ( 'auto-draft' === $post->post_status ) {
+			return;
+		}
+
+		// Update invoice number.
+		$settings            = get_option( 'munimji-settings', array() );
+		$invoice_number      = $settings['last_invoice_number'] + 1;
+		$last_invoice_number = array( 'last_invoice_number' => $invoice_number );
+		$updated_settings    = wp_parse_args( $last_invoice_number, $settings );
+
+		update_option( 'munimji-settings', $updated_settings );
 	}
 }
