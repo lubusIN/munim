@@ -24,6 +24,10 @@ class Invoices {
 	 */
 	public static function init() {
 		add_action( 'init', [ __CLASS__, 'register_cpt' ], 0 );
+		add_action( 'init', [ __CLASS__, 'register_status' ] );
+		add_action( 'admin_footer-edit.php', [ __CLASS__, 'render_status_in_quick_edit' ] );
+		add_action( 'admin_footer-post.php', [ __CLASS__, 'render_status_in_edit' ] );
+		add_action( 'admin_footer-post-new.php', [ __CLASS__, 'render_status_in_edit' ] );
 		add_action( 'cmb2_admin_init', [ __CLASS__, 'register_cmb' ] );
 		add_action( 'wp_insert_post', [ __CLASS__, 'update_number' ], 10, 3 );
 	}
@@ -84,6 +88,91 @@ class Invoices {
 			'show_in_rest'        => false,
 		);
 		register_post_type( 'munimji_invoice', $args );
+	}
+
+	/**
+	 * Register custom status
+	 *
+	 * @return void
+	 */
+	public static function register_status() {
+		// Outstanding.
+		$args = array(
+			'label'                     => _x( 'outstanding', 'Outstanding Invoices', 'munimji' ),
+			/* translators: Outstanding invoices count */
+			'label_count'               => _n_noop( 'outstanding (%s)', 'outstanding (%s)', 'munimji' ),
+			'public'                    => false,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			'exclude_from_search'       => true,
+		);
+		register_post_status( 'outstanding', $args );
+
+		// Paid.
+		$args = array(
+			'label'                     => _x( 'paid', 'Paid Invoices', 'munimji' ),
+			/* translators: Paid invoices count */
+			'label_count'               => _n_noop( 'paid (%s)', 'paid (%s)', 'munimji' ),
+			'public'                    => false,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			'exclude_from_search'       => true,
+		);
+		register_post_status( 'paid', $args );
+
+		// Cancelled.
+		$args = array(
+			'label'                     => _x( 'cancelled', 'Cancelled Invoices', 'munimji' ),
+			/* translators: Cancelled invoices count */
+			'label_count'               => _n_noop( 'cancelled (%s)', 'cancelled (%s)', 'munimji' ),
+			'public'                    => false,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			'exclude_from_search'       => true,
+		);
+		register_post_status( 'cancelled', $args );
+	}
+
+	/**
+	 * Render status in quick edit screen.
+	 *
+	 * @return void
+	 */
+	public static function render_status_in_quick_edit() {
+		// Bailout if not invoices.
+		if ( 'munimji_invoice' !== get_post_type() ) {
+			return;
+		}
+
+		echo "<script>
+				jQuery(document).ready( function() {
+					jQuery( 'select[name=\"_status\"]' )
+						.append( '<option value=\"outstanding\">Outstanding</option>' )
+						.append( '<option value=\"paid\">Paid</option>' )
+						.append( '<option value=\"cancelled\">Cancelled</option>' );
+					});
+			 </script>";
+	}
+
+	/**
+	 * Render status in add/edit screen.
+	 *
+	 * @return void
+	 */
+	public static function render_status_in_edit() {
+		// Bailout if not invoices.
+		if ( 'munimji_invoice' !== get_post_type() ) {
+			return;
+		}
+
+		echo "<script>
+				jQuery(document).ready( function() {
+					jQuery( 'select[name=\"post_status\"]' )
+						.append( '<option value=\"outstanding\">Outstanding</option>' )
+						.append( '<option value=\"paid\">Paid</option>' )
+						.append( '<option value=\"cancelled\">Cancelled</option>' );
+				});
+			 </script>";
 	}
 
 	/**
