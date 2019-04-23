@@ -13,6 +13,8 @@
 
 namespace LubusIN\Munimji;
 
+use Dompdf\Dompdf;
+
 /**
  * Munimji Invoices
  */
@@ -28,8 +30,10 @@ class Invoices {
 		add_action( 'admin_footer-edit.php', [ __CLASS__, 'render_status_in_quick_edit' ] );
 		add_action( 'admin_footer-post.php', [ __CLASS__, 'render_status_in_edit' ] );
 		add_action( 'admin_footer-post-new.php', [ __CLASS__, 'render_status_in_edit' ] );
+		add_action( 'post_row_actions', [ __CLASS__, 'render_row_actions' ], 10, 2 );
 		add_action( 'cmb2_admin_init', [ __CLASS__, 'register_cmb' ] );
 		add_action( 'wp_insert_post', [ __CLASS__, 'update_number' ], 10, 3 );
+		add_action( 'admin_init', [ __CLASS__, 'generate_pdf' ] );
 	}
 
 	/**
@@ -173,6 +177,31 @@ class Invoices {
 						.append( '<option value=\"cancelled\">Cancelled</option>' );
 				});
 			 </script>";
+	}
+
+	/**
+	 * Add custom row actions
+	 *
+	 * @param  array   $actions exisiting actions.
+	 * @param  WP_Post $post post object.
+	 * @return array
+	 */
+	public static function render_row_actions( $actions, $post ) {
+		if ( 'munimji_invoice' === $post->post_type ) {
+			unset( $actions['view'] );
+
+			$url = add_query_arg(
+				array(
+					'munimji_action' => 'pdf',
+					'post'           => $post->ID,
+					'nonce'          => wp_create_nonce( 'pdf' ),
+				)
+			);
+
+			$actions['pdf'] = '<a href="' . $url . '">Pdf</a>';
+		}
+
+		return $actions;
 	}
 
 	/**
@@ -383,5 +412,49 @@ class Invoices {
 		$updated_settings    = wp_parse_args( $last_invoice_number, $settings );
 
 		update_option( 'munimji-settings', $updated_settings );
+	}
+
+	/**
+	 * Check if pdf requested
+	 *
+	 * @return boolean
+	 */
+	public static function is_pdf_request() {
+		return ( isset( $_GET['post'] ) && isset( $_GET['munimji_action'] ) && isset( $_GET['nonce'] ) );
+	}
+
+	/**
+	 * Generate pdf.
+	 *
+	 * @return void
+	 */
+	public static function generate_pdf() {
+		if ( ! self::is_pdf_request() ) {
+			return;
+		}
+
+		// sanitize data and verify nonce.
+		$action = sanitize_key( $_GET['munimji_action'] );
+		$nonce  = sanitize_key( $_GET['nonce'] );
+		$myID = $_GET['post'];
+
+		if ( ! wp_verify_nonce( $nonce, $action ) ) {
+			wp_die( 'Invalid request.' );
+		}
+
+		// Get Data.
+
+		// Get HTML.
+		ob_start();
+		include MUNIMJI_PLUGIN_DIR . 'templates/lubus/invoice.php';
+		$html = ob_get_contents();
+		ob_end_clean();
+
+		// Generate pdf.
+		$dompdf = new DOMPDF();
+		$dompdf->loadHtml( $html );
+		$dompdf->setPaper( 'A4', 'portrait' );
+		$dompdf->render();
+		$dompdf->stream();
 	}
 }
