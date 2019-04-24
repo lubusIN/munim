@@ -14,6 +14,7 @@
 namespace LubusIN\Munimji;
 
 use Dompdf\Dompdf;
+use LubusIN\Munimji\Helpers;
 
 /**
  * Munimji Invoices
@@ -190,15 +191,24 @@ class Invoices {
 		if ( 'munimji_invoice' === $post->post_type ) {
 			unset( $actions['view'] );
 
-			$url = add_query_arg(
+			$view_url = add_query_arg(
 				array(
-					'munimji_action' => 'pdf',
+					'munimji_action' => 'view',
 					'post'           => $post->ID,
-					'nonce'          => wp_create_nonce( 'pdf' ),
+					'nonce'          => wp_create_nonce( 'view' ),
 				)
 			);
 
-			$actions['pdf'] = '<a href="' . $url . '">Pdf</a>';
+			$download_url = add_query_arg(
+				array(
+					'munimji_action' => 'download',
+					'post'           => $post->ID,
+					'nonce'          => wp_create_nonce( 'download' ),
+				)
+			);
+
+			$actions['view']     = '<a href="' . $view_url . '" target="_blank">View</a>';
+			$actions['download'] = '<a href="' . $download_url . '">download</a>';
 		}
 
 		return $actions;
@@ -310,7 +320,7 @@ class Invoices {
 			array(
 				'name'         => 'Amount',
 				'id'           => 'amount',
-				'type'         => 'text_money',
+				'type'         => 'text_small',
 				'before_field' => '₹',
 			)
 		);
@@ -358,7 +368,7 @@ class Invoices {
 			array(
 				'name'         => 'Rate',
 				'id'           => 'rate',
-				'type'         => 'text_money',
+				'type'         => 'text_small',
 				'before_field' => '%',
 			)
 		);
@@ -420,7 +430,7 @@ class Invoices {
 	 * @return boolean
 	 */
 	public static function is_pdf_request() {
-		return ( isset( $_GET['post'] ) && isset( $_GET['munimji_action'] ) && isset( $_GET['nonce'] ) );
+		return ( isset( $_GET['post'], $_GET['munimji_action'], $_GET['nonce'] ) );
 	}
 
 	/**
@@ -434,9 +444,9 @@ class Invoices {
 		}
 
 		// sanitize data and verify nonce.
+		$post   = sanitize_key( $_GET['post'] );
 		$action = sanitize_key( $_GET['munimji_action'] );
 		$nonce  = sanitize_key( $_GET['nonce'] );
-		$myID = $_GET['post'];
 
 		if ( ! wp_verify_nonce( $nonce, $action ) ) {
 			wp_die( 'Invalid request.' );
@@ -454,7 +464,14 @@ class Invoices {
 		$dompdf = new DOMPDF();
 		$dompdf->loadHtml( $html );
 		$dompdf->setPaper( 'A4', 'portrait' );
+		$dompdf->setBasePath( MUNIMJI_PLUGIN_DIR . '/templates/lubus' );
 		$dompdf->render();
-		$dompdf->stream();
+		$dompdf->stream(
+			Helpers::get_file_name( $post ),
+			[
+				'compress'   => false,
+				'Attachment' => ( 'download' === $action ),
+			]
+		);
 	}
 }

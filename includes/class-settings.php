@@ -79,7 +79,7 @@ class Settings {
 						'image/png',
 					),
 				),
-				'preview_size' => 'medium',
+				'preview_size' => 'thumbnail',
 			)
 		);
 
@@ -100,7 +100,7 @@ class Settings {
 						'image/png',
 					),
 				),
-				'preview_size' => 'medium',
+				'preview_size' => 'thumbnail',
 			)
 		);
 
@@ -124,7 +124,7 @@ class Settings {
 			array(
 				'name' => 'Website',
 				'id'   => 'website',
-				'type' => 'text_url',
+				'type' => 'text',
 			)
 		);
 
