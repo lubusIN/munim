@@ -60,6 +60,7 @@ final class Munimji {
 		// Set up init Hook.
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
+		add_action( 'custom_menu_order', array( $this, 'reorder_menu' ) );
 
 		// Modules.
 		Settings::init();
@@ -134,6 +135,26 @@ final class Munimji {
 			'manage_options',
 			'admin.php?page=munimji'
 		);
+	}
+
+	/**
+	 * Reorder munimji submenu.
+	 *
+	 * @return void
+	 */
+	public function reorder_menu() {
+		global $submenu;
+		$munimji_submenu = [];
+		foreach ( $submenu as $menu_name => $menu_items ) {
+			if ( 'admin.php?page=munimji' === $menu_name ) {
+				$munimji_submenu[0]                = $menu_items[2]; // Dashboard.
+				$munimji_submenu[1]                = $menu_items[0]; // Clients.
+				$munimji_submenu[2]                = $menu_items[1]; // Invoices.
+				$munimji_submenu[3]                = $menu_items[3]; // Settings.
+				$submenu['admin.php?page=munimji'] = $munimji_submenu;
+				break;
+			}
+		}
 	}
 
 	/**
