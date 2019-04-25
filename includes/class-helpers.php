@@ -58,7 +58,7 @@ class Helpers {
 	 * @return string
 	 */
 	public static function get_file_name( $invoice_id ) {
-		$invoice_number = get_post_meta( $invoice_id, 'number', true );
+		$invoice_number = get_post_meta( $invoice_id, 'munimji_invoice_number', true );
 		$invoice_slug   = get_post_field( 'post_name', $invoice_id );
 		$pdf_filename   = $invoice_number . '.' . $invoice_slug . '.pdf';
 		return $pdf_filename;

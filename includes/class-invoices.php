@@ -20,6 +20,14 @@ use LubusIN\Munimji\Helpers;
  * Munimji Invoices
  */
 class Invoices {
+
+	/**
+	 * Prefix for custom meta fields.
+	 *
+	 * @var string
+	 */
+	private static $meta_prefix = 'munimji_invoice_';
+
 	/**
 	 * Init invoice
 	 *
@@ -43,7 +51,7 @@ class Invoices {
 	 * @return void
 	 */
 	public static function register_cpt() {
-		$labels = array(
+		$labels = [
 			'name'                  => _x( 'Invoices', 'Post Type General Name', 'munimji' ),
 			'singular_name'         => _x( 'Invoice', 'Post Type Singular Name', 'munimji' ),
 			'menu_name'             => __( 'Invoices', 'munimji' ),
@@ -71,13 +79,13 @@ class Invoices {
 			'items_list'            => __( 'Items list', 'munimji' ),
 			'items_list_navigation' => __( 'Items list navigation', 'munimji' ),
 			'filter_items_list'     => __( 'Filter items list', 'munimji' ),
-		);
+		];
 		$args   = array(
 			'label'               => __( 'Invoice', 'munimji' ),
 			'description'         => __( 'Munimji Invoices', 'munimji' ),
 			'labels'              => $labels,
-			'supports'            => array( 'title' ),
-			'taxonomies'          => array(),
+			'supports'            => [ 'title' ],
+			'taxonomies'          => [],
 			'hierarchical'        => false,
 			'public'              => true,
 			'show_ui'             => true,
@@ -102,7 +110,7 @@ class Invoices {
 	 */
 	public static function register_status() {
 		// Outstanding.
-		$args = array(
+		$args = [
 			'label'                     => _x( 'outstanding', 'Outstanding Invoices', 'munimji' ),
 			/* translators: Outstanding invoices count */
 			'label_count'               => _n_noop( 'outstanding (%s)', 'outstanding (%s)', 'munimji' ),
@@ -110,11 +118,11 @@ class Invoices {
 			'show_in_admin_all_list'    => true,
 			'show_in_admin_status_list' => true,
 			'exclude_from_search'       => true,
-		);
+		];
 		register_post_status( 'outstanding', $args );
 
 		// Paid.
-		$args = array(
+		$args = [
 			'label'                     => _x( 'paid', 'Paid Invoices', 'munimji' ),
 			/* translators: Paid invoices count */
 			'label_count'               => _n_noop( 'paid (%s)', 'paid (%s)', 'munimji' ),
@@ -122,11 +130,11 @@ class Invoices {
 			'show_in_admin_all_list'    => true,
 			'show_in_admin_status_list' => true,
 			'exclude_from_search'       => true,
-		);
+		];
 		register_post_status( 'paid', $args );
 
 		// Cancelled.
-		$args = array(
+		$args = [
 			'label'                     => _x( 'cancelled', 'Cancelled Invoices', 'munimji' ),
 			/* translators: Cancelled invoices count */
 			'label_count'               => _n_noop( 'cancelled (%s)', 'cancelled (%s)', 'munimji' ),
@@ -134,7 +142,7 @@ class Invoices {
 			'show_in_admin_all_list'    => true,
 			'show_in_admin_status_list' => true,
 			'exclude_from_search'       => true,
-		);
+		];
 		register_post_status( 'cancelled', $args );
 	}
 
@@ -189,22 +197,24 @@ class Invoices {
 	 */
 	public static function render_row_actions( $actions, $post ) {
 		if ( 'munimji_invoice' === $post->post_type ) {
-			unset( $actions['view'] );
+			unset( $actions['view'] ); // Remove post preview.
 
+			// Action to view pdf.
 			$view_url = add_query_arg(
-				array(
-					'munimji_action' => 'view',
-					'post'           => $post->ID,
-					'nonce'          => wp_create_nonce( 'view' ),
-				)
+				[
+					'munimji_action'     => 'view',
+					'munimji_invoice_id' => $post->ID,
+					'nonce'              => wp_create_nonce( 'view' ),
+				]
 			);
 
+			// Action to download pdf.
 			$download_url = add_query_arg(
-				array(
-					'munimji_action' => 'download',
-					'post'           => $post->ID,
-					'nonce'          => wp_create_nonce( 'download' ),
-				)
+				[
+					'munimji_action'     => 'download',
+					'munimji_invoice_id' => $post->ID,
+					'nonce'              => wp_create_nonce( 'download' ),
+				]
 			);
 
 			$actions['view']     = '<a href="' . $view_url . '" target="_blank">View</a>';
@@ -220,157 +230,140 @@ class Invoices {
 	 * @return void
 	 */
 	public static function register_cmb() {
-		/**
-		 * Registers main options page menu item and form.
-		 */
-		$args = array(
-			'id'           => 'munimji_invoice_info',
-			'title'        => 'Invoice Info',
-			'object_types' => array( 'munimji_invoice' ),
-		);
 
-		$invoice_info = new_cmb2_box( $args );
+		// Register CMB2 for invoice info.
+		$args = [
+			'id'           => self::$meta_prefix . 'details',
+			'title'        => 'Details',
+			'object_types' => [ 'munimji_invoice' ],
+		];
 
-		/**
-		 * Options fields ids only need
-		 * to be unique within this box.
-		 * Prefix is not needed.
-		 */
-		$invoice_info->add_field(
-			array(
+		$invoice_details = new_cmb2_box( $args );
+
+		// Custom fields for invoice.
+		$invoice_details->add_field(
+			[
 				'name'       => 'Number',
-				'id'         => 'number',
+				'id'         => self::$meta_prefix . 'number',
 				'type'       => 'text_small',
 				'default_cb' => [ __CLASS__, 'get_number' ],
 				'attributes' => array(
 					'readonly' => 'readonly',
 				),
-			)
+			]
 		);
 
-		$invoice_info->add_field(
-			array(
+		$invoice_details->add_field(
+			[
 				'name'       => __( 'Client', 'munimji' ),
-				'id'         => 'client',
+				'id'         => self::$meta_prefix . 'client_id',
 				'type'       => 'post_search_ajax',
 				'desc'       => __( '(Start typing client name)', 'munimji' ),
 				'limit'      => 1,
-				'query_args' => array(
-					'post_type'      => array( 'munimji_client' ),
-					'post_status'    => array( 'publish' ),
+				'query_args' => [
+					'post_type'      => [ 'munimji_client' ],
+					'post_status'    => [ 'publish' ],
 					'posts_per_page' => -1,
-				),
-			)
+				],
+			]
 		);
 
-		$invoice_info->add_field(
-			array(
+		$invoice_details->add_field(
+			[
 				'name' => 'Date',
-				'id'   => 'date',
+				'id'   => self::$meta_prefix . 'date',
 				'type' => 'text_date',
-			)
+			]
 		);
 
-		/**
-		 * Registers tax items.
-		 */
-		$args = array(
-			'id'           => 'munimji_invoice_items',
-			'title'        => 'Invoice Items',
-			'object_types' => array( 'munimji_invoice' ),
-			'option_key'   => 'munimji-invoice-items',
-		);
+		// Register CMB2 for invoice items.
+		$args = [
+			'id'           => self::$meta_prefix . 'items',
+			'title'        => 'Items',
+			'object_types' => [ 'munimji_invoice' ],
+		];
 
 		$invoice_items = new_cmb2_box( $args );
 
-		/**
-		 * Options fields ids only need
-		 * to be unique within this box.
-		 * Prefix is not needed.
-		 */
-
-		// Invoice Items.
+		// Custom fields for items.
 		$invoice_item = $invoice_items->add_field(
-			array(
-				'id'         => 'invoice_item',
+			[
+				'id'         => self::$meta_prefix . 'items',
 				'type'       => 'group',
 				'repeatable' => true,
-				'options'    => array(
-					'group_title'    => __( 'Invoice item {#}', 'munimji' ),
+				'options'    => [
+					'group_title'    => __( 'Item {#}', 'munimji' ),
 					'add_button'     => __( 'Add Item', 'munimji' ),
 					'remove_button'  => __( 'Remove Item', 'munimji' ),
 					'sortable'       => true,
 					'closed'         => false,
 					'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'munimji' ),
-				),
-			)
+				],
+			]
 		);
 
 		$invoice_items->add_group_field(
 			$invoice_item,
-			array(
-				'name' => 'Service',
-				'id'   => 'service',
+			[
+				'name' => 'Name',
+				'id'   => 'name',
 				'type' => 'text',
-			)
+			]
 		);
 
 		$invoice_items->add_group_field(
 			$invoice_item,
-			array(
+			[
 				'name'         => 'Amount',
 				'id'           => 'amount',
 				'type'         => 'text_small',
 				'before_field' => '₹',
-			)
+			]
 		);
 
-		// Invoice Taxes.
-		/**
-		 * Registers tax items.
-		 */
-		$args = array(
-			'id'           => 'munimji_invoice_taxes',
-			'title'        => 'Invoice Taxes',
-			'object_types' => array( 'munimji_invoice' ),
-			'option_key'   => 'munimji-invoice-taxes',
-		);
+		// Register CMB2 for invoice taxes.
+		$args = [
+			'id'           => self::$meta_prefix . 'taxes',
+			'title'        => 'Taxes',
+			'object_types' => [ 'munimji_invoice' ],
+		];
 
 		$invoice_taxes = new_cmb2_box( $args );
 
+		// Custom fields for tax.
 		$invoice_tax = $invoice_taxes->add_field(
-			array(
-				'id'         => 'invoice_tax',
+			[
+				'id'         => self::$meta_prefix . 'taxes',
 				'type'       => 'group',
 				'repeatable' => true,
-				'options'    => array(
-					'group_title'    => __( 'Invoice tax {#}', 'munimji' ),
+				'options'    => [
+					'group_title'    => __( 'Tax {#}', 'munimji' ),
 					'add_button'     => __( 'Add Tax', 'munimji' ),
 					'remove_button'  => __( 'Remove Tax', 'munimji' ),
 					'sortable'       => true,
 					'closed'         => false,
 					'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'munimji' ),
-				),
-			)
+				],
+			]
 		);
 
 		$invoice_taxes->add_group_field(
 			$invoice_tax,
-			array(
+			[
 				'name' => 'Name',
 				'id'   => 'name',
 				'type' => 'text',
-			)
+			]
 		);
 
 		$invoice_taxes->add_group_field(
 			$invoice_tax,
-			array(
+			[
 				'name'         => 'Rate',
 				'id'           => 'rate',
 				'type'         => 'text_small',
 				'before_field' => '%',
-			)
+			]
 		);
 	}
 
@@ -380,8 +373,8 @@ class Invoices {
 	 * @return string invoice number
 	 */
 	public static function get_number() {
-		$settings = get_option( 'munimji-settings', array() );
-		$number   = ! empty( $settings ) && isset( $settings['last_invoice_number'] ) ? $settings['last_invoice_number'] + 1 : '0001';
+		$settings = get_option( 'munimji_settings_invoice', array() );
+		$number   = ! empty( $settings ) && isset( $settings['last_number'] ) ? ++$settings['last_number'] : 1;
 
 		return $number;
 	}
@@ -416,12 +409,12 @@ class Invoices {
 		}
 
 		// Update invoice number.
-		$settings            = get_option( 'munimji-settings', array() );
-		$invoice_number      = $settings['last_invoice_number'] + 1;
-		$last_invoice_number = array( 'last_invoice_number' => $invoice_number );
+		$settings            = get_option( 'munimji_settings_invoice', [] );
+		$invoice_number      = $settings['last_number'];
+		$last_invoice_number = [ 'last_number' => ++$invoice_number ];
 		$updated_settings    = wp_parse_args( $last_invoice_number, $settings );
 
-		update_option( 'munimji-settings', $updated_settings );
+		update_option( 'munimji_settings_invoice', $updated_settings );
 	}
 
 	/**
@@ -430,7 +423,7 @@ class Invoices {
 	 * @return boolean
 	 */
 	public static function is_pdf_request() {
-		return ( isset( $_GET['post'], $_GET['munimji_action'], $_GET['nonce'] ) );
+		return ( isset( $_GET['munimji_invoice_id'], $_GET['munimji_action'], $_GET['nonce'] ) );
 	}
 
 	/**
@@ -444,15 +437,13 @@ class Invoices {
 		}
 
 		// sanitize data and verify nonce.
-		$post   = sanitize_key( $_GET['post'] );
-		$action = sanitize_key( $_GET['munimji_action'] );
-		$nonce  = sanitize_key( $_GET['nonce'] );
+		$invoice_id = sanitize_key( $_GET['munimji_invoice_id'] );
+		$action     = sanitize_key( $_GET['munimji_action'] );
+		$nonce      = sanitize_key( $_GET['nonce'] );
 
 		if ( ! wp_verify_nonce( $nonce, $action ) ) {
 			wp_die( 'Invalid request.' );
 		}
-
-		// Get Data.
 
 		// Get HTML.
 		ob_start();
@@ -467,7 +458,7 @@ class Invoices {
 		$dompdf->setBasePath( MUNIMJI_PLUGIN_DIR . '/templates/lubus' );
 		$dompdf->render();
 		$dompdf->stream(
-			Helpers::get_file_name( $post ),
+			Helpers::get_file_name( $invoice_id ),
 			[
 				'compress'   => false,
 				'Attachment' => ( 'download' === $action ),

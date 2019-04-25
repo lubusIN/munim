@@ -17,6 +17,14 @@ namespace LubusIN\Munimji;
  * Munimji Cients
  */
 class Clients {
+
+	/**
+	 * Prefix for custom meta fields
+	 *
+	 * @var string
+	 */
+	private static $meta_prefix = 'munimji_client_';
+
 	/**
 	 * Init client
 	 *
@@ -33,7 +41,7 @@ class Clients {
 	 * @return void
 	 */
 	public static function register_cpt() {
-		$labels = array(
+		$labels = [
 			'name'                  => _x( 'Clients', 'Post Type General Name', 'munimji' ),
 			'singular_name'         => _x( 'Client', 'Post Type Singular Name', 'munimji' ),
 			'menu_name'             => __( 'Clients', 'munimji' ),
@@ -61,13 +69,13 @@ class Clients {
 			'items_list'            => __( 'Items list', 'munimji' ),
 			'items_list_navigation' => __( 'Items list navigation', 'munimji' ),
 			'filter_items_list'     => __( 'Filter items list', 'munimji' ),
-		);
-		$args   = array(
+		];
+		$args   = [
 			'label'               => __( 'Client', 'munimji' ),
 			'description'         => __( 'Munimji Clients', 'munimji' ),
 			'labels'              => $labels,
-			'supports'            => array( 'title' ),
-			'taxonomies'          => array(),
+			'supports'            => [ 'title' ],
+			'taxonomies'          => [],
 			'hierarchical'        => false,
 			'public'              => true,
 			'show_ui'             => true,
@@ -81,7 +89,7 @@ class Clients {
 			'publicly_queryable'  => true,
 			'capability_type'     => 'page',
 			'show_in_rest'        => false,
-		);
+		];
 		register_post_type( 'munimji_client', $args );
 	}
 
@@ -91,38 +99,70 @@ class Clients {
 	 * @return void
 	 */
 	public static function register_cmb() {
-		/**
-		 * Registers main options page menu item and form.
-		 */
-		$args = array(
-			'id'           => 'munimji_client_info',
-			'title'        => 'Client Info',
-			'object_types' => array( 'munimji_client' ),
-			'option_key'   => 'munimji-client',
-		);
+		// Register CMB2 for client details.
+		$args = [
+			'id'           => self::$meta_prefix . 'details',
+			'title'        => 'Details',
+			'object_types' => [ 'munimji_client' ],
+		];
 
-		$client_info = new_cmb2_box( $args );
+		$client_details = new_cmb2_box( $args );
 
-		/**
-		 * Options fields ids only need
-		 * to be unique within this box.
-		 * Prefix is not needed.
-		 */
-
-		$client_info->add_field(
-			array(
-				'name' => 'Address',
-				'id'   => 'address',
-				'type' => 'textarea_small',
-			)
-		);
-
-		$client_info->add_field(
-			array(
-				'name' => 'GSTIN Number',
-				'id'   => 'gstin_no',
+		// Custom fields for client.
+		$client_details->add_field(
+			[
+				'name' => 'Address 1',
+				'id'   => self::$meta_prefix . 'address_1',
 				'type' => 'text',
-			)
+			]
+		);
+
+		$client_details->add_field(
+			[
+				'name' => 'Address 2',
+				'id'   => self::$meta_prefix . 'address_2',
+				'type' => 'text',
+			]
+		);
+
+		$client_details->add_field(
+			[
+				'name' => 'City',
+				'id'   => self::$meta_prefix . 'city',
+				'type' => 'text_medium',
+			]
+		);
+
+		$client_details->add_field(
+			[
+				'name' => 'State',
+				'id'   => self::$meta_prefix . 'state',
+				'type' => 'text_medium',
+			]
+		);
+
+		$client_details->add_field(
+			[
+				'name' => 'Zip',
+				'id'   => self::$meta_prefix . 'zip',
+				'type' => 'text_small',
+			]
+		);
+
+		$client_details->add_field(
+			[
+				'name' => 'Country',
+				'id'   => self::$meta_prefix . 'country',
+				'type' => 'text_small',
+			]
+		);
+
+		$client_details->add_field(
+			[
+				'name' => 'GSTIN',
+				'id'   => self::$meta_prefix . 'gstin',
+				'type' => 'text_medium',
+			]
 		);
 	}
 }

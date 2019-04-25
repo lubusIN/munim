@@ -58,9 +58,9 @@ final class Munimji {
 	 */
 	private function init_hooks() {
 		// Set up init Hook.
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
-		add_action( 'admin_menu', array( $this, 'register_menu' ) );
-		add_action( 'custom_menu_order', array( $this, 'reorder_menu' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
+		add_action( 'admin_menu', [ $this, 'register_menu' ] );
+		add_action( 'custom_menu_order', [ $this, 'reorder_menu' ] );
 
 		// Modules.
 		Settings::init();
@@ -99,7 +99,7 @@ final class Munimji {
 		wp_register_script(
 			'munimji-script',
 			MUNIMJI_PLUGIN_URL . '/assets/script.js',
-			array(),
+			[],
 			filemtime( MUNIMJI_PLUGIN_DIR . '/assets/script.js' ),
 			true
 		);
@@ -109,7 +109,7 @@ final class Munimji {
 		wp_register_style(
 			'munimji',
 			MUNIMJI_PLUGIN_URL . '/assets/style.css',
-			array(),
+			[],
 			filemtime( MUNIMJI_PLUGIN_DIR . '/assets/style.css' )
 		);
 		wp_enqueue_style( 'munimji' );

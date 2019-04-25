@@ -17,13 +17,21 @@ namespace LubusIN\Munimji;
  * Munimji Settings
  */
 class Settings {
+
+	/**
+	 * Prefix for options.
+	 *
+	 * @var string
+	 */
+	private static $options_prefix = 'munimji_settings_';
+
 	/**
 	 * Init  plugin settings.
 	 *
 	 * @return void
 	 */
 	public static function init() {
-		add_action( 'cmb2_admin_init', array( __CLASS__, 'register_settings' ) );
+		add_action( 'cmb2_admin_init', [ __CLASS__, 'register_settings' ] );
 	}
 
 	/**
@@ -32,140 +40,185 @@ class Settings {
 	 * @return void
 	 */
 	public static function register_settings() {
-		/**
-		 * Registers main options page menu item and form.
-		 */
-		$args = array(
-			'id'           => 'munimji_business_info',
-			'title'        => 'Munimji Settings',
-			'object_types' => array( 'options-page' ),
-			'option_key'   => 'munimji-settings',
-			'tab_group'    => 'munimji',
-			'tab_title'    => 'Business Info',
-			'display_cb'   => array( __CLASS__, 'render_settings' ),
+		// Register business settings.
+		$args = [
+			'id'           => self::$options_prefix . 'business',
+			'title'        => 'Munimji Settings > Business',
+			'object_types' => [ 'options-page' ],
+			'option_key'   => self::$options_prefix . 'business',
+			'tab_group'    => 'munimji_settings',
+			'tab_title'    => 'Business',
+			'display_cb'   => [ __CLASS__, 'render_settings' ],
 			'parent_slug'  => 'admin.php?page=munimji',
 			'menu_title'   => 'Settings',
-		);
+		];
 
-		$business_info = new_cmb2_box( $args );
+		$business_settings = new_cmb2_box( $args );
 
-		/**
-		 * Options fields ids only need
-		 * to be unique within this box.
-		 * Prefix is not needed.
-		 */
-		$business_info->add_field(
-			array(
+		// Business setting fields.
+		$business_settings->add_field(
+			[
 				'name' => 'Name',
 				'id'   => 'name',
 				'type' => 'text',
-			)
+			]
 		);
 
-		$business_info->add_field(
-			array(
+		$business_settings->add_field(
+			[
 				'name'         => 'Logo',
 				'id'           => 'logo',
 				'type'         => 'file',
-				'options'      => array(
-					'url' => false,
-				),
-				'text'         => array(
-					'add_upload_file_text' => 'Add File',
-				),
-				'query_args'   => array(
-					'type' => array(
+				'options'      => [ 'url' => false ],
+				'text'         => [ 'add_upload_file_text' => 'Add File' ],
+				'query_args'   => [
+					'type' => [
 						'image/jpeg',
 						'image/png',
-					),
-				),
+					],
+				],
 				'preview_size' => 'thumbnail',
-			)
+			]
 		);
 
-		$business_info->add_field(
-			array(
+		$business_settings->add_field(
+			[
 				'name'         => 'Secondary Logo',
 				'id'           => 'secondary_logo',
 				'type'         => 'file',
-				'options'      => array(
-					'url' => false,
-				),
-				'text'         => array(
-					'add_upload_file_text' => 'Add File',
-				),
-				'query_args'   => array(
-					'type' => array(
+				'options'      => [ 'url' => false ],
+				'text'         => [ 'add_upload_file_text' => 'Add File' ],
+				'query_args'   => [
+					'type' => [
 						'image/jpeg',
 						'image/png',
-					),
-				),
+					],
+				],
 				'preview_size' => 'thumbnail',
-			)
+			]
 		);
 
-		$business_info->add_field(
-			array(
-				'name' => 'Address',
-				'id'   => 'address',
-				'type' => 'textarea_small',
-			)
+		$business_settings->add_field(
+			[
+				'name' => 'Address 1',
+				'id'   => 'address_1',
+				'type' => 'text',
+			]
 		);
 
-		$business_info->add_field(
-			array(
+		$business_settings->add_field(
+			[
+				'name' => 'Address 2',
+				'id'   => 'address_2',
+				'type' => 'text',
+			]
+		);
+
+		$business_settings->add_field(
+			[
+				'name' => 'City',
+				'id'   => 'city',
+				'type' => 'text_medium',
+			]
+		);
+
+		$business_settings->add_field(
+			[
+				'name' => 'State',
+				'id'   => 'state',
+				'type' => 'text_medium',
+			]
+		);
+
+		$business_settings->add_field(
+			[
+				'name' => 'Zip',
+				'id'   => 'zip',
+				'type' => 'text_small',
+			]
+		);
+
+		$business_settings->add_field(
+			[
+				'name' => 'Country',
+				'id'   => 'country',
+				'type' => 'text_small',
+			]
+		);
+
+		$business_settings->add_field(
+			[
 				'name' => 'Email',
 				'id'   => 'email',
 				'type' => 'text_email',
-			)
+			]
 		);
 
-		$business_info->add_field(
-			array(
+		$business_settings->add_field(
+			[
 				'name' => 'Website',
 				'id'   => 'website',
 				'type' => 'text',
-			)
+			]
 		);
 
-		$business_info->add_field(
-			array(
-				'name' => 'Last Invoice Number',
-				'id'   => 'last_invoice_number',
-				'type' => 'text_small',
-			)
+		// Invoice Settings.
+		$args = [
+			'id'           => self::$options_prefix . 'invoice',
+			'title'        => 'Munimji Settings > Invoice',
+			'object_types' => [ 'options-page' ],
+			'option_key'   => self::$options_prefix . 'invoice',
+			'tab_group'    => 'munimji_settings',
+			'tab_title'    => 'Invoice',
+			'display_cb'   => [ __CLASS__, 'render_settings' ],
+			'parent_slug'  => 'admin.php?page=munimji_settings_business',
+		];
+
+		$invoice_settings = new_cmb2_box( $args );
+
+		// Invoice settings field.
+		$invoice_settings->add_field(
+			[
+				'name'    => 'Last Number',
+				'id'      => 'last_number',
+				'type'    => 'text',
+				'default' => '0000',
+			]
 		);
 
-		$business_info->add_field(
-			array(
-				'name' => 'State Of Supply',
-				'id'   => 'state_of_supply',
+		$invoice_info = $invoice_settings->add_field(
+			[
+				'id'         => 'info',
+				'desc'       => __( 'Info to be displayed on invoice e.g. Tax No, Pan No etc', 'munimji' ),
+				'type'       => 'group',
+				'repeatable' => true,
+				'options'    => [
+					'group_title'    => __( 'Info {#}', 'munimji' ),
+					'add_button'     => __( 'Add Info', 'munimji' ),
+					'remove_button'  => __( 'Remove Info', 'munimji' ),
+					'sortable'       => true,
+					'closed'         => false,
+					'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'munimji' ),
+				],
+			]
+		);
+
+		$invoice_settings->add_group_field(
+			$invoice_info,
+			[
+				'name' => 'Name',
+				'id'   => 'name',
 				'type' => 'text',
-			)
+			]
 		);
 
-		$business_info->add_field(
-			array(
-				'name' => 'Service Code',
-				'id'   => 'service_code',
+		$invoice_settings->add_group_field(
+			$invoice_info,
+			[
+				'name' => 'Value',
+				'id'   => 'value',
 				'type' => 'text',
-			)
-		);
-
-		$business_info->add_field(
-			array(
-				'name' => 'PAN Number',
-				'id'   => 'pan_no',
-				'type' => 'text',
-			)
-		);
-
-		$business_info->add_field(
-			array(
-				'name' => 'GSTIN Number',
-				'id'   => 'gstin_no',
-				'type' => 'text',
-			)
+			]
 		);
 	}
 
