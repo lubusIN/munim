@@ -1,4 +1,4 @@
-=== Munimij - Simple Invoices ===
+=== Munim - Simple Invoices ===
 Contributors: ajitbohra, lubus
 Donate link: https://lubus.in/
 Tags: invoice, invoicing,
@@ -18,20 +18,20 @@ Simple plugin to manage clients and invoices
 
 ***From your WordPress dashboard***
  1. Visit 'Plugins > Add New'
- 2. Search for `munimji`  or upload zip file
- 3. Activate `munimji` from your Plugins page
+ 2. Search for `munim`  or upload zip file
+ 3. Activate `munim` from your Plugins page
 
 ***Manual Installation***
- 1. [Download](https://wordpress.org/plugins/munimji/) "munimji".
- 2. Upload the `munimji` directory to your '/wp-content/plugins/' directory, using your favorite method (ftp, sftp, scp, etc...)
- 3. Activate `munimji` from your Plugins page.
+ 1. [Download](https://wordpress.org/plugins/munim/) "munim".
+ 2. Upload the `munim` directory to your '/wp-content/plugins/' directory, using your favorite method (ftp, sftp, scp, etc...)
+ 3. Activate `munim` from your Plugins page.
 
 == Frequently Asked Questions ==
 
 == Screenshots ==
 
 == Changelog ==
-= 1.0 =
+= 0.1.0 =
 Initial release, get set go :)
 
 == Upgrade Notice ==

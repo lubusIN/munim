@@ -1,6 +1,6 @@
 <?php
 /**
- * Munimji
+ * Munim
  *
  * @author  Ajit Bohra <ajit@lubus.in>
  * @license MIT
@@ -8,22 +8,22 @@
  * @see   https://www.munimiji.com/
  *
  * @copyright 2019 LUBUS
- * @package   Munimji
+ * @package   Munim
  */
 
-namespace LubusIN\Munimji;
+namespace LubusIN\Munim;
 
 /**
  * Bootstrap plugin
  */
-final class Munimji {
+final class Munim {
 
 	/**
 	 * Instance.
 	 *
 	 * @since
 	 *
-	 * @var Munimji
+	 * @var Munim
 	 */
 	private static $instance;
 
@@ -41,7 +41,7 @@ final class Munimji {
 	 *
 	 * @since
 	 *
-	 * @return Munimji
+	 * @return Munim
 	 */
 	public static function get_instance() {
 		if ( null === static::$instance ) {
@@ -78,7 +78,7 @@ final class Munimji {
 	 */
 	public function __clone() {
 		// Cloning instances of the class is forbidden.
-		munimji_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'munimji' ), '1.0' );
+		munim_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'munim' ), '1.0' );
 	}
 
 	/**
@@ -88,7 +88,7 @@ final class Munimji {
 	 */
 	public function __wakeup() {
 		// Unserializing instances of the class is forbidden.
-		munimji_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'munimji' ), '1.0' );
+		munim_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'munim' ), '1.0' );
 	}
 
 	/**
@@ -97,22 +97,22 @@ final class Munimji {
 	public function register_assets() {
 		// Scripts.
 		wp_register_script(
-			'munimji-script',
-			MUNIMJI_PLUGIN_URL . '/assets/script.js',
+			'munim-script',
+			MUNIM_PLUGIN_URL . '/assets/script.js',
 			[],
-			filemtime( MUNIMJI_PLUGIN_DIR . '/assets/script.js' ),
+			filemtime( MUNIM_PLUGIN_DIR . '/assets/script.js' ),
 			true
 		);
-		wp_enqueue_script( 'munimji-script' );
+		wp_enqueue_script( 'munim-script' );
 
 		// Styles.
 		wp_register_style(
-			'munimji',
-			MUNIMJI_PLUGIN_URL . '/assets/style.css',
+			'munim',
+			MUNIM_PLUGIN_URL . '/assets/style.css',
 			[],
-			filemtime( MUNIMJI_PLUGIN_DIR . '/assets/style.css' )
+			filemtime( MUNIM_PLUGIN_DIR . '/assets/style.css' )
 		);
-		wp_enqueue_style( 'munimji' );
+		wp_enqueue_style( 'munim' );
 	}
 
 	/**
@@ -120,38 +120,38 @@ final class Munimji {
 	 */
 	public function register_menu() {
 		add_menu_page(
-			__( 'Munimji - Simple Invoicing', 'munimji' ),
-			'Munimji',
+			__( 'Munim - Simple Invoicing', 'munim' ),
+			'Munim',
 			'manage_options',
-			'admin.php?page=munimji',
+			'admin.php?page=munim',
 			[ $this, 'render_page' ],
 			'dashicons-analytics'
 		);
 
 		add_submenu_page(
-			'admin.php?page=munimji',
-			'Munimji > Dashboard',
+			'admin.php?page=munim',
+			'Munim > Dashboard',
 			'Dashboard',
 			'manage_options',
-			'admin.php?page=munimji'
+			'admin.php?page=munim'
 		);
 	}
 
 	/**
-	 * Reorder munimji submenu.
+	 * Reorder munim submenu.
 	 *
 	 * @return void
 	 */
 	public function reorder_menu() {
 		global $submenu;
-		$munimji_submenu = [];
+		$munim_submenu = [];
 		foreach ( $submenu as $menu_name => $menu_items ) {
-			if ( 'admin.php?page=munimji' === $menu_name ) {
-				$munimji_submenu[0]                = $menu_items[2]; // Dashboard.
-				$munimji_submenu[1]                = $menu_items[0]; // Clients.
-				$munimji_submenu[2]                = $menu_items[1]; // Invoices.
-				$munimji_submenu[3]                = $menu_items[3]; // Settings.
-				$submenu['admin.php?page=munimji'] = $munimji_submenu;
+			if ( 'admin.php?page=munim' === $menu_name ) {
+				$munim_submenu[0]                = $menu_items[2]; // Dashboard.
+				$munim_submenu[1]                = $menu_items[0]; // Clients.
+				$munim_submenu[2]                = $menu_items[1]; // Invoices.
+				$munim_submenu[3]                = $menu_items[3]; // Settings.
+				$submenu['admin.php?page=munim'] = $munim_submenu;
 				break;
 			}
 		}

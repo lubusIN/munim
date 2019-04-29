@@ -5,19 +5,19 @@
  * @author  Ajit Bohra <ajit@lubus.in>
  * @license MIT
  *
- * @see   https://www.munimiji.com/
+ * @see   https://www.munim.com/
  *
  * @copyright 2019 LUBUS
- * @package   Munimji
+ * @package   Munim
  */
 
-namespace LubusIN\Munimji;
+namespace LubusIN\Munim;
 
 use Dompdf\Dompdf;
-use LubusIN\Munimji\Helpers;
+use LubusIN\Munim\Helpers;
 
 /**
- * Munimji Invoices
+ * Munim Invoices
  */
 class Invoices {
 
@@ -26,7 +26,7 @@ class Invoices {
 	 *
 	 * @var string
 	 */
-	private static $meta_prefix = 'munimji_invoice_';
+	private static $meta_prefix = 'munim_invoice_';
 
 	/**
 	 * Init invoice
@@ -52,44 +52,44 @@ class Invoices {
 	 */
 	public static function register_cpt() {
 		$labels = [
-			'name'                  => _x( 'Invoices', 'Post Type General Name', 'munimji' ),
-			'singular_name'         => _x( 'Invoice', 'Post Type Singular Name', 'munimji' ),
-			'menu_name'             => __( 'Invoices', 'munimji' ),
-			'name_admin_bar'        => __( 'Invoices', 'munimji' ),
-			'archives'              => __( 'Item Archives', 'munimji' ),
-			'attributes'            => __( 'Item Attributes', 'munimji' ),
-			'parent_item_colon'     => __( 'Parent Item:', 'munimji' ),
-			'all_items'             => __( 'Invoices', 'munimji' ),
-			'add_new_item'          => __( 'Add New Invoice', 'munimji' ),
-			'add_new'               => __( 'Add New', 'munimji' ),
-			'new_item'              => __( 'New Item', 'munimji' ),
-			'edit_item'             => __( 'Edit Item', 'munimji' ),
-			'update_item'           => __( 'Update Item', 'munimji' ),
-			'view_item'             => __( 'View Item', 'munimji' ),
-			'view_items'            => __( 'View Items', 'munimji' ),
-			'search_items'          => __( 'Search Item', 'munimji' ),
-			'not_found'             => __( 'Not found', 'munimji' ),
-			'not_found_in_trash'    => __( 'Not found in Trash', 'munimji' ),
-			'featured_image'        => __( 'Featured Image', 'munimji' ),
-			'set_featured_image'    => __( 'Set featured image', 'munimji' ),
-			'remove_featured_image' => __( 'Remove featured image', 'munimji' ),
-			'use_featured_image'    => __( 'Use as featured image', 'munimji' ),
-			'insert_into_item'      => __( 'Insert into item', 'munimji' ),
-			'uploaded_to_this_item' => __( 'Uploaded to this item', 'munimji' ),
-			'items_list'            => __( 'Items list', 'munimji' ),
-			'items_list_navigation' => __( 'Items list navigation', 'munimji' ),
-			'filter_items_list'     => __( 'Filter items list', 'munimji' ),
+			'name'                  => _x( 'Invoices', 'Post Type General Name', 'munim' ),
+			'singular_name'         => _x( 'Invoice', 'Post Type Singular Name', 'munim' ),
+			'menu_name'             => __( 'Invoices', 'munim' ),
+			'name_admin_bar'        => __( 'Invoices', 'munim' ),
+			'archives'              => __( 'Item Archives', 'munim' ),
+			'attributes'            => __( 'Item Attributes', 'munim' ),
+			'parent_item_colon'     => __( 'Parent Item:', 'munim' ),
+			'all_items'             => __( 'Invoices', 'munim' ),
+			'add_new_item'          => __( 'Add New Invoice', 'munim' ),
+			'add_new'               => __( 'Add New', 'munim' ),
+			'new_item'              => __( 'New Item', 'munim' ),
+			'edit_item'             => __( 'Edit Item', 'munim' ),
+			'update_item'           => __( 'Update Item', 'munim' ),
+			'view_item'             => __( 'View Item', 'munim' ),
+			'view_items'            => __( 'View Items', 'munim' ),
+			'search_items'          => __( 'Search Item', 'munim' ),
+			'not_found'             => __( 'Not found', 'munim' ),
+			'not_found_in_trash'    => __( 'Not found in Trash', 'munim' ),
+			'featured_image'        => __( 'Featured Image', 'munim' ),
+			'set_featured_image'    => __( 'Set featured image', 'munim' ),
+			'remove_featured_image' => __( 'Remove featured image', 'munim' ),
+			'use_featured_image'    => __( 'Use as featured image', 'munim' ),
+			'insert_into_item'      => __( 'Insert into item', 'munim' ),
+			'uploaded_to_this_item' => __( 'Uploaded to this item', 'munim' ),
+			'items_list'            => __( 'Items list', 'munim' ),
+			'items_list_navigation' => __( 'Items list navigation', 'munim' ),
+			'filter_items_list'     => __( 'Filter items list', 'munim' ),
 		];
 		$args   = array(
-			'label'               => __( 'Invoice', 'munimji' ),
-			'description'         => __( 'Munimji Invoices', 'munimji' ),
+			'label'               => __( 'Invoice', 'munim' ),
+			'description'         => __( 'Munim Invoices', 'munim' ),
 			'labels'              => $labels,
 			'supports'            => [ 'title' ],
 			'taxonomies'          => [],
 			'hierarchical'        => false,
 			'public'              => true,
 			'show_ui'             => true,
-			'show_in_menu'        => 'admin.php?page=munimji',
+			'show_in_menu'        => 'admin.php?page=munim',
 			'menu_position'       => 5,
 			'show_in_admin_bar'   => true,
 			'show_in_nav_menus'   => false,
@@ -100,7 +100,7 @@ class Invoices {
 			'capability_type'     => 'page',
 			'show_in_rest'        => false,
 		);
-		register_post_type( 'munimji_invoice', $args );
+		register_post_type( 'munim_invoice', $args );
 	}
 
 	/**
@@ -111,9 +111,9 @@ class Invoices {
 	public static function register_status() {
 		// Outstanding.
 		$args = [
-			'label'                     => _x( 'outstanding', 'Outstanding Invoices', 'munimji' ),
+			'label'                     => _x( 'outstanding', 'Outstanding Invoices', 'munim' ),
 			/* translators: Outstanding invoices count */
-			'label_count'               => _n_noop( 'outstanding (%s)', 'outstanding (%s)', 'munimji' ),
+			'label_count'               => _n_noop( 'outstanding (%s)', 'outstanding (%s)', 'munim' ),
 			'public'                    => false,
 			'show_in_admin_all_list'    => true,
 			'show_in_admin_status_list' => true,
@@ -123,9 +123,9 @@ class Invoices {
 
 		// Paid.
 		$args = [
-			'label'                     => _x( 'paid', 'Paid Invoices', 'munimji' ),
+			'label'                     => _x( 'paid', 'Paid Invoices', 'munim' ),
 			/* translators: Paid invoices count */
-			'label_count'               => _n_noop( 'paid (%s)', 'paid (%s)', 'munimji' ),
+			'label_count'               => _n_noop( 'paid (%s)', 'paid (%s)', 'munim' ),
 			'public'                    => false,
 			'show_in_admin_all_list'    => true,
 			'show_in_admin_status_list' => true,
@@ -135,9 +135,9 @@ class Invoices {
 
 		// Cancelled.
 		$args = [
-			'label'                     => _x( 'cancelled', 'Cancelled Invoices', 'munimji' ),
+			'label'                     => _x( 'cancelled', 'Cancelled Invoices', 'munim' ),
 			/* translators: Cancelled invoices count */
-			'label_count'               => _n_noop( 'cancelled (%s)', 'cancelled (%s)', 'munimji' ),
+			'label_count'               => _n_noop( 'cancelled (%s)', 'cancelled (%s)', 'munim' ),
 			'public'                    => false,
 			'show_in_admin_all_list'    => true,
 			'show_in_admin_status_list' => true,
@@ -153,7 +153,7 @@ class Invoices {
 	 */
 	public static function render_status_in_quick_edit() {
 		// Bailout if not invoices.
-		if ( 'munimji_invoice' !== get_post_type() ) {
+		if ( 'munim_invoice' !== get_post_type() ) {
 			return;
 		}
 
@@ -174,7 +174,7 @@ class Invoices {
 	 */
 	public static function render_status_in_edit() {
 		// Bailout if not invoices.
-		if ( 'munimji_invoice' !== get_post_type() ) {
+		if ( 'munim_invoice' !== get_post_type() ) {
 			return;
 		}
 
@@ -196,14 +196,14 @@ class Invoices {
 	 * @return array
 	 */
 	public static function render_row_actions( $actions, $post ) {
-		if ( 'munimji_invoice' === $post->post_type ) {
+		if ( 'munim_invoice' === $post->post_type ) {
 			unset( $actions['view'] ); // Remove post preview.
 
 			// Action to view pdf.
 			$view_url = add_query_arg(
 				[
-					'munimji_action'     => 'view',
-					'munimji_invoice_id' => $post->ID,
+					'munim_action'     => 'view',
+					'munim_invoice_id' => $post->ID,
 					'nonce'              => wp_create_nonce( 'view' ),
 				]
 			);
@@ -211,14 +211,14 @@ class Invoices {
 			// Action to download pdf.
 			$download_url = add_query_arg(
 				[
-					'munimji_action'     => 'download',
-					'munimji_invoice_id' => $post->ID,
+					'munim_action'     => 'download',
+					'munim_invoice_id' => $post->ID,
 					'nonce'              => wp_create_nonce( 'download' ),
 				]
 			);
 
 			$actions['view']     = '<a href="' . $view_url . '" target="_blank">View</a>';
-			$actions['download'] = '<a href="' . $download_url . '">download</a>';
+			$actions['download'] = '<a href="' . $download_url . '">Download</a>';
 		}
 
 		return $actions;
@@ -235,7 +235,7 @@ class Invoices {
 		$args = [
 			'id'           => self::$meta_prefix . 'details',
 			'title'        => 'Details',
-			'object_types' => [ 'munimji_invoice' ],
+			'object_types' => [ 'munim_invoice' ],
 		];
 
 		$invoice_details = new_cmb2_box( $args );
@@ -255,13 +255,13 @@ class Invoices {
 
 		$invoice_details->add_field(
 			[
-				'name'       => __( 'Client', 'munimji' ),
+				'name'       => __( 'Client', 'munim' ),
 				'id'         => self::$meta_prefix . 'client_id',
 				'type'       => 'post_search_ajax',
-				'desc'       => __( '(Start typing client name)', 'munimji' ),
+				'desc'       => __( '(Start typing client name)', 'munim' ),
 				'limit'      => 1,
 				'query_args' => [
-					'post_type'      => [ 'munimji_client' ],
+					'post_type'      => [ 'munim_client' ],
 					'post_status'    => [ 'publish' ],
 					'posts_per_page' => -1,
 				],
@@ -280,7 +280,7 @@ class Invoices {
 		$args = [
 			'id'           => self::$meta_prefix . 'items',
 			'title'        => 'Items',
-			'object_types' => [ 'munimji_invoice' ],
+			'object_types' => [ 'munim_invoice' ],
 		];
 
 		$invoice_items = new_cmb2_box( $args );
@@ -292,12 +292,12 @@ class Invoices {
 				'type'       => 'group',
 				'repeatable' => true,
 				'options'    => [
-					'group_title'    => __( 'Item {#}', 'munimji' ),
-					'add_button'     => __( 'Add Item', 'munimji' ),
-					'remove_button'  => __( 'Remove Item', 'munimji' ),
+					'group_title'    => __( 'Item {#}', 'munim' ),
+					'add_button'     => __( 'Add Item', 'munim' ),
+					'remove_button'  => __( 'Remove Item', 'munim' ),
 					'sortable'       => true,
 					'closed'         => false,
-					'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'munimji' ),
+					'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'munim' ),
 				],
 			]
 		);
@@ -325,7 +325,7 @@ class Invoices {
 		$args = [
 			'id'           => self::$meta_prefix . 'taxes',
 			'title'        => 'Taxes',
-			'object_types' => [ 'munimji_invoice' ],
+			'object_types' => [ 'munim_invoice' ],
 		];
 
 		$invoice_taxes = new_cmb2_box( $args );
@@ -337,12 +337,12 @@ class Invoices {
 				'type'       => 'group',
 				'repeatable' => true,
 				'options'    => [
-					'group_title'    => __( 'Tax {#}', 'munimji' ),
-					'add_button'     => __( 'Add Tax', 'munimji' ),
-					'remove_button'  => __( 'Remove Tax', 'munimji' ),
+					'group_title'    => __( 'Tax {#}', 'munim' ),
+					'add_button'     => __( 'Add Tax', 'munim' ),
+					'remove_button'  => __( 'Remove Tax', 'munim' ),
 					'sortable'       => true,
 					'closed'         => false,
-					'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'munimji' ),
+					'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'munim' ),
 				],
 			]
 		);
@@ -373,7 +373,7 @@ class Invoices {
 	 * @return string invoice number
 	 */
 	public static function get_number() {
-		$settings = get_option( 'munimji_settings_invoice', array() );
+		$settings = get_option( 'munim_settings_invoice', array() );
 		$number   = ! empty( $settings ) && isset( $settings['last_number'] ) ? ++$settings['last_number'] : 1;
 
 		return $number;
@@ -398,8 +398,8 @@ class Invoices {
 			return;
 		}
 
-		// Bailout if post type is not munimji_invoice.
-		if ( 'munimji_invoice' !== $post->post_type ) {
+		// Bailout if post type is not munim_invoice.
+		if ( 'munim_invoice' !== $post->post_type ) {
 			return;
 		}
 
@@ -409,12 +409,12 @@ class Invoices {
 		}
 
 		// Update invoice number.
-		$settings            = get_option( 'munimji_settings_invoice', [] );
+		$settings            = get_option( 'munim_settings_invoice', [] );
 		$invoice_number      = $settings['last_number'];
 		$last_invoice_number = [ 'last_number' => ++$invoice_number ];
 		$updated_settings    = wp_parse_args( $last_invoice_number, $settings );
 
-		update_option( 'munimji_settings_invoice', $updated_settings );
+		update_option( 'munim_settings_invoice', $updated_settings );
 	}
 
 	/**
@@ -423,7 +423,7 @@ class Invoices {
 	 * @return boolean
 	 */
 	public static function is_pdf_request() {
-		return ( isset( $_GET['munimji_invoice_id'], $_GET['munimji_action'], $_GET['nonce'] ) );
+		return ( isset( $_GET['munim_invoice_id'], $_GET['munim_action'], $_GET['nonce'] ) );
 	}
 
 	/**
@@ -437,8 +437,8 @@ class Invoices {
 		}
 
 		// sanitize data and verify nonce.
-		$invoice_id = sanitize_key( $_GET['munimji_invoice_id'] );
-		$action     = sanitize_key( $_GET['munimji_action'] );
+		$invoice_id = sanitize_key( $_GET['munim_invoice_id'] );
+		$action     = sanitize_key( $_GET['munim_action'] );
 		$nonce      = sanitize_key( $_GET['nonce'] );
 
 		if ( ! wp_verify_nonce( $nonce, $action ) ) {
@@ -447,7 +447,7 @@ class Invoices {
 
 		// Get HTML.
 		ob_start();
-		include MUNIMJI_PLUGIN_DIR . 'templates/lubus/invoice.php';
+		include MUNIM_PLUGIN_DIR . 'templates/lubus/invoice.php';
 		$html = ob_get_contents();
 		ob_end_clean();
 
@@ -455,7 +455,7 @@ class Invoices {
 		$dompdf = new DOMPDF();
 		$dompdf->loadHtml( $html );
 		$dompdf->setPaper( 'A4', 'portrait' );
-		$dompdf->setBasePath( MUNIMJI_PLUGIN_DIR . '/templates/lubus' );
+		$dompdf->setBasePath( MUNIM_PLUGIN_DIR . '/templates/lubus' );
 		$dompdf->render();
 		$dompdf->stream(
 			Helpers::get_file_name( $invoice_id ),

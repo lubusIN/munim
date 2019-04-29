@@ -5,10 +5,10 @@
  * @author  Ajit Bohra <ajit@lubus.in>
  * @license MIT
  *
- * @see   https://www.munimiji.com/
+ * @see   https://www.munim.com/
  *
  * @copyright 2019 LUBUS
- * @package   Munimji
+ * @package   Munim
  */
 
 ?>

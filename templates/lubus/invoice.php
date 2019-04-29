@@ -5,30 +5,30 @@
  * @author  Ajit Bohra <ajit@lubus.in>
  * @license MIT
  *
- * @see   https://www.munimiji.com/
+ * @see   https://www.munim.com/
  *
  * @copyright 2019 LUBUS
- * @package   Munimji
+ * @package   Munim
  */
 
-use LubusIN\Munimji\Helpers;
+use LubusIN\Munim\Helpers;
 
 // Settings.
-$munimji_settings_business = get_option( 'munimji_settings_business', [] );
-$munimji_settings_invoice  = get_option( 'munimji_settings_invoice', [] );
-$munimji_settings_info     = $munimji_settings_invoice['munimji_settings_invoice_info'];
+$munim_settings_business     = get_option( 'munim_settings_business', [] );
+$munim_settings_invoice      = get_option( 'munim_settings_invoice', [] );
+$munim_settings_invoice_info = $munim_settings_invoice['info'];
 
 // Invoice Data.
-$invoice_id          = $_GET['munimji_invoice_id'];
+$invoice_id          = $_GET['munim_invoice_id'];
 $invoice_name        = get_the_title( $invoice_id );
 $invoice_data        = Helpers::array_shift( get_post_meta( $invoice_id ) );
-$invoice_client_id   = $invoice_data['munimji_invoice_client_id'];
+$invoice_client_id   = $invoice_data['munim_invoice_client_id'];
 $invoice_client_data = Helpers::array_shift( get_post_meta( $invoice_client_id ) );
 $invoice_client_name = get_the_title( $invoice_client_id );
-$invoice_items       = maybe_unserialize( $invoice_data['munimji_invoice_items'] );
-$invoice_tax_items   = maybe_unserialize( $invoice_data['munimji_invoice_taxes'] );
-$invoice_logo        = get_attached_file( $munimji_settings_business['logo_id'] );
-$invoice_icon        = get_attached_file( $munimji_settings_business['secondary_logo_id'] );
+$invoice_items       = maybe_unserialize( $invoice_data['munim_invoice_items'] );
+$invoice_tax_items   = maybe_unserialize( $invoice_data['munim_invoice_taxes'] );
+$invoice_logo        = get_attached_file( $munim_settings_business['logo_id'] );
+$invoice_icon        = get_attached_file( $munim_settings_business['secondary_logo_id'] );
 
 // Totals.
 $invoice_subtotal = array_sum( wp_list_pluck( $invoice_items, 'amount' ) );
@@ -56,8 +56,8 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 				<div id="info" class="float-right text-right width-half">
 					<h1>Tax Invoice</h1>
 					<ul class="data-list">
-						<li>#<?php echo $invoice_data['munimji_invoice_number']; ?></li>
-						<li><?php echo $invoice_data['munimji_invoice_date']; ?></li>
+						<li>#<?php echo $invoice_data['munim_invoice_number']; ?></li>
+						<li><?php echo $invoice_data['munim_invoice_date']; ?></li>
 					</ul>
 				</div>
 			</div>
@@ -66,7 +66,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 				<div id="business" class="float-left width-half">
 					<h2>Company Details</h2>
 					<ul class="data-list">
-						<?php foreach ( $munimji_settings_info as $info ) { ?>
+						<?php foreach ( $munim_settings_invoice_info as $info ) { ?>
 							<li><?php echo $info['name'] . ': ' . $info['value']; ?></li>
 						<?php } ?>
 					</ul>
@@ -77,11 +77,11 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 					<ul class="data-list">
 						<li><?php echo $invoice_client_name; ?></li>
 						<li>
-							<?php echo $invoice_client_data['munimji_client_address_1']; ?><br />
-							<?php echo $invoice_client_data['munimji_client_address_2'] . ' ' . $invoice_client_data['munimji_client_city'] . '-' . $invoice_client_data['munimji_client_zip']; ?><br />
-							<?php //echo $invoice_client_data['munimji_client_state'] . ', ' . $invoice_client_data['munimji_client_country']; ?>
+							<?php echo $invoice_client_data['munim_client_address_1']; ?><br />
+							<?php echo $invoice_client_data['munim_client_address_2'] . ' ' . $invoice_client_data['munim_client_city'] . '-' . $invoice_client_data['munim_client_zip']; ?><br />
+							<?php //echo $invoice_client_data['munim_client_state'] . ', ' . $invoice_client_data['munim_client_country']; ?>
 						</li>
-						<li>GSTIN: <?php echo $invoice_client_data['munimji_client_gstin']; ?></li>
+						<li>GSTIN: <?php echo $invoice_client_data['munim_client_gstin']; ?></li>
 					</ul>
 				</div>
 			</div>
@@ -142,17 +142,17 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 			<div id="contact" class="float-left">
 				<ul class="data-list">
 					<li id="brand-icon"><img src="<?php echo $invoice_icon; ?>" alt="Logo"></li>
-					<li>E - <?php echo $munimji_settings_business['email']; ?></li>
-					<li>W - <?php echo $munimji_settings_business['website']; ?></li>
+					<li>E - <?php echo $munim_settings_business['email']; ?></li>
+					<li>W - <?php echo $munim_settings_business['website']; ?></li>
 					<li>
-						<?php echo $munimji_settings_business['address_1']; ?><br />
-						<?php echo $munimji_settings_business['address_2'] . ' ' . $munimji_settings_business['city'] . '-' . $munimji_settings_business['zip']; ?><br />
-						<?php //echo $munimji_settings_business['state'] . ', ' . $munimji_settings_business['country']; ?>
+						<?php echo $munim_settings_business['address_1']; ?><br />
+						<?php echo $munim_settings_business['address_2'] . ' ' . $munim_settings_business['city'] . '-' . $munim_settings_business['zip']; ?><br />
+						<?php //echo $munim_settings_business['state'] . ', ' . $munim_settings_business['country']; ?>
 					</li>
 				</ul>
 			</div>
 			<div id="note" class="float-right">
-				<h1><img id="heart" src="img/heart.png" alt="heart">Thank You</h1>
+				<h1>Thank You</h1>
 			</div>
 		</div>
 

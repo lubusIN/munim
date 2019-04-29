@@ -1,9 +1,9 @@
 {
-  "name": "munimji",
+  "name": "munim",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
   "description": "Simple invoices",
-  "homepage": "https://munimji.com",
+  "homepage": "https://munim.com",
   "require": {
     "composer/installers": "~1.2",
 		"cmb2/cmb2": "dev-master",
@@ -23,7 +23,7 @@
 		"invoicing"
   ],
   "support": {
-    "issues": "https://github.com/lubusIN/munimji/"
+    "issues": "https://github.com/lubusIN/munim/"
 	},
 	"autoload": {
 		"classmap": [

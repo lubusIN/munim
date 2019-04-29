@@ -5,16 +5,16 @@
  * @author  Ajit Bohra <ajit@lubus.in>
  * @license MIT
  *
- * @see   https://www.munimiji.com/
+ * @see   https://www.munim.com/
  *
  * @copyright 2019 LUBUS
- * @package   Munimji
+ * @package   Munim
  */
 
-namespace LubusIN\Munimji;
+namespace LubusIN\Munim;
 
 /**
- * Munimji Cients
+ * Munim Cients
  */
 class Clients {
 
@@ -23,7 +23,7 @@ class Clients {
 	 *
 	 * @var string
 	 */
-	private static $meta_prefix = 'munimji_client_';
+	private static $meta_prefix = 'munim_client_';
 
 	/**
 	 * Init client
@@ -42,44 +42,44 @@ class Clients {
 	 */
 	public static function register_cpt() {
 		$labels = [
-			'name'                  => _x( 'Clients', 'Post Type General Name', 'munimji' ),
-			'singular_name'         => _x( 'Client', 'Post Type Singular Name', 'munimji' ),
-			'menu_name'             => __( 'Clients', 'munimji' ),
-			'name_admin_bar'        => __( 'Clients', 'munimji' ),
-			'archives'              => __( 'Item Archives', 'munimji' ),
-			'attributes'            => __( 'Item Attributes', 'munimji' ),
-			'parent_item_colon'     => __( 'Parent Item:', 'munimji' ),
-			'all_items'             => __( 'Clients', 'munimji' ),
-			'add_new_item'          => __( 'Add New Client', 'munimji' ),
-			'add_new'               => __( 'Add New', 'munimji' ),
-			'new_item'              => __( 'New Item', 'munimji' ),
-			'edit_item'             => __( 'Edit Item', 'munimji' ),
-			'update_item'           => __( 'Update Item', 'munimji' ),
-			'view_item'             => __( 'View Item', 'munimji' ),
-			'view_items'            => __( 'View Items', 'munimji' ),
-			'search_items'          => __( 'Search Item', 'munimji' ),
-			'not_found'             => __( 'Not found', 'munimji' ),
-			'not_found_in_trash'    => __( 'Not found in Trash', 'munimji' ),
-			'featured_image'        => __( 'Featured Image', 'munimji' ),
-			'set_featured_image'    => __( 'Set featured image', 'munimji' ),
-			'remove_featured_image' => __( 'Remove featured image', 'munimji' ),
-			'use_featured_image'    => __( 'Use as featured image', 'munimji' ),
-			'insert_into_item'      => __( 'Insert into item', 'munimji' ),
-			'uploaded_to_this_item' => __( 'Uploaded to this item', 'munimji' ),
-			'items_list'            => __( 'Items list', 'munimji' ),
-			'items_list_navigation' => __( 'Items list navigation', 'munimji' ),
-			'filter_items_list'     => __( 'Filter items list', 'munimji' ),
+			'name'                  => _x( 'Clients', 'Post Type General Name', 'munim' ),
+			'singular_name'         => _x( 'Client', 'Post Type Singular Name', 'munim' ),
+			'menu_name'             => __( 'Clients', 'munim' ),
+			'name_admin_bar'        => __( 'Clients', 'munim' ),
+			'archives'              => __( 'Item Archives', 'munim' ),
+			'attributes'            => __( 'Item Attributes', 'munim' ),
+			'parent_item_colon'     => __( 'Parent Item:', 'munim' ),
+			'all_items'             => __( 'Clients', 'munim' ),
+			'add_new_item'          => __( 'Add New Client', 'munim' ),
+			'add_new'               => __( 'Add New', 'munim' ),
+			'new_item'              => __( 'New Item', 'munim' ),
+			'edit_item'             => __( 'Edit Item', 'munim' ),
+			'update_item'           => __( 'Update Item', 'munim' ),
+			'view_item'             => __( 'View Item', 'munim' ),
+			'view_items'            => __( 'View Items', 'munim' ),
+			'search_items'          => __( 'Search Item', 'munim' ),
+			'not_found'             => __( 'Not found', 'munim' ),
+			'not_found_in_trash'    => __( 'Not found in Trash', 'munim' ),
+			'featured_image'        => __( 'Featured Image', 'munim' ),
+			'set_featured_image'    => __( 'Set featured image', 'munim' ),
+			'remove_featured_image' => __( 'Remove featured image', 'munim' ),
+			'use_featured_image'    => __( 'Use as featured image', 'munim' ),
+			'insert_into_item'      => __( 'Insert into item', 'munim' ),
+			'uploaded_to_this_item' => __( 'Uploaded to this item', 'munim' ),
+			'items_list'            => __( 'Items list', 'munim' ),
+			'items_list_navigation' => __( 'Items list navigation', 'munim' ),
+			'filter_items_list'     => __( 'Filter items list', 'munim' ),
 		];
 		$args   = [
-			'label'               => __( 'Client', 'munimji' ),
-			'description'         => __( 'Munimji Clients', 'munimji' ),
+			'label'               => __( 'Client', 'munim' ),
+			'description'         => __( 'Munim Clients', 'munim' ),
 			'labels'              => $labels,
 			'supports'            => [ 'title' ],
 			'taxonomies'          => [],
 			'hierarchical'        => false,
 			'public'              => true,
 			'show_ui'             => true,
-			'show_in_menu'        => 'admin.php?page=munimji',
+			'show_in_menu'        => 'admin.php?page=munim',
 			'menu_position'       => 5,
 			'show_in_admin_bar'   => true,
 			'show_in_nav_menus'   => false,
@@ -90,7 +90,7 @@ class Clients {
 			'capability_type'     => 'page',
 			'show_in_rest'        => false,
 		];
-		register_post_type( 'munimji_client', $args );
+		register_post_type( 'munim_client', $args );
 	}
 
 	/**
@@ -103,7 +103,7 @@ class Clients {
 		$args = [
 			'id'           => self::$meta_prefix . 'details',
 			'title'        => 'Details',
-			'object_types' => [ 'munimji_client' ],
+			'object_types' => [ 'munim_client' ],
 		];
 
 		$client_details = new_cmb2_box( $args );

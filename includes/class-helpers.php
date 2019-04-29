@@ -5,16 +5,16 @@
  * @author  Ajit Bohra <ajit@lubus.in>
  * @license MIT
  *
- * @see   https://www.munimiji.com/
+ * @see   https://www.munim.com/
  *
  * @copyright 2019 LUBUS
- * @package   Munimji
+ * @package   Munim
  */
 
-namespace LubusIN\Munimji;
+namespace LubusIN\Munim;
 
 /**
- * Munimji Helpers
+ * Munim Helpers
  */
 class Helpers {
 	/**
@@ -58,7 +58,7 @@ class Helpers {
 	 * @return string
 	 */
 	public static function get_file_name( $invoice_id ) {
-		$invoice_number = get_post_meta( $invoice_id, 'munimji_invoice_number', true );
+		$invoice_number = get_post_meta( $invoice_id, 'munim_invoice_number', true );
 		$invoice_slug   = get_post_field( 'post_name', $invoice_id );
 		$pdf_filename   = $invoice_number . '.' . $invoice_slug . '.pdf';
 		return $pdf_filename;

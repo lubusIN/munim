@@ -7,11 +7,11 @@ services:
     ports:
       - 9999:80
     environment:
-      WORDPRESS_DB_PASSWORD: munimji
+      WORDPRESS_DB_PASSWORD: munim
     volumes:
-      - ./:/var/www/html/wp-content/plugins/munimji
+      - ./:/var/www/html/wp-content/plugins/munim
 
   mysql:
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: munimji
+      MYSQL_ROOT_PASSWORD: munim

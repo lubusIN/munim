@@ -8,13 +8,13 @@
  * @see   https://www.munimiji.com/
  *
  * @copyright 2019 LUBUS
- * @package   Munimji
+ * @package   Munim
  */
 
-namespace LubusIN\Munimji;
+namespace LubusIN\Munim;
 
 /**
- * Munimji Settings
+ * Munim Settings
  */
 class Settings {
 
@@ -23,7 +23,7 @@ class Settings {
 	 *
 	 * @var string
 	 */
-	private static $options_prefix = 'munimji_settings_';
+	private static $options_prefix = 'munim_settings_';
 
 	/**
 	 * Init  plugin settings.
@@ -43,13 +43,13 @@ class Settings {
 		// Register business settings.
 		$args = [
 			'id'           => self::$options_prefix . 'business',
-			'title'        => 'Munimji Settings > Business',
+			'title'        => 'Munim Settings > Business',
 			'object_types' => [ 'options-page' ],
 			'option_key'   => self::$options_prefix . 'business',
-			'tab_group'    => 'munimji_settings',
+			'tab_group'    => 'munim_settings',
 			'tab_title'    => 'Business',
 			'display_cb'   => [ __CLASS__, 'render_settings' ],
-			'parent_slug'  => 'admin.php?page=munimji',
+			'parent_slug'  => 'admin.php?page=munim',
 			'menu_title'   => 'Settings',
 		];
 
@@ -165,13 +165,13 @@ class Settings {
 		// Invoice Settings.
 		$args = [
 			'id'           => self::$options_prefix . 'invoice',
-			'title'        => 'Munimji Settings > Invoice',
+			'title'        => 'Munim Settings > Invoice',
 			'object_types' => [ 'options-page' ],
 			'option_key'   => self::$options_prefix . 'invoice',
-			'tab_group'    => 'munimji_settings',
+			'tab_group'    => 'munim_settings',
 			'tab_title'    => 'Invoice',
 			'display_cb'   => [ __CLASS__, 'render_settings' ],
-			'parent_slug'  => 'admin.php?page=munimji_settings_business',
+			'parent_slug'  => 'admin.php?page=munim_settings_business',
 		];
 
 		$invoice_settings = new_cmb2_box( $args );
@@ -189,16 +189,16 @@ class Settings {
 		$invoice_info = $invoice_settings->add_field(
 			[
 				'id'         => 'info',
-				'desc'       => __( 'Info to be displayed on invoice e.g. Tax No, Pan No etc', 'munimji' ),
+				'desc'       => __( 'Info to be displayed on invoice e.g. Tax No, Pan No etc', 'munim' ),
 				'type'       => 'group',
 				'repeatable' => true,
 				'options'    => [
-					'group_title'    => __( 'Info {#}', 'munimji' ),
-					'add_button'     => __( 'Add Info', 'munimji' ),
-					'remove_button'  => __( 'Remove Info', 'munimji' ),
+					'group_title'    => __( 'Info {#}', 'munim' ),
+					'add_button'     => __( 'Add Info', 'munim' ),
+					'remove_button'  => __( 'Remove Info', 'munim' ),
 					'sortable'       => true,
 					'closed'         => false,
-					'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'munimji' ),
+					'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'munim' ),
 				],
 			]
 		);
