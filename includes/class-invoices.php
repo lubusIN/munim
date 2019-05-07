@@ -42,6 +42,7 @@ class Invoices {
 		add_action( 'post_row_actions', [ __CLASS__, 'render_row_actions' ], 10, 2 );
 		add_action( 'cmb2_admin_init', [ __CLASS__, 'register_cmb' ] );
 		add_action( 'save_post_munim_invoice', [ __CLASS__, 'update_number' ], 10, 3 );
+		add_action( 'save_post_munim_invoice', [ __CLASS__, 'update_totals' ], 10, 3 );
 		add_action( 'admin_init', [ __CLASS__, 'generate_pdf' ] );
 	}
 
@@ -386,7 +387,6 @@ class Invoices {
 	 * @param  int     $post_id post id.
 	 * @param  WP_Post $post post object.
 	 * @param  bool    $update $updated_settings.
-	 * @return array   settings with updated last invoice number
 	 */
 	public static function update_number( $post_id, $post, $update ) {
 		// Bail out if autosave.
@@ -405,7 +405,7 @@ class Invoices {
 		}
 
 		// Bailout if invoice number already exisit.
-		if ( '' !== get_post_meta( $post_id, 'munim_invoice_number', true ) ) {
+		if ( '' !== $post->munim_invoice_number ) {
 			return;
 		}
 
@@ -416,6 +416,41 @@ class Invoices {
 		$updated_settings    = wp_parse_args( $last_invoice_number, $settings );
 
 		update_option( 'munim_settings_invoice', $updated_settings );
+	}
+
+	/**
+	 * Update last invoice number
+	 *
+	 * @param  int     $post_id post id.
+	 * @param  WP_Post $post post object.
+	 * @param  bool    $update $updated_settings.
+	 * @return array   settings with updated last invoice number
+	 */
+	public static function update_totals( $post_id, $post, $update ) {
+		// Bail out if autosave.
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		// Bailout if its revision.
+		if ( wp_is_post_revision( $post ) ) {
+			return;
+		}
+
+		// Bailout if post status is auto-draft.
+		if ( 'auto-draft' === $post->post_status ) {
+			return;
+		}
+
+		// Update items and taxes total.
+		$items_total = array_sum( wp_list_pluck( $post->munim_invoice_items, 'amount' ) );
+		$taxes_total = Helpers::get_tax_total( $post->munim_invoice_taxes, $items_total );
+		$total       = $items_total + $taxes_total;
+
+		update_post_meta( $post_id, 'munimji_invoice_subtotal', $items_total );
+		update_post_meta( $post_id, 'munimji_invoice_taxes_total', $taxes_total );
+		update_post_meta( $post_id, 'munimji_invoice_total', $total );
+
 	}
 
 	/**
