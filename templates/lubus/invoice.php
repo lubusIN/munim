@@ -114,30 +114,32 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 		<div id="taxes" class="clear-both">
 			<table width="100%">
 				<tbody>
-					<!-- Sub Total -->
-					<tr id="sub-total" class="border-bottom">
-						<td width="30%" class="filler"></td>
-						<td width="30%" class="filler"></td>
-						<td width="20%">Sub-Total</td>
-						<td width="20%" class="text-right">INR <?php echo $invoice_subtotal; ?></td>
-					</tr>
-
-					<!-- Taxes -->
-					<?php foreach ( $invoice_tax_items as $tax_item ) { ?>
-						<tr class="border-bottom">
+					<?php if ( $invoice_tax_items ) { ?>
+						<!-- Sub Total -->
+						<tr id="sub-total" class="border-bottom">
 							<td width="30%" class="filler"></td>
 							<td width="30%" class="filler"></td>
-							<td width="20%"><?php echo $tax_item['name']; ?> (<?php echo $tax_item['rate']; ?>%)</td>
-							<td width="20%" class="text-right">INR <?php echo round ( ( $tax_item['rate'] / 100 ) * $invoice_subtotal ); ?></td>
+							<td width="20%">Sub-Total</td>
+							<td width="20%" class="text-right"><?php echo $invoice_currency; ?> <?php echo $invoice_subtotal; ?></td>
 						</tr>
-					<?php } ?>
+
+						<!-- Taxes -->
+						<?php foreach ( $invoice_tax_items as $tax_item ) { ?>
+							<tr class="border-bottom">
+								<td width="30%" class="filler"></td>
+								<td width="30%" class="filler"></td>
+								<td width="20%"><?php echo $tax_item['name']; ?> (<?php echo $tax_item['rate']; ?>%)</td>
+								<td width="20%" class="text-right"><?php echo $invoice_currency; ?> <?php echo round ( ( $tax_item['rate'] / 100 ) * $invoice_subtotal ); ?></td>
+							</tr>
+						<?php } // End Taxes ?>
+					<?php } // End Invoice Taxes check ?>
 
 					<!-- Total -->
 					<tr id="total">
 						<td width="30%" class="filler"></td>
 						<td width="30%" class="filler"></td>
 						<td width="20%"><h2>Total</h2></td>
-						<td width="20%" class="text-right"><h2>INR <?php echo round( $invoice_total ); ?></h2></td>
+						<td width="20%" class="text-right"><h2><?php echo $invoice_currency; ?> <?php echo round( $invoice_total ); ?></h2></td>
 					</tr>
 				</tbody>
 			</table>
