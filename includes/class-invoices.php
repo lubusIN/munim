@@ -41,7 +41,7 @@ class Invoices {
 		add_action( 'admin_footer-post-new.php', [ __CLASS__, 'render_status_in_edit' ] );
 		add_action( 'post_row_actions', [ __CLASS__, 'render_row_actions' ], 10, 2 );
 		add_action( 'cmb2_admin_init', [ __CLASS__, 'register_cmb' ] );
-		add_action( 'wp_insert_post', [ __CLASS__, 'update_number' ], 10, 3 );
+		add_action( 'save_post_munim_invoice', [ __CLASS__, 'update_number' ], 10, 3 );
 		add_action( 'admin_init', [ __CLASS__, 'generate_pdf' ] );
 	}
 
@@ -399,13 +399,13 @@ class Invoices {
 			return;
 		}
 
-		// Bailout if post type is not munim_invoice.
-		if ( 'munim_invoice' !== $post->post_type ) {
+		// Bailout if post status is auto-draft.
+		if ( 'auto-draft' === $post->post_status ) {
 			return;
 		}
 
-		// Bailout if post status is auto-draft.
-		if ( 'auto-draft' === $post->post_status ) {
+		// Bailout if invoice number already exisit.
+		if ( '' !== get_post_meta( $post_id, 'munim_invoice_number', true ) ) {
 			return;
 		}
 
