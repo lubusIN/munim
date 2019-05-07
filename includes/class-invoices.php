@@ -483,7 +483,7 @@ class Invoices {
 
 		// Get HTML.
 		ob_start();
-		include MUNIM_PLUGIN_DIR . 'templates/lubus/invoice.php';
+		include MUNIM_PLUGIN_DIR . 'templates/minimal/invoice.php';
 		$html = ob_get_contents();
 		ob_end_clean();
 
@@ -491,7 +491,7 @@ class Invoices {
 		$dompdf = new DOMPDF();
 		$dompdf->loadHtml( $html );
 		$dompdf->setPaper( 'A4', 'portrait' );
-		$dompdf->setBasePath( MUNIM_PLUGIN_DIR . '/templates/lubus' );
+		$dompdf->setBasePath( MUNIM_PLUGIN_DIR . '/templates/minimal' );
 		$dompdf->render();
 		$dompdf->stream(
 			Helpers::get_file_name( $invoice_id ),
