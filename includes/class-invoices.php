@@ -461,9 +461,10 @@ class Invoices {
 		$dompdf->stream(
 			Helpers::get_file_name( $invoice_id ),
 			[
-				'compress'   => false,
+				'compress'   => true,
 				'Attachment' => ( 'download' === $action ),
 			]
 		);
+		exit();
 	}
 }
