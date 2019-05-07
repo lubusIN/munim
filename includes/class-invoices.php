@@ -270,9 +270,10 @@ class Invoices {
 
 		$invoice_details->add_field(
 			[
-				'name' => 'Date',
-				'id'   => self::$meta_prefix . 'date',
-				'type' => 'text_date',
+				'name'        => 'Date',
+				'id'          => self::$meta_prefix . 'date',
+				'type'        => 'text_date',
+				'date_format' => 'd/m/Y',
 			]
 		);
 

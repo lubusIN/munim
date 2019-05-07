@@ -63,7 +63,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 			</div>
 
 			<div id="details" class="clear-both">
-				<div id="business" class="float-left width-half">
+				<div id="business" class="float-left width-40">
 					<h2>Company Details</h2>
 					<ul class="data-list">
 						<?php foreach ( $munim_settings_invoice_info as $info ) { ?>
@@ -72,14 +72,16 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 					</ul>
 				</div>
 
-				<div id="client" class="float-right width-half text-right">
+				<div id="client" class="float-right width-60 text-right">
 					<h2>Recipient</h2>
 					<ul class="data-list">
 						<li><?php echo $invoice_client_name; ?></li>
 						<li>
 							<?php echo $invoice_client_data['munim_client_address_1']; ?><br />
-							<?php echo $invoice_client_data['munim_client_address_2'] . ' ' . $invoice_client_data['munim_client_city'] . '-' . $invoice_client_data['munim_client_zip']; ?><br />
-							<?php //echo $invoice_client_data['munim_client_state'] . ', ' . $invoice_client_data['munim_client_country']; ?>
+							<?php echo $invoice_client_data['munim_client_address_2']; ?><br />
+							<?php echo $invoice_client_data['munim_client_city']; ?>,
+							<?php echo $invoice_client_data['munim_client_state']; ?>
+							<?php echo $invoice_client_data['munim_client_zip']; ?>
 						</li>
 						<li>GSTIN: <?php echo $invoice_client_data['munim_client_gstin']; ?></li>
 					</ul>
@@ -123,7 +125,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 							<td width="30%" class="filler"></td>
 							<td width="30%" class="filler"></td>
 							<td width="20%"><?php echo $tax_item['name']; ?> (<?php echo $tax_item['rate']; ?>%)</td>
-							<td width="20%" class="text-right">INR <?php echo ( $tax_item['rate'] / 100 ) * $invoice_subtotal; ?></td>
+							<td width="20%" class="text-right">INR <?php echo round ( ( $tax_item['rate'] / 100 ) * $invoice_subtotal ); ?></td>
 						</tr>
 					<?php } ?>
 
@@ -132,7 +134,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 						<td width="30%" class="filler"></td>
 						<td width="30%" class="filler"></td>
 						<td width="20%"><h2>Total</h2></td>
-						<td width="20%" class="text-right"><h2>INR <?php echo $invoice_total; ?></h2></td>
+						<td width="20%" class="text-right"><h2>INR <?php echo round( $invoice_total ); ?></h2></td>
 					</tr>
 				</tbody>
 			</table>
@@ -147,7 +149,6 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 					<li>
 						<?php echo $munim_settings_business['address_1']; ?><br />
 						<?php echo $munim_settings_business['address_2'] . ' ' . $munim_settings_business['city'] . '-' . $munim_settings_business['zip']; ?><br />
-						<?php //echo $munim_settings_business['state'] . ', ' . $munim_settings_business['country']; ?>
 					</li>
 				</ul>
 			</div>

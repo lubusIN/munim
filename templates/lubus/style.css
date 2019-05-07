@@ -49,6 +49,14 @@ div.width-half{
 	width: 50%;
 }
 
+div.width-40{
+	width: 40%;
+}
+
+div.width-60{
+	width: 60%;
+}
+
 ul.data-list{
 	list-style: none;
 	padding: 0;
@@ -86,7 +94,7 @@ tr.border-bottom th{
 #meta{
 	background-color: #E6F5FD;
 	padding: 50px 50px 20px 50px;
-	height: 280px;
+	height: 300px;
 }
 
 #logo img{
