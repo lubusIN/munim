@@ -26,6 +26,7 @@ $invoice_client_id   = $invoice_data['munim_invoice_client_id'];
 $invoice_client_data = Helpers::array_shift( get_post_meta( $invoice_client_id ) );
 $invoice_client_name = get_the_title( $invoice_client_id );
 $invoice_items       = maybe_unserialize( $invoice_data['munim_invoice_items'] );
+$invoice_currency    = $invoice_client_data['munim_client_currency'];
 $invoice_tax_items   = maybe_unserialize( $invoice_data['munim_invoice_taxes'] );
 $invoice_logo        = get_attached_file( $munim_settings_business['logo_id'] );
 $invoice_icon        = get_attached_file( $munim_settings_business['secondary_logo_id'] );
@@ -101,7 +102,9 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 					<?php foreach ( $invoice_items as $item ) { ?>
 						<tr class="border-bottom">
 							<td><?php echo $item['name']; ?></td>
-							<td class="text-right">INR <?php echo $item['amount']; ?></td>
+							<td class="text-right">
+								<?php echo $invoice_currency; ?> <?php echo $item['amount']; ?>
+							</td>
 						</tr>
 					<?php } ?>
 				</tbody>

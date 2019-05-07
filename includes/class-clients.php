@@ -159,6 +159,17 @@ class Clients {
 
 		$client_details->add_field(
 			[
+				'name'             => 'Currency',
+				'desc'             => 'Select an currency',
+				'id'               => self::$meta_prefix . 'currency',
+				'type'             => 'select',
+				'show_option_none' => true,
+				'options'          => get_munim_currencies(),
+			]
+		);
+
+		$client_details->add_field(
+			[
 				'name' => 'GSTIN',
 				'id'   => self::$meta_prefix . 'gstin',
 				'type' => 'text_medium',
