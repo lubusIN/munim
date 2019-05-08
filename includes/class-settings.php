@@ -220,6 +220,77 @@ class Settings {
 				'type' => 'text',
 			]
 		);
+
+		// Bank Settings.
+		$args = [
+			'id'           => self::$options_prefix . 'bank',
+			'title'        => 'Munim Settings > Bank',
+			'object_types' => [ 'options-page' ],
+			'option_key'   => self::$options_prefix . 'bank',
+			'tab_group'    => 'munim_settings',
+			'tab_title'    => 'Bank',
+			'display_cb'   => [ __CLASS__, 'render_settings' ],
+			'parent_slug'  => 'admin.php?page=munim_settings_business',
+		];
+
+		$bank_settings = new_cmb2_box( $args );
+
+		// Bank settings field.
+		$bank_settings->add_field(
+			[
+				'name' => 'Account Name',
+				'id'   => 'account_name',
+				'type' => 'text',
+			]
+		);
+
+		$bank_settings->add_field(
+			[
+				'name' => 'Account Number',
+				'id'   => 'account_number',
+				'type' => 'text',
+			]
+		);
+
+		$bank_settings->add_field(
+			[
+				'name' => 'IFSC Code',
+				'id'   => 'ifsc_code',
+				'type' => 'text',
+			]
+		);
+
+		$bank_settings->add_field(
+			[
+				'name' => 'SWIFT Code',
+				'id'   => 'swift_code',
+				'type' => 'text',
+			]
+		);
+
+		$bank_settings->add_field(
+			[
+				'name' => 'Bank Name',
+				'id'   => 'bank_name',
+				'type' => 'text',
+			]
+		);
+
+		$bank_settings->add_field(
+			[
+				'name' => 'Branch Name',
+				'id'   => 'branch_name',
+				'type' => 'text',
+			]
+		);
+
+		$bank_settings->add_field(
+			[
+				'name' => 'Branch Code',
+				'id'   => 'branch_code',
+				'type' => 'text',
+			]
+		);
 	}
 
 	/**
