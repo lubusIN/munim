@@ -24,6 +24,7 @@ $invoice_name        = get_the_title( $invoice_id );
 $invoice_data        = Helpers::array_shift( get_post_meta( $invoice_id ) );
 $invoice_client_id   = $invoice_data['munim_invoice_client_id'];
 $invoice_client_data = Helpers::array_shift( get_post_meta( $invoice_client_id ) );
+$invoice_client_info = maybe_unserialize( $invoice_client_data['munim_client_additional_info'] );
 $invoice_client_name = get_the_title( $invoice_client_id );
 $invoice_items       = maybe_unserialize( $invoice_data['munim_invoice_items'] );
 $invoice_currency    = $invoice_client_data['munim_client_currency'];
@@ -84,7 +85,14 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 							<?php echo $invoice_client_data['munim_client_state']; ?>
 							<?php echo $invoice_client_data['munim_client_zip']; ?>
 						</li>
-						<li>GSTIN: <?php echo $invoice_client_data['munim_client_gstin']; ?></li>
+						<?php
+						if ( $invoice_client_info ) {
+							foreach ( $invoice_client_info as $info ) { ?>
+								<li><?php echo $info['name'] ?>: <?php echo $info['value']; ?></li>
+								<?php
+							}
+						}
+						?>
 					</ul>
 				</div>
 			</div>

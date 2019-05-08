@@ -168,11 +168,47 @@ class Clients {
 			]
 		);
 
-		$client_details->add_field(
+		// Register CMB2 for client additional info.
+		$args = [
+			'id'           => self::$meta_prefix . 'info',
+			'title'        => 'Additional Info',
+			'object_types' => [ 'munim_client' ],
+		];
+
+		$client_additional_info = new_cmb2_box( $args );
+
+		// Additional info.
+		$client_info = $client_additional_info->add_field(
 			[
-				'name' => 'GSTIN',
-				'id'   => self::$meta_prefix . 'gstin',
-				'type' => 'text_medium',
+				'id'         => self::$meta_prefix . 'additional_info',
+				'type'       => 'group',
+				'repeatable' => true,
+				'options'    => [
+					'group_title'    => __( 'Info {#}', 'munim' ),
+					'add_button'     => __( 'Add Info', 'munim' ),
+					'remove_button'  => __( 'Remove Info', 'munim' ),
+					'sortable'       => true,
+					'closed'         => false,
+					'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'munim' ),
+				],
+			]
+		);
+
+		$client_additional_info->add_group_field(
+			$client_info,
+			[
+				'name' => 'Name',
+				'id'   => 'name',
+				'type' => 'text',
+			]
+		);
+
+		$client_additional_info->add_group_field(
+			$client_info,
+			[
+				'name' => 'Value',
+				'id'   => 'value',
+				'type' => 'text',
 			]
 		);
 	}

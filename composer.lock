@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e2defb3abdebafddc05051c1b5c7934",
+    "content-hash": "cb0b39ff7566752c510a59dc819e7455",
     "packages": [
         {
             "name": "alexis-magina/cmb2-field-post-search-ajax",
