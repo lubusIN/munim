@@ -23,6 +23,9 @@ $munim_settings_invoice_info = $munim_settings_invoice['info'];
 $invoice_id          = $_GET['munim_invoice_id'];
 $invoice_name        = get_the_title( $invoice_id );
 $invoice_data        = Helpers::array_shift( get_post_meta( $invoice_id ) );
+$invoice_date        = date( $munim_settings_invoice['date_format'], $invoice_data['munim_invoice_date'] );
+
+$invoice_data        = Helpers::array_shift( get_post_meta( $invoice_id ) );
 $invoice_client_id   = $invoice_data['munim_invoice_client_id'];
 $invoice_client_data = Helpers::array_shift( get_post_meta( $invoice_client_id ) );
 $invoice_client_info = isset( $invoice_client_data['munim_client_additional_info'] ) ? maybe_unserialize( $invoice_client_data['munim_client_additional_info'] ) : false;
@@ -69,7 +72,7 @@ $invoice_icon        = get_attached_file( $munim_settings_business['secondary_lo
 					Invoice # <?php echo $invoice_data['munim_invoice_number']; ?>
 				</div>
 				<div id="invoice-date" class="float-right width-40 text-right">
-					Date: <?php echo $invoice_data['munim_invoice_date']; ?>
+					Date: <?php echo $invoice_date; ?>
 				</div>
 			</div>
 

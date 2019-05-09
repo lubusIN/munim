@@ -269,12 +269,14 @@ class Invoices {
 			]
 		);
 
+		$munim_settings_invoice = get_option( 'munim_settings_invoice', [] );
+
 		$invoice_details->add_field(
 			[
 				'name'        => 'Date',
 				'id'          => self::$meta_prefix . 'date',
-				'type'        => 'text_date',
-				'date_format' => 'd/m/Y',
+				'type'        => 'text_date_timestamp',
+				'date_format' => isset( $munim_settings_invoice['date_format']) ? $munim_settings_invoice['date_format'] : 'd/m/Y',
 			]
 		);
 

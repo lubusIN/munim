@@ -22,6 +22,8 @@ $munim_settings_invoice_info = $munim_settings_invoice['info'];
 $invoice_id          = $_GET['munim_invoice_id'];
 $invoice_name        = get_the_title( $invoice_id );
 $invoice_data        = Helpers::array_shift( get_post_meta( $invoice_id ) );
+$invoice_date        = date( $munim_settings_invoice['date_format'], $invoice_data['munim_invoice_date'] );
+
 $invoice_client_id   = $invoice_data['munim_invoice_client_id'];
 $invoice_client_data = Helpers::array_shift( get_post_meta( $invoice_client_id ) );
 $invoice_client_info = maybe_unserialize( $invoice_client_data['munim_client_additional_info'] );
@@ -59,7 +61,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 					<h1>Tax Invoice</h1>
 					<ul class="data-list">
 						<li>#<?php echo $invoice_data['munim_invoice_number']; ?></li>
-						<li><?php echo $invoice_data['munim_invoice_date']; ?></li>
+						<li><?php echo $invoice_date; ?></li>
 					</ul>
 				</div>
 			</div>

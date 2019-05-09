@@ -194,6 +194,15 @@ class Settings {
 			]
 		);
 
+		$invoice_settings->add_field(
+			[
+				'name'    => 'Date Format',
+				'id'      => 'date_format',
+				'type'    => 'text',
+				'default' => 'd/m/Y',
+			]
+		);
+
 		$invoice_info = $invoice_settings->add_field(
 			[
 				'id'         => 'info',
