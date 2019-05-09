@@ -160,6 +160,17 @@ $invoice_icon        = get_attached_file( $munim_settings_business['secondary_lo
 				</tbody>
 			</table>
 
+			<?php
+			if ( class_exists( NumberFormatter ) ) {
+				$number_formatter = new NumberFormatter( 'en', NumberFormatter::SPELLOUT );
+				$amount_in_words  = $number_formatter->format( $invoice_data['munim_invoice_total'] );
+				?>
+					<div id="amount-in-words">
+						<strong>Amount in words:</strong> Rupees <?php echo ucwords( $amount_in_words ); ?> Only
+					</div>
+			<?php } ?>
+
+
 			<div id="footer">
 				<strong>Bank Details</strong>
 				<ul class="data-list">
