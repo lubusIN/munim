@@ -489,9 +489,13 @@ class Invoices {
 			wp_die( 'Invalid request.' );
 		}
 
+		// Get template.
+		$munim_settings_template = get_option( 'munim_settings_template', [] );
+		$munim_template_path     = MUNIM_PLUGIN_DIR . 'templates/' . $munim_settings_template['template'];
+
 		// Get HTML.
 		ob_start();
-		include MUNIM_PLUGIN_DIR . 'templates/minimal/invoice.php';
+		include $munim_template_path . '/invoice.php';
 		$html = ob_get_contents();
 		ob_end_clean();
 
@@ -499,7 +503,7 @@ class Invoices {
 		$dompdf = new DOMPDF();
 		$dompdf->loadHtml( $html );
 		$dompdf->setPaper( 'A4', 'portrait' );
-		$dompdf->setBasePath( MUNIM_PLUGIN_DIR . '/templates/minimal' );
+		$dompdf->setBasePath( $munim_template_path );
 		$dompdf->render();
 		$dompdf->stream(
 			Helpers::get_file_name( $invoice_id ),

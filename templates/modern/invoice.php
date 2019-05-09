@@ -154,7 +154,7 @@ $invoice_icon        = get_attached_file( $munim_settings_business['secondary_lo
 
 						</td>
 						<td class="border-left" style="background-color: #e9e9e9">
-							<?php echo $invoice_data['munimji_invoice_total']; ?>
+							<?php echo $invoice_data['munim_invoice_total']; ?>
 						</td>
 					</tr>
 				</tbody>

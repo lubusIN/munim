@@ -286,6 +286,34 @@ class Settings {
 				'type' => 'text',
 			]
 		);
+
+		// Template Settings.
+		$args = [
+			'id'           => self::$options_prefix . 'template',
+			'title'        => 'Munim Settings > Template',
+			'object_types' => [ 'options-page' ],
+			'option_key'   => self::$options_prefix . 'template',
+			'tab_group'    => 'munim_settings',
+			'tab_title'    => 'Template',
+			'display_cb'   => [ __CLASS__, 'render_settings' ],
+			'parent_slug'  => 'admin.php?page=munim_settings_business',
+		];
+
+		$template_settings = new_cmb2_box( $args );
+		$screenshot_path   = MUNIM_PLUGIN_URL . 'templates/';
+
+		$template_settings->add_field(
+			[
+				'name'    => 'Use',
+				'id'      => 'template',
+				'type'    => 'radio_inline',
+				'options' => array(
+					'minimal' => __( 'Minimal <br/> <br/><img width="200px" src="' . $screenshot_path . 'minimal/screenshot.png" />', 'munim' ),
+					'modern'  => __( 'Modern <br/> <br/><img width="200px" src="' . $screenshot_path . 'modern/screenshot.png" />', 'munim' ),
+				),
+				'default' => 'minimal',
+			]
+		);
 	}
 
 	/**

@@ -22,3 +22,4 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 delete_option( 'munim_settings_business' );
 delete_option( 'munim_settings_invoice' );
 delete_option( 'munim_settings_bank' );
+delete_option( 'munim_settings_template' );
