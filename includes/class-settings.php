@@ -148,6 +148,14 @@ class Settings {
 
 		$business_settings->add_field(
 			[
+				'name' => 'Contact',
+				'id'   => 'contact',
+				'type' => 'text_small',
+			]
+		);
+
+		$business_settings->add_field(
+			[
 				'name' => 'Email',
 				'id'   => 'email',
 				'type' => 'text_email',
@@ -235,59 +243,37 @@ class Settings {
 
 		$bank_settings = new_cmb2_box( $args );
 
-		// Bank settings field.
-		$bank_settings->add_field(
+		$bank_info = $bank_settings->add_field(
 			[
-				'name' => 'Account Name',
-				'id'   => 'account_name',
+				'id'         => 'info',
+				'desc'       => __( 'Bank Account Details', 'munim' ),
+				'type'       => 'group',
+				'repeatable' => true,
+				'options'    => [
+					'group_title'    => __( 'Info {#}', 'munim' ),
+					'add_button'     => __( 'Add Info', 'munim' ),
+					'remove_button'  => __( 'Remove Info', 'munim' ),
+					'sortable'       => true,
+					'closed'         => false,
+					'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'munim' ),
+				],
+			]
+		);
+
+		$bank_settings->add_group_field(
+			$bank_info,
+			[
+				'name' => 'Name',
+				'id'   => 'name',
 				'type' => 'text',
 			]
 		);
 
-		$bank_settings->add_field(
+		$bank_settings->add_group_field(
+			$bank_info,
 			[
-				'name' => 'Account Number',
-				'id'   => 'account_number',
-				'type' => 'text',
-			]
-		);
-
-		$bank_settings->add_field(
-			[
-				'name' => 'IFSC Code',
-				'id'   => 'ifsc_code',
-				'type' => 'text',
-			]
-		);
-
-		$bank_settings->add_field(
-			[
-				'name' => 'SWIFT Code',
-				'id'   => 'swift_code',
-				'type' => 'text',
-			]
-		);
-
-		$bank_settings->add_field(
-			[
-				'name' => 'Bank Name',
-				'id'   => 'bank_name',
-				'type' => 'text',
-			]
-		);
-
-		$bank_settings->add_field(
-			[
-				'name' => 'Branch Name',
-				'id'   => 'branch_name',
-				'type' => 'text',
-			]
-		);
-
-		$bank_settings->add_field(
-			[
-				'name' => 'Branch Code',
-				'id'   => 'branch_code',
+				'name' => 'Value',
+				'id'   => 'value',
 				'type' => 'text',
 			]
 		);

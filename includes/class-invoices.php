@@ -444,12 +444,18 @@ class Invoices {
 
 		// Update items and taxes total.
 		$items_total = array_sum( wp_list_pluck( $post->munim_invoice_items, 'amount' ) );
-		$taxes_total = Helpers::get_tax_total( $post->munim_invoice_taxes, $items_total );
-		$total       = $items_total + $taxes_total;
+		update_post_meta( $post_id, 'munim_invoice_subtotal', $items_total );
 
-		update_post_meta( $post_id, 'munimji_invoice_subtotal', $items_total );
-		update_post_meta( $post_id, 'munimji_invoice_taxes_total', $taxes_total );
-		update_post_meta( $post_id, 'munimji_invoice_total', $total );
+		if ( isset( $post->munim_invoice_taxes ) ) {
+			$taxes_total = Helpers::get_tax_total( $post->munim_invoice_taxes, $items_total );
+			$total       = $items_total + $taxes_total;
+
+			update_post_meta( $post_id, 'munim_invoice_taxes_total', $taxes_total );
+			update_post_meta( $post_id, 'munim_invoice_total', $total );
+		} else {
+			update_post_meta( $post_id, 'munim_invoice_taxes_total', '0' );
+			update_post_meta( $post_id, 'munim_invoice_total', $items_total );
+		}
 
 	}
 

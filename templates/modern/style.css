@@ -1,0 +1,181 @@
+/* Common */
+@page{
+	margin: 0
+}
+
+@font-face {
+    font-family: 'nunito-regular';
+	src: url('fonts/Nunito/Nunito-Regular.ttf') format('truetype');
+	font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'nunito-extralight';
+	src: url('fonts/Nunito/Nunito-ExtraLight.ttf') format('truetype');
+	font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'nunito-bold';
+	src: url('fonts/Nunito/Nunito-Bold.ttf') format('truetype');
+	font-weight: normal;
+    font-style: normal;
+}
+
+*{
+	color: #2A2C32;
+	font-family: 'nunito-regular';
+	font-weight: normal;
+	font-style: normal;
+	font-size: 16px;
+
+	padding: 0;
+	margin: 0;
+	line-height: normal;
+}
+
+strong,th{
+	font-family: 'nunito-bold';
+	font-weight: normal;
+	font-style: normal;
+	font-size: 16px;
+}
+
+div.float-left{
+	float: left;
+}
+
+div.float-right{
+	float: right;
+}
+
+div.clear-both{
+	clear: both;
+}
+
+div.width-100{
+	width: 100%;
+}
+
+div.width-50{
+	width: 50%;
+}
+
+div.width-40{
+	width: 40%;
+}
+
+div.width-60{
+	width: 60%;
+}
+
+ul.data-list{
+	list-style: none;
+	padding: 0;
+}
+
+ul.data-list li{
+	line-height: unset;
+}
+
+table{
+	border-collapse: collapse;
+	width: 100%;
+}
+
+td{
+	padding: 10px 20px;
+}
+
+th.text-right,
+td.text-right,
+div.text-right {
+	text-align: right;
+}
+
+tr.border-bottom td,
+tr.border-bottom th{
+	border-bottom: 2px solid #2A2C32;
+}
+
+tr.border-left td,
+tr.border-left th
+th.border-left,
+td.border-left{
+	border-left: 2px solid #2A2C32;
+}
+
+tr.padding-top-0 td {
+	padding-top: 0px;
+}
+
+/* Invoice */
+div#header {
+	display: block;
+	width: 100%;
+	height: 296px;
+}
+
+div#header>img {
+	width: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+#header-content{
+	position: absolute;
+	padding: 80px 60px;
+}
+
+#brand-logo{
+	max-width: 55%;
+	margin-bottom: 10px;
+}
+
+#business-address{
+	color: #e9e9e9;
+	font-family: 'nunito-extralight';
+	font-weight: normal;
+	font-style: normal;
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+
+#business-contact{
+	color: #E0AC34;
+	font-family: 'nunito-bold';
+	font-weight: normal;
+	font-style: normal;
+	font-size: 16px;
+}
+
+span.circle-sep{
+	font-size: 15px;
+	color: #E0AC34;
+	display: inline-block;
+	line-height: 20%;
+}
+
+#body{
+	padding: 40px 50px 0px 50px;
+}
+
+#invoice-info{
+	height: 60px;
+}
+
+#invoice-items{
+	margin: 20px 0px;
+}
+
+#footer{
+	padding: 50px;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 6cm;
+}
