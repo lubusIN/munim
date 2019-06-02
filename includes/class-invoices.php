@@ -27,6 +27,8 @@ class Invoices {
 	 * @var string
 	 */
 	private static $meta_prefix = 'munim_invoice_';
+	private static $pdf_view_url;
+	private static $pdf_download_url;
 
 	/**
 	 * Init invoice
@@ -44,6 +46,7 @@ class Invoices {
 		add_action( 'save_post_munim_invoice', [ __CLASS__, 'update_number' ], 10, 3 );
 		add_action( 'save_post_munim_invoice', [ __CLASS__, 'update_totals' ], 10, 3 );
 		add_action( 'admin_init', [ __CLASS__, 'generate_pdf' ] );
+		add_action( 'post_submitbox_misc_actions', [ __CLASS__, 'add_pdf_actions' ] );
 	}
 
 	/**
@@ -200,26 +203,8 @@ class Invoices {
 		if ( 'munim_invoice' === $post->post_type ) {
 			unset( $actions['view'] ); // Remove post preview.
 
-			// Action to view pdf.
-			$view_url = add_query_arg(
-				[
-					'munim_action'     => 'view',
-					'munim_invoice_id' => $post->ID,
-					'nonce'              => wp_create_nonce( 'view' ),
-				]
-			);
-
-			// Action to download pdf.
-			$download_url = add_query_arg(
-				[
-					'munim_action'     => 'download',
-					'munim_invoice_id' => $post->ID,
-					'nonce'              => wp_create_nonce( 'download' ),
-				]
-			);
-
-			$actions['view']     = '<a href="' . $view_url . '" target="_blank">View</a>';
-			$actions['download'] = '<a href="' . $download_url . '">Download</a>';
+			$actions['view']     = '<a href="' . self::get_view_url() . '" target="_blank">View</a>';
+			$actions['download'] = '<a href="' . self::get_download_url() . '">Download</a>';
 		}
 
 		return $actions;
@@ -521,5 +506,55 @@ class Invoices {
 			]
 		);
 		exit();
+	}
+
+	/**
+	 * PDF view url.
+	 *
+	 * @return array
+	 */
+	public static function get_view_url() {
+		global $post;
+		$view_url = add_query_arg(
+			[
+				'munim_action'     => 'view',
+				'munim_invoice_id' => $post->ID,
+				'nonce'            => wp_create_nonce( 'view' ),
+			]
+		);
+		return $view_url;
+	}
+
+	/**
+	 * PDF download url.
+	 *
+	 * @return array
+	 */
+	public static function get_download_url() {
+		global $post;
+		$download_url = add_query_arg(
+			[
+				'munim_action'     => 'download',
+				'munim_invoice_id' => $post->ID,
+				'nonce'            => wp_create_nonce( 'download' ),
+			]
+		);
+		return $download_url;
+	}
+
+	/**
+	 * Add pdf actions to publish metabox
+	 *
+	 * @param WP_Post $post invoice post object.
+	 * @return void
+	 */
+	public static function add_pdf_actions( $post ) {
+		if ( 'munim_invoice' === $post->post_type ) {
+			echo '<div class="misc-pub-section misc-pub-section-pdf">';
+			echo '<a href="' . self::get_view_url() . '" class="button button-secondary" target="_blank"><span class="dashicons dashicons-visibility" style="margin-top: 3px"></span> View</a>';
+			echo '&nbsp;&nbsp;';
+			echo '<a href="' . self::get_download_url() . '" class="button button-secondary"><span class="dashicons dashicons-download" style="margin-top: 3px"></span>Download</a>';
+			echo '</div>';
+		}
 	}
 }
