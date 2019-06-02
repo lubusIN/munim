@@ -251,6 +251,10 @@ class Invoices {
 				'attributes' => array(
 					'readonly' => 'readonly',
 				),
+				'column'     => [
+					'position' => 1,
+					'name'     => 'Invoice No',
+				],
 			]
 		);
 
@@ -277,6 +281,10 @@ class Invoices {
 				'id'          => self::$meta_prefix . 'date',
 				'type'        => 'text_date_timestamp',
 				'date_format' => isset( $munim_settings_invoice['date_format']) ? $munim_settings_invoice['date_format'] : 'd/m/Y',
+				'column'     => [
+					'position' => 3,
+					'name'     => 'Invoice Date',
+				],
 			]
 		);
 
