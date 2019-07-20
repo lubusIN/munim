@@ -95,22 +95,48 @@ final class Munim {
 	 * Register Scripts.
 	 */
 	public function register_assets() {
+
+		$screen = get_current_screen();
+
+		// Bailout if not munim dashboard
+		if ( 'toplevel_page_admin?page=munim' !== $screen->id ) {
+			return;
+		}
+
 		// Scripts.
 		wp_register_script(
-			'munim-script',
-			MUNIM_PLUGIN_URL . '/assets/script.js',
+			'apexcharts-script',
+			'https://cdn.jsdelivr.net/npm/apexcharts',
 			[],
-			filemtime( MUNIM_PLUGIN_DIR . '/assets/script.js' ),
+			null,
+			true
+		);
+		wp_enqueue_script( 'apexcharts-script' );
+
+		wp_register_script(
+			'munim-script',
+			MUNIM_PLUGIN_URL . 'assets/js/script.js',
+			['apexcharts-script'],
+			filemtime( MUNIM_PLUGIN_DIR . 'assets/js/script.js' ),
 			true
 		);
 		wp_enqueue_script( 'munim-script' );
 
+		wp_register_script(
+			'munim-dashboard',
+			MUNIM_PLUGIN_URL . 'assets/js/dashboard.js',
+			[],
+			filemtime( MUNIM_PLUGIN_DIR . 'assets/js/dashboard.js' ),
+			true
+		);
+		wp_enqueue_script( 'munim-dashboard' );
+
 		// Styles.
 		wp_register_style(
 			'munim',
-			MUNIM_PLUGIN_URL . '/assets/style.css',
+			MUNIM_PLUGIN_URL . 'assets/css/style.css',
 			[],
-			filemtime( MUNIM_PLUGIN_DIR . '/assets/style.css' )
+			filemtime( MUNIM_PLUGIN_DIR . 'assets/css/style.css' )
 		);
 		wp_enqueue_style( 'munim' );
 	}
