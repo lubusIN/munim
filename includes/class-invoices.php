@@ -27,8 +27,6 @@ class Invoices {
 	 * @var string
 	 */
 	private static $meta_prefix = 'munim_invoice_';
-	private static $pdf_view_url;
-	private static $pdf_download_url;
 
 	/**
 	 * Init invoice
@@ -37,6 +35,8 @@ class Invoices {
 	 */
 	public static function init() {
 		add_action( 'init', [ __CLASS__, 'register_cpt' ], 0 );
+		add_filter( 'gettext', [ __CLASS__, 'rename_text'] );
+		add_filter( 'ngettext', [ __CLASS__, 'rename_text'] );
 		add_action( 'init', [ __CLASS__, 'register_status' ] );
 		add_action( 'admin_footer-edit.php', [ __CLASS__, 'render_status_in_quick_edit' ] );
 		add_action( 'admin_footer-post.php', [ __CLASS__, 'render_status_in_edit' ] );
@@ -105,6 +105,28 @@ class Invoices {
 			'show_in_rest'        => false,
 		);
 		register_post_type( 'munim_invoice', $args );
+	}
+
+	/**
+	 * Rename text
+	 *
+	 * @param string $translated
+	 * @return void
+	 */
+	public static function rename_text( $translated ) {
+		// Bailout if not invoices.
+		if ( 'munim_invoice' !== get_post_type() ) {
+			return $translated;
+		}
+
+		$words = array(
+			// 'word to translate' = > 'translation'
+			'Published' => 'Issued',
+			'Publish'   => 'Issue',
+		);
+
+		$translated = str_ireplace(  array_keys($words),  $words,  $translated );
+		return $translated;
 	}
 
 	/**
