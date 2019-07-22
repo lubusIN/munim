@@ -117,8 +117,8 @@ class Invoices {
 		$args = [
 			'label'                     => _x( 'outstanding', 'Outstanding Invoices', 'munim' ),
 			/* translators: Outstanding invoices count */
-			'label_count'               => _n_noop( 'outstanding (%s)', 'outstanding (%s)', 'munim' ),
-			'public'                    => false,
+			'label_count'               => _n_noop( 'Outstanding <span class="count">(%s)</span>', 'outstanding <span class="count">(%s)</span>', 'munim' ),
+			'public'                    => true,
 			'show_in_admin_all_list'    => true,
 			'show_in_admin_status_list' => true,
 			'exclude_from_search'       => true,
@@ -129,8 +129,8 @@ class Invoices {
 		$args = [
 			'label'                     => _x( 'paid', 'Paid Invoices', 'munim' ),
 			/* translators: Paid invoices count */
-			'label_count'               => _n_noop( 'paid (%s)', 'paid (%s)', 'munim' ),
-			'public'                    => false,
+			'label_count'               => _n_noop( 'Paid <span class="count">(%s)</span>', 'Paid <span class="count">(%s)</span>', 'munim' ),
+			'public'                    => true,
 			'show_in_admin_all_list'    => true,
 			'show_in_admin_status_list' => true,
 			'exclude_from_search'       => true,
@@ -141,8 +141,8 @@ class Invoices {
 		$args = [
 			'label'                     => _x( 'cancelled', 'Cancelled Invoices', 'munim' ),
 			/* translators: Cancelled invoices count */
-			'label_count'               => _n_noop( 'cancelled (%s)', 'cancelled (%s)', 'munim' ),
-			'public'                    => false,
+			'label_count'               => _n_noop( 'Cancelled <span class="count">(%s)</span>', 'Cancelled <span class="count">(%s)</span>', 'munim' ),
+			'public'                    => true,
 			'show_in_admin_all_list'    => true,
 			'show_in_admin_status_list' => true,
 			'exclude_from_search'       => true,
