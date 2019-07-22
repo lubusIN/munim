@@ -137,7 +137,7 @@ class Invoices {
 	public static function register_status() {
 		// Outstanding.
 		$args = [
-			'label'                     => _x( 'outstanding', 'Outstanding Invoices', 'munim' ),
+			'label'                     => _x( 'Outstanding', 'Outstanding Invoices', 'munim' ),
 			/* translators: Outstanding invoices count */
 			'label_count'               => _n_noop( 'Outstanding <span class="count">(%s)</span>', 'outstanding <span class="count">(%s)</span>', 'munim' ),
 			'public'                    => true,
@@ -149,7 +149,7 @@ class Invoices {
 
 		// Paid.
 		$args = [
-			'label'                     => _x( 'paid', 'Paid Invoices', 'munim' ),
+			'label'                     => _x( 'Paid', 'Paid Invoices', 'munim' ),
 			/* translators: Paid invoices count */
 			'label_count'               => _n_noop( 'Paid <span class="count">(%s)</span>', 'Paid <span class="count">(%s)</span>', 'munim' ),
 			'public'                    => true,
@@ -161,7 +161,7 @@ class Invoices {
 
 		// Cancelled.
 		$args = [
-			'label'                     => _x( 'cancelled', 'Cancelled Invoices', 'munim' ),
+			'label'                     => _x( 'Cancelled', 'Cancelled Invoices', 'munim' ),
 			/* translators: Cancelled invoices count */
 			'label_count'               => _n_noop( 'Cancelled <span class="count">(%s)</span>', 'Cancelled <span class="count">(%s)</span>', 'munim' ),
 			'public'                    => true,
@@ -183,14 +183,17 @@ class Invoices {
 			return;
 		}
 
-		echo "<script>
+		$script = "<script>
 				jQuery(document).ready( function() {
 					jQuery( 'select[name=\"_status\"]' )
-						.append( '<option value=\"outstanding\">Outstanding</option>' )
+						.append( '<option value=\"outstanding\">Outstanding Test</option>' )
 						.append( '<option value=\"paid\">Paid</option>' )
-						.append( '<option value=\"cancelled\">Cancelled</option>' );
+						.append( '<option value=\"cancelled\">Cancelled</option>' )
+						.val('%s');
 					});
-			 </script>";
+			</script>";
+
+		echo sprintf( $script, 'paid' );
 	}
 
 	/**
@@ -204,14 +207,21 @@ class Invoices {
 			return;
 		}
 
-		echo "<script>
+		$invoice_status_slug = get_post_status();
+		$invoice_status_label = get_post_status_object( $invoice_status_slug )->label;
+
+		$script = "<script>
 				jQuery(document).ready( function() {
 					jQuery( 'select[name=\"post_status\"]' )
 						.append( '<option value=\"outstanding\">Outstanding</option>' )
 						.append( '<option value=\"paid\">Paid</option>' )
-						.append( '<option value=\"cancelled\">Cancelled</option>' );
+						.append( '<option value=\"cancelled\">Cancelled</option>' )
+						.val('%1\$s');
 				});
-			 </script>";
+				jQuery( '#post-status-display' ).text( '%2\$s' );
+			</script>";
+
+		echo sprintf( $script, $invoice_status_slug, $invoice_status_label );
 	}
 
 	/**
