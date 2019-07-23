@@ -22,31 +22,31 @@ use LubusIN\Munim\Helpers;
 			<h2 class="font-bold px-4 py-2 bg-white border border-b-0 border-gray-300">Overview</h2>
 			<div class="flex flex-wrap bg-white border border-gray-300">
 				<div class="w-1/2 flex flex-col p-4 border-b border-r border-gray-300">
-					<span class="text-xl mb-2">₹ 10,000</span>
+					<span class="text-xl mb-2">₹ <?php echo number_format( Helpers::get_total( 'gross' ) ); ?></span>
 					<span class="text-gray-500">Gross For Month</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-gray-300">
-					<span class="text-xl mb-2">₹ 8,000</span>
+					<span class="text-xl mb-2">₹ <?php echo number_format( Helpers::get_total( 'net' ) ); ?></span>
 					<span class="text-gray-500">Net For Month</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-r border-gray-300">
-					<span class="text-xl mb-2">₹ 6,000</span>
+					<span class="text-xl mb-2">₹ 0</span>
 					<span class="text-gray-500">Receipts For Month</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-gray-300">
-					<span class="text-xl mb-2">₹ 4,000</span>
-					<span class="text-gray-500">Outstanding For Month</span>
+					<span class="text-xl mb-2">₹ 0</span>
+					<span class="text-gray-500">Due For Month</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-r border-gray-300">
-					<span class="text-xl mb-2">₹ 2,000</span>
-					<span class="text-gray-500">GST Payable</span>
+					<span class="text-xl mb-2">₹ <?php echo number_format( Helpers::get_total( 'taxes', 'previous' ) ); ?></span>
+					<span class="text-gray-500">Tax Payable</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-gray-300">
-					<span class="text-xl mb-2">₹ 1,000</span>
-					<span class="text-gray-500">GST Current</span>
+					<span class="text-xl mb-2">₹ <?php echo number_format( Helpers::get_total( 'taxes' ) ); ?></span>
+					<span class="text-gray-500">Tax Current</span>
 				</div>
 				<div class="w-full flex flex-col p-4">
-					<span class="text-xl mb-2">₹ 10,000</span>
+					<span class="text-xl mb-2">₹ 0</span>
 					<span class="text-gray-500">TDS For Year</span>
 				</div>
 			</div>
@@ -119,7 +119,7 @@ use LubusIN\Munim\Helpers;
 
 					<?php foreach ($munim_recent_invoices as $invoice) : ?>
 						<li class="flex flex-wrap px-4 mb-4">
-							<span class="w-4/6">
+							<span class="w-4/6 text-blue-600">
 								<a href="<?php echo get_edit_post_link( $invoice );  ?>">
 									<?php echo $invoice->post_title; ?>
 								</a>

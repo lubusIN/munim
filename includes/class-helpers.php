@@ -162,4 +162,73 @@ class Helpers {
 
 		return $classes;
 	}
+
+	public static function get_total( $data, $period = 'current', $status = 'all'  ) {
+		$stat = 0;
+
+		$stat_args = [
+			'posts_per_page' => '-1',
+			'post_type' => 'munim_invoice',
+		];
+
+		if ( 'all' === $status ) {
+			$stat_args['post_status'] = [
+				'publish',
+				'paid',
+				'partial',
+			];
+		}
+
+		if ( 'current' === $period ) {
+			$stat_args['meta_query'] = [
+				[
+					'key'     => 'munim_invoice_date',
+					'compare' => '>',
+					'value'   => strtotime( 'last day of previous month', time() ),
+					'type'    => 'numeric',
+				],
+			];
+		}
+
+		if ( 'previous' === $period ) {
+			$stat_args['meta_query'] = [
+				[
+					'key'     => 'munim_invoice_date',
+					'compare' => 'BETWEEN',
+					'value'   => [
+						strtotime( 'last day of -2 months', time() ),
+						strtotime( 'last day of previous month', time() )
+					],
+					'type'    => 'numeric',
+				],
+			];
+		}
+
+		$stat_query = new \WP_Query( $stat_args );
+		$stat_invoices = $stat_query->get_posts();
+
+		if ( $stat_invoices ) {
+			foreach ( $stat_invoices as $invoice ) {
+				switch ($data) {
+					case 'gross':
+							$stat += $invoice->munim_invoice_total;
+						break;
+
+					case 'net':
+							$stat += $invoice->munim_invoice_subtotal;
+						break;
+
+					case 'taxes':
+							$stat += $invoice->munim_invoice_taxes_total;
+						break;
+
+					default:
+							$stat = 0;
+						break;
+				}
+			}
+		}
+
+		return $stat;
+	}
 }
