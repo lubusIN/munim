@@ -159,6 +159,18 @@ class Invoices {
 		];
 		register_post_status( 'paid', $args );
 
+		// Partial.
+		$args = [
+			'label'                     => _x( 'Partial', 'Partial Invoices', 'munim' ),
+			/* translators: Partial invoices count */
+			'label_count'               => _n_noop( 'Partial <span class="count">(%s)</span>', 'Partial <span class="count">(%s)</span>', 'munim' ),
+			'public'                    => true,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			'exclude_from_search'       => true,
+		];
+		register_post_status( 'partial', $args );
+
 		// Cancelled.
 		$args = [
 			'label'                     => _x( 'Cancelled', 'Cancelled Invoices', 'munim' ),
@@ -188,8 +200,9 @@ class Invoices {
 		$script = "<script>
 				jQuery(document).ready( function() {
 					jQuery( 'select[name=\"_status\"]' )
-						.append( '<option value=\"outstanding\">Outstanding Test</option>' )
+						.append( '<option value=\"outstanding\">Outstanding</option>' )
 						.append( '<option value=\"paid\">Paid</option>' )
+						.append( '<option value=\"partial\">Partial</option>' )
 						.append( '<option value=\"cancelled\">Cancelled</option>' )
 						.val('%1\$s');
 					});
@@ -217,6 +230,7 @@ class Invoices {
 					jQuery( 'select[name=\"post_status\"]' )
 						.append( '<option value=\"outstanding\">Outstanding</option>' )
 						.append( '<option value=\"paid\">Paid</option>' )
+						.append( '<option value=\"partial\">Partial</option>' )
 						.append( '<option value=\"cancelled\">Cancelled</option>' )
 						.val('%1\$s');
 				});

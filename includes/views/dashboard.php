@@ -1,4 +1,6 @@
 <?php
+use LubusIN\Munim\Helpers;
+
 /**
  * Dashboard View.
  *
@@ -54,28 +56,40 @@
 			<h2 class="font-bold px-4 py-2 bg-white border border-b-0 border-gray-300">Status</h2>
 			<div class="flex flex-wrap bg-white border border-2 border-gray-300">
 				<div class="w-1/2 flex flex-col p-4 border-b border-r border-gray-300" >
-					<span class="text-xl mb-2">5</span>
+					<span class="text-xl mb-2">
+						<?php echo Helpers::get_invoice_status_count();  ?>
+					</span>
 					<span class="text-gray-500">Issued</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-gray-300">
-					<span class="text-xl mb-2">0</span>
+					<span class="text-xl mb-2">
+						<?php echo Helpers::get_invoice_status_count( 'cancelled' );  ?>
+					</span>
 					<span class="text-gray-500">Cancelled</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-r border-gray-300">
-					<span class="text-xl mb-2">3</span>
+					<span class="text-xl mb-2">
+						<?php echo Helpers::get_invoice_status_count( 'paid' );  ?>
+					</span>
 					<span class="text-gray-500">Paid</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b xborder-gray-300">
-					<span class="text-xl mb-2">1</span>
+					<span class="text-xl mb-2">
+						<?php echo Helpers::get_invoice_status_count( 'partial' );  ?>
+					</span>
 					<span class="text-gray-500">Partially Paid</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-r  border-gray-300">
-					<span class="text-xl mb-2">1</span>
-					<span class="text-gray-500">Pending Current</span>
+					<span class="text-xl mb-2">
+						<?php echo Helpers::get_invoice_status_count() - Helpers::get_invoice_status_count( ['paid', 'cancelled'] );  ?>
+					</span>
+					<span class="text-gray-500">Outstanding Current</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-gray-300">
-					<span class="text-xl mb-2">1</span>
-					<span class="text-gray-500">Pending Previous</span>
+					<span class="text-xl mb-2">
+						<?php echo Helpers::get_invoice_status_count( '', 'previous' ) - Helpers::get_invoice_status_count( ['paid', 'cancelled'], 'previous' );  ?>
+					</span>
+					<span class="text-gray-500">Outstanding Previous</span>
 				</div>
 				<div class="w-full flex flex-col p-4">
 					<button class="flex justify-center w-1/2 border-2 border-blue-500 bg-blue-100 rounded-lg p-2 mx-auto align-center">
