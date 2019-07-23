@@ -83,13 +83,13 @@ use LubusIN\Munim\Helpers;
 					<span class="text-xl mb-2">
 						<?php echo Helpers::get_invoice_status_count() - Helpers::get_invoice_status_count( ['paid', 'cancelled'] );  ?>
 					</span>
-					<span class="text-gray-500">Outstanding Current</span>
+					<span class="text-gray-500">Due</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-gray-300">
 					<span class="text-xl mb-2">
 						<?php echo Helpers::get_invoice_status_count( '', 'previous' ) - Helpers::get_invoice_status_count( ['paid', 'cancelled'], 'previous' );  ?>
 					</span>
-					<span class="text-gray-500">Outstanding Previous</span>
+					<span class="text-gray-500">Overdue</span>
 				</div>
 				<div class="w-full flex flex-col p-4">
 					<button class="flex justify-center w-1/2 border-2 border-blue-500 bg-blue-100 rounded-lg p-2 mx-auto align-center">
@@ -107,54 +107,37 @@ use LubusIN\Munim\Helpers;
 		</div>
 
 		<div id="munim-recent-invoices" class="w-1/3 px-2">
-			<h2 class="font-bold px-4 py-2 bg-white border border-b-0 border-gray-300">Recent Invoices</h2>
+			<h2 class="font-bold px-4 py-2 bg-white border border-b-0 border-gray-300">Recent</h2>
 			<div class="flex flex-wrap bg-white border border-2 border-gray-300">
+				<?php $munim_recent_invoices = Helpers::get_recent_invoices(); ?>
 				<ul class="py-4 w-full">
 					<li class="flex flex-wrap font-bold px-4 mb-4">
-						<span class="w-1/2">Client</span>
-						<span class="w-1/3">Amount</span>
-						<span class="w-1/6">Status</span>
+							<span class="w-4/6">Client</span>
+							<span class="w-1/6">Amount</span>
+							<span class="w-1/6">Status</span>
 					</li>
 
-					<li class="flex flex-wrap px-4 mb-4">
-						<span class="w-1/2">Exotel Pvt Ltd</span>
-						<span class="w-1/3">40,000</span>
-						<span class="w-1/6">
-							<span class="bg-red-100 block rounded-full text-center text-xs text-red-500 font-medium border-2 border-red-200">pending</span>
-						</span>
-					</li>
-
-					<li class="flex flex-wrap px-4 mb-4">
-						<span class="w-1/2">Exotel Pvt Ltd</span>
-						<span class="w-1/3">40,000</span>
-						<span class="w-1/6">
-							<span class="bg-red-100 block rounded-full text-center text-xs text-red-500 font-medium border-2 border-red-200">pending</span>
-						</span>
-					</li>
-					<li class="flex flex-wrap px-4 mb-4">
-						<span class="w-1/2">Exotel Pvt Ltd</span>
-						<span class="w-1/3">40,000</span>
-						<span class="w-1/6">
-							<span class="bg-red-100 block rounded-full text-center text-xs text-red-500 font-medium border-2 border-red-200">pending</span>
-						</span>
-					</li>
-					<li class="flex flex-wrap px-4 mb-4">
-						<span class="w-1/2">Exotel Pvt Ltd</span>
-						<span class="w-1/3">40,000</span>
-						<span class="w-1/6">
-							<span class="bg-red-100 block rounded-full text-center text-xs text-red-500 font-medium border-2 border-red-200">pending</span>
-						</span>
-					</li>
-					<li class="flex flex-wrap px-4 mb-4">
-						<span class="w-1/2">Exotel Pvt Ltd</span>
-						<span class="w-1/3">40,000</span>
-						<span class="w-1/6">
-							<span class="bg-red-100 block rounded-full text-center text-xs text-red-500 font-medium border-2 border-red-200">pending</span>
-						</span>
-					</li>
+					<?php foreach ($munim_recent_invoices as $invoice) : ?>
+						<li class="flex flex-wrap px-4 mb-4">
+							<span class="w-4/6">
+								<a href="<?php echo get_edit_post_link( $invoice );  ?>">
+									<?php echo $invoice->post_title; ?>
+								</a>
+							</span>
+							<span class="w-1/6">
+								₹ <?php echo number_format( $invoice->munim_invoice_total ); ?>
+							</span>
+							<span class="w-1/6">
+								<?php $invoice_status = Helpers::get_invoice_status( $invoice->post_status ); ?>
+								<span class="<?php echo Helpers::get_status_classes( $invoice_status ) ?> block rounded-full text-center text-xs font-medium">
+									<?php echo $invoice_status; ?>
+								</span>
+							</span>
+						</li>
+					<?php endforeach; ?>
 				</ul>
 				<div class="p-4 w-full text-center border-t border-gray-300 font-medium">
-					<a href="">View All</a>
+					<a href="<?php echo admin_url( 'edit.php?post_type=munim_invoice' ); ?>">View All</a>
 				</div>
 			</div>
 		</div>

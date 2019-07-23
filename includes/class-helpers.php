@@ -69,7 +69,7 @@ class Helpers {
 	 *
 	 * @param string $status
 	 * @param string $period
-	 * @return void
+	 * @return int
 	 */
 	public static function get_invoice_status_count( $status = '', $period = 'current' ) {
 		$count = 0;
@@ -110,5 +110,56 @@ class Helpers {
 		$count = $count_query->found_posts;
 
 		return $count;
+	}
+
+	/**
+	 * Get Recent Invoices
+	 *
+	 * @return array_object
+	 */
+	public static function get_recent_invoices() {
+		$recent_args = [
+			'posts_per_page' => '5',
+			'post_type' => 'munim_invoice',
+		];
+
+		$invoices = new \WP_Query( $recent_args );
+
+		return $invoices->get_posts();
+	}
+
+	/**
+	 * Get status for display
+	 *
+	 * @param string $status
+	 * @return string
+	 */
+	public static function get_invoice_status( $status ) {
+		$status = 'publish' === $status ? 'issued' : $status;
+		return $status;
+	}
+
+	/**
+	 * Get css classes for status
+	 *
+	 * @param string $status
+	 * @return string
+	 */
+	public static function get_status_classes( $status ){
+		$classes = '';
+		switch ( $status ) {
+			case 'outstanding':
+					$classes = 'bg-red-100 border-2 border-red-200 text-red-500';
+				break;
+
+			case 'paid':
+					$classes = 'bg-green-100 border-2 border-green-200 text-green-500';
+				break;
+			default:
+					$classes = 'bg-indigo-100 border-2 border-indigo-200 text-indigo-500';
+				break;
+		}
+
+		return $classes;
 	}
 }
