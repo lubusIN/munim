@@ -183,18 +183,20 @@ class Invoices {
 			return;
 		}
 
+		$invoice_status_slug = get_post_status();
+
 		$script = "<script>
 				jQuery(document).ready( function() {
 					jQuery( 'select[name=\"_status\"]' )
 						.append( '<option value=\"outstanding\">Outstanding Test</option>' )
 						.append( '<option value=\"paid\">Paid</option>' )
 						.append( '<option value=\"cancelled\">Cancelled</option>' )
-						.val('%s');
+						.val('%1\$s');
 					});
 			</script>";
 
-		echo sprintf( $script, 'paid' );
-	}
+			echo sprintf( $script, $invoice_status_slug);
+		}
 
 	/**
 	 * Render status in add/edit screen.
