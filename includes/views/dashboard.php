@@ -112,7 +112,7 @@ use LubusIN\Munim\Helpers;
 				<?php $munim_recent_invoices = Helpers::get_recent_invoices(); ?>
 				<ul class="py-4 w-full">
 					<li class="flex flex-wrap font-bold px-4 mb-4">
-							<span class="w-4/6">Client</span>
+							<span class="w-4/6">Name</span>
 							<span class="w-1/6">Amount</span>
 							<span class="w-1/6">Status</span>
 					</li>
