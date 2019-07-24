@@ -171,6 +171,14 @@ class Helpers {
 		return $classes;
 	}
 
+	/**
+	 * Get data total
+	 *
+	 * @param string $data
+	 * @param string $period
+	 * @param string $status
+	 * @return int total
+	 */
 	public static function get_total( $data, $period = 'current', $status = 'all'  ) {
 		$stat = 0;
 
@@ -200,6 +208,25 @@ class Helpers {
 			];
 		}
 
+		if ( 'financial' === $period ) {
+			$financial_year_to = (date('m') > 3) ? date('y') +1 : date('y');
+			$financial_year_from = $financial_year_to - 1;
+			$m_start_date = date( $financial_year_from . '-04-01' );
+			$m_end_date = date( $financial_year_to . '-03-31' );
+
+			$stat_args['meta_query'] = [
+				[
+					'key'     => 'munim_invoice_date',
+					'compare' => 'BETWEEN',
+					'value'   => [
+						strtotime( $m_start_date ),
+						strtotime( $m_end_date )
+					],
+					'type'    => 'numeric',
+				],
+			];
+		}
+
 		if ( 'previous' === $period ) {
 			$stat_args['meta_query'] = [
 				[
@@ -212,6 +239,17 @@ class Helpers {
 					'type'    => 'numeric',
 				],
 			];
+		}
+
+		if ( 'tds' === $data ) {
+			$stat_args['meta_query']['relation'] = 'AND';
+
+			$stat_args['meta_query'][] =
+				[
+					'key'     => 'munim_invoice_tds',
+					'compare' => '=',
+					'value'   => 'on',
+				];
 		}
 
 		$stat_query = new \WP_Query( $stat_args );
@@ -230,6 +268,9 @@ class Helpers {
 
 					case 'taxes':
 							$stat += $invoice->munim_invoice_taxes_total;
+						break;
+					case 'tds':
+							$stat += $invoice->munim_invoice_tds_amount;
 						break;
 
 					default:

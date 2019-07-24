@@ -203,6 +203,15 @@ class Settings {
 			]
 		);
 
+		$invoice_settings->add_field(
+			[
+				'name'    => 'TDS %',
+				'id'      => 'tds',
+				'type'    => 'text',
+				'default' => '10',
+			]
+		);
+
 		$invoice_info = $invoice_settings->add_field(
 			[
 				'id'         => 'info',

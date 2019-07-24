@@ -46,7 +46,7 @@ use LubusIN\Munim\Helpers;
 					<span class="text-gray-500">Tax Current</span>
 				</div>
 				<div class="w-full flex flex-col p-4">
-					<span class="text-xl mb-2">₹ 0</span>
+					<span class="text-xl mb-2">₹ <?php echo number_format( Helpers::get_total( 'tds', 'financial' ) ); ?></span>
 					<span class="text-gray-500">TDS For Year</span>
 				</div>
 			</div>

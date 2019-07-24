@@ -44,7 +44,7 @@ class Invoices {
 		add_action( 'post_row_actions', [ __CLASS__, 'render_row_actions' ], 10, 2 );
 		add_action( 'cmb2_admin_init', [ __CLASS__, 'register_cmb' ] );
 		add_action( 'save_post_munim_invoice', [ __CLASS__, 'update_number' ], 10, 3 );
-		add_action( 'save_post_munim_invoice', [ __CLASS__, 'update_totals' ], 10, 3 );
+		add_action( 'wp_insert_post', [ __CLASS__, 'update_totals' ], 10, 3 );
 		add_action( 'admin_init', [ __CLASS__, 'generate_pdf' ] );
 		add_action( 'post_submitbox_misc_actions', [ __CLASS__, 'add_pdf_actions' ] );
 	}
@@ -264,7 +264,6 @@ class Invoices {
 	 * @return void
 	 */
 	public static function register_cmb() {
-
 		// Register CMB2 for invoice info.
 		$args = [
 			'id'           => self::$meta_prefix . 'details',
@@ -318,6 +317,24 @@ class Invoices {
 					'position' => 3,
 					'name'     => 'Invoice Date',
 				],
+			]
+		);
+
+		$invoice_details->add_field(
+			[
+				'name'        => 'TDS',
+				'id'          => self::$meta_prefix . 'tds',
+				'type'        => 'checkbox',
+			]
+		);
+
+		$invoice_details->add_field(
+			[
+				'name'        => 'TDS Value',
+				'id'          => self::$meta_prefix . 'tds_percent',
+				'type'        => 'text_small',
+				'after_field' => '%',
+				'default_cb'  => [ __CLASS__, 'get_tds' ],
 			]
 		);
 
@@ -425,6 +442,18 @@ class Invoices {
 	}
 
 	/**
+	 * Generate TDS %
+	 *
+	 * @return string TDS %
+	 */
+	public static function get_tds() {
+		$settings = get_option( 'munim_settings_invoice', array() );
+		$tds   = ! empty( $settings ) && isset( $settings['tds'] ) ? $settings['tds'] : 10;
+
+		return $tds;
+	}
+
+	/**
 	 * Update last invoice number
 	 *
 	 * @param  int     $post_id post id.
@@ -475,6 +504,11 @@ class Invoices {
 			return;
 		}
 
+		// Bailout if not invoices.
+		if ( 'munim_invoice' !== get_post_type() ) {
+			return;
+		}
+
 		// Bailout if its revision.
 		if ( wp_is_post_revision( $post ) ) {
 			return;
@@ -499,6 +533,10 @@ class Invoices {
 			update_post_meta( $post_id, 'munim_invoice_taxes_total', '0' );
 			update_post_meta( $post_id, 'munim_invoice_total', $items_total );
 		}
+
+		// Update tds amount.
+		$amount = ( $items_total * $post->munim_invoice_tds_percent ) / 100;
+		update_post_meta( $post_id, 'munim_invoice_tds_amount', $amount );
 
 	}
 
