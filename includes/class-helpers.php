@@ -177,6 +177,8 @@ class Helpers {
 				'paid',
 				'partial',
 			];
+		} else {
+			$stat_args['post_status'] = $status;
 		}
 
 		if ( 'current' === $period ) {
