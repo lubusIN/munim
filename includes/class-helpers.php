@@ -159,6 +159,10 @@ class Helpers {
 			case 'paid':
 					$classes = 'bg-green-100 border-2 border-green-200 text-green-500';
 				break;
+
+			case 'partial':
+					$classes = 'bg-orange-100 border-2 border-orange-200 text-orange-500';
+				break;
 			default:
 					$classes = 'bg-indigo-100 border-2 border-indigo-200 text-indigo-500';
 				break;
