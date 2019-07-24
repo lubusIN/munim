@@ -89,19 +89,23 @@ class Helpers {
 		}
 
 		if ( 'current' === $period ) {
-			$count_args['date_query'] = [
-				'after' => [
-					'year'  => date( 'Y' ),
-					'month' => date( 'm' ) - 1,
+			$count_args['meta_query'] = [
+				[
+					'key'     => 'munim_invoice_date',
+					'compare' => '>',
+					'value'   => strtotime( 'last day of previous month', time() ),
+					'type'    => 'numeric',
 				],
 			];
 		}
 
 		if ( 'previous' === $period ) {
-			$count_args['date_query'] = [
-				'before' => [
-					'year'  => date( 'Y' ),
-					'month' => date( 'm' ),
+			$count_args['meta_query'] = [
+				[
+					'key'     => 'munim_invoice_date',
+					'compare' => '<',
+					'value'   => strtotime( 'first day of this month', time() ),
+					'type'    => 'numeric',
 				],
 			];
 		}
