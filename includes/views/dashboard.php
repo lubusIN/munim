@@ -26,11 +26,12 @@ use LubusIN\Munim\Helpers;
 					<span class="text-gray-500">Gross For Month</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-gray-300">
-					<span class="text-xl mb-2">₹ <?php echo number_format( Helpers::get_total( 'net' ) ); ?></span>
+					<span class="text-xl mb-2">
+						₹ <?php echo number_format( Helpers::get_total( 'net' ) - Helpers::get_total( 'tds', 'current' ) ); ?></span>
 					<span class="text-gray-500">Net For Month</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-r border-gray-300">
-					<span class="text-xl mb-2">₹ <?php echo number_format( Helpers::get_total( 'gross', 'current', 'paid' ) ); ?></span>
+					<span class="text-xl mb-2">₹ <?php echo number_format( Helpers::get_total( 'gross', 'current', 'paid' ) - Helpers::get_total( 'tds', 'current' ) ); ?></span>
 					<span class="text-gray-500">Receipts For Month</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-gray-300">

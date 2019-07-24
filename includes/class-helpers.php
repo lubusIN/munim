@@ -243,7 +243,6 @@ class Helpers {
 
 		if ( 'tds' === $data ) {
 			$stat_args['meta_query']['relation'] = 'AND';
-
 			$stat_args['meta_query'][] =
 				[
 					'key'     => 'munim_invoice_tds',
