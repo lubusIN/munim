@@ -114,9 +114,18 @@ final class Munim {
 		wp_enqueue_script( 'apexcharts-script' );
 
 		wp_register_script(
+			'munim-clipboard',
+			MUNIM_PLUGIN_URL . 'assets/js/clipboard.min.js',
+			[],
+			filemtime( MUNIM_PLUGIN_DIR . 'assets/js/clipboard.min.js' ),
+			true
+		);
+		wp_enqueue_script( 'munim-clipboard' );
+
+		wp_register_script(
 			'munim-script',
 			MUNIM_PLUGIN_URL . 'assets/js/script.js',
-			['apexcharts-script'],
+			['apexcharts-script','munim-clipboard','jquery'],
 			filemtime( MUNIM_PLUGIN_DIR . 'assets/js/script.js' ),
 			true
 		);
