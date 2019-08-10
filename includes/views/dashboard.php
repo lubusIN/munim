@@ -197,9 +197,18 @@ use LubusIN\Munim\Helpers;
 						endforeach;?>
 					</textarea>
 
+					<?php
+						$clipboard_data= "";
+						foreach ($munim_settings_bank as $bank_info ):
+							$clipboard_data .= sprintf( '%s: %s &#10;', $bank_info['name'], $bank_info['value'] );
+						endforeach;
+						foreach ($munim_settings_bank as $bank_info ):
+							$clipboard_data .= sprintf( '%s: %s &#10;', $bank_info['name'], $bank_info['value'] );
+						endforeach;
+					?>
 					<button
 						class="clipboard-btn absolute bottom-0 right-0 inline-block leading-none cursor-pointer text-sm rounded p-2 border border-solid bg-gray-300"
-						data-clipboard-target="#munim-copy-details"
+						data-clipboard-text="<?php echo $clipboard_data; ?>"
 					>
 							<svg class="fill-current w-3 inline-block" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 								<g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">

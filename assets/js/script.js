@@ -10,7 +10,5 @@ jQuery(document).ready(function($){
 			$( '.clipboard-btn' ).toggleClass('hidden');
 			$( '.clipboard-copied-btn' ).toggleClass('hidden');
 		}, 1500);
-
-		e.clearSelection();
 	});
 });
