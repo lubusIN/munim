@@ -154,7 +154,7 @@ use LubusIN\Munim\Helpers;
 			</div>
 		</div>
 
-		<div id="munim-business-info" class="w-1/3 px-2 mt-4" style="display:grid">
+		<div id="munim-business-info" class="w-1/3 px-2 mt-4">
 			<h2 class="font-bold px-4 py-2 bg-white border border-b-0 border-gray-300">Business Info</h2>
 			<div class="flex flex-wrap bg-white border border-2 border-gray-300 p-4">
 
@@ -164,7 +164,7 @@ use LubusIN\Munim\Helpers;
 				$munim_settings_invoice = get_option( 'munim_settings_invoice', [] )['info'];
 				?>
 
-				<div class="w-1/2">
+				<div class="w-1/2 mb-2">
 					<div class="munim-bank-details">
 						<?php foreach ($munim_settings_bank as $bank_info ): ?>
 
