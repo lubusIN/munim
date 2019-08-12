@@ -192,8 +192,8 @@ use LubusIN\Munim\Helpers;
 						foreach ($munim_settings_bank as $bank_info ):
 						printf( '%s: %s &#10;', $bank_info['name'], $bank_info['value'] );
 						endforeach;
-						foreach ($munim_settings_bank as $bank_info ):
-						printf( '%s: %s &#10;', $bank_info['name'], $bank_info['value'] );
+						foreach ($munim_settings_invoice as $invoice_info ):
+						printf( '%s: %s &#10;', $invoice_info['name'], $invoice_info['value'] );
 						endforeach;?>
 					</textarea>
 
@@ -202,8 +202,8 @@ use LubusIN\Munim\Helpers;
 						foreach ($munim_settings_bank as $bank_info ):
 							$clipboard_data .= sprintf( '%s: %s &#10;', $bank_info['name'], $bank_info['value'] );
 						endforeach;
-						foreach ($munim_settings_bank as $bank_info ):
-							$clipboard_data .= sprintf( '%s: %s &#10;', $bank_info['name'], $bank_info['value'] );
+						foreach ($munim_settings_invoice as $invoice_info ):
+							$clipboard_data .= sprintf( '%s: %s &#10;', $invoice_info['name'], $invoice_info['value'] );
 						endforeach;
 					?>
 					<button
