@@ -198,6 +198,6 @@ final class Munim {
 	 * @return void
 	 */
 	public function render_page() {
-		include 'views/dashboard.php';
+		include 'views/dashboard/index.php';
 	}
 }
