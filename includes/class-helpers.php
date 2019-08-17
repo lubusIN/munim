@@ -302,7 +302,7 @@ class Helpers {
 	 * @return array
 	 */
 	public static function get_monthly_turnover( $data = 'net' ) {
-		$financial_year_to = ( date( 'm' ) > 3 ) ? date( 'y' ) +1 : date( 'y' );
+		$financial_year_to = ( date( 'm' ) > 3 ) ? date( 'Y' ) +1 : date( 'Y' );
 		$financial_year_from = $financial_year_to - 1;
 
 		$data = [
