@@ -143,7 +143,7 @@ final class Munim {
 		// Script data.
 		wp_localize_script( 'munim-dashboard', 'munim',
 			[
-				'monthly_trend' => Helpers::get_monthly_turnover(),
+				'monthly_trend' => Helpers::get_monthly_turnover( 'gross' ),
 			]
     	);
 
