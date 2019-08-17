@@ -281,4 +281,19 @@ class Helpers {
 
 		return $stat;
 	}
+
+	/**
+	 * Get net receipts
+	 *
+	 * @param string $period
+	 * @return int
+	 */
+	public static function get_receipts( $period = 'current' ) {
+		$total = self::get_total( 'gross', $period, 'paid' );
+		$tds   = self::get_total( 'tds', $period );
+
+		$receipts = $total > 0 ? $total - $tds : 0;
+
+		return $receipts;
+	}
 }
