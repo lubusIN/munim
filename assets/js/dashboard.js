@@ -27,6 +27,13 @@ var options = {
 	xaxis: {
 	  categories: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
 	},
+	yaxis: {
+		labels: {
+		  formatter: function (value) {
+			return new Intl.NumberFormat().format(value);
+		  }
+		},
+	  },
   }
 
   var chart = new ApexCharts(
