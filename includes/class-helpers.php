@@ -292,7 +292,7 @@ class Helpers {
 			}
 		}
 
-		return $stat;
+		return round( $stat );
 	}
 
 	/**
