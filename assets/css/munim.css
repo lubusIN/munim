@@ -1,0 +1,22 @@
+/* S: Mobile */
+
+/* M: Tablet */
+@media (min-width: 768px) {
+	#munim-trend-chart .apexcharts-canvas{
+		min-height: 300px !important;
+	}
+}
+
+/* L: Laptop */
+@media (min-width: 1024px) {
+	#munim-trend-chart .apexcharts-canvas{
+		min-height: 308px !important;
+	}
+}
+
+/* XL: Desktop */
+@media (min-width: 1280px) {
+	#munim-trend-chart .apexcharts-canvas{
+		min-height: 395px !important;
+	}
+}

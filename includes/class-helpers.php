@@ -181,6 +181,10 @@ class Helpers {
 	 */
 	public static function get_total( $data, $period = 'current', $status = 'all'  ) {
 		$stat = 0;
+		$financial_year_to = ( date( 'm' ) > 3 ) ? date( 'y' ) +1 : date( 'y' );
+		$financial_year_from = $financial_year_to - 1;
+		$financial_start_date = date( $financial_year_from . '-04-01' );
+		$financial_end_date = date( $financial_year_to . '-03-31' );
 
 		$stat_args = [
 			'posts_per_page' => '-1',
@@ -209,18 +213,27 @@ class Helpers {
 		}
 
 		if ( 'financial' === $period ) {
-			$financial_year_to = (date('m') > 3) ? date('y') +1 : date('y');
-			$financial_year_from = $financial_year_to - 1;
-			$m_start_date = date( $financial_year_from . '-04-01' );
-			$m_end_date = date( $financial_year_to . '-03-31' );
-
 			$stat_args['meta_query'] = [
 				[
 					'key'     => 'munim_invoice_date',
 					'compare' => 'BETWEEN',
 					'value'   => [
-						strtotime( $m_start_date ),
-						strtotime( $m_end_date )
+						strtotime( $financial_start_date ),
+						strtotime( $financial_end_date )
+					],
+					'type'    => 'numeric',
+				],
+			];
+		}
+
+		if ( is_array( $period ) ) {
+			$stat_args['meta_query'] = [
+				[
+					'key'     => 'munim_invoice_date',
+					'compare' => 'BETWEEN',
+					'value'   => [
+						strtotime( $period['start_date'] ),
+						strtotime( $period['end_date'] )
 					],
 					'type'    => 'numeric',
 				],
@@ -280,6 +293,106 @@ class Helpers {
 		}
 
 		return $stat;
+	}
+
+	/**
+	 * Get monthly turnover
+	 * @param string $data
+	 *
+	 * @return array
+	 */
+	public static function get_monthly_turnover( $data = 'net' ) {
+		$financial_year_to = ( date( 'm' ) > 3 ) ? date( 'y' ) +1 : date( 'y' );
+		$financial_year_from = $financial_year_to - 1;
+
+		$data = [
+			'Apr' => self::get_total(
+				$data,
+				[
+					'start_date' => sprintf( 'first day of Apr %s', $financial_year_from ),
+					'end_date'	 => sprintf( 'last day of Apr %s', $financial_year_from ),
+				]
+			),
+			'May' => self::get_total(
+				$data,
+				[
+					'start_date' => sprintf( 'first day of May %s', $financial_year_from ),
+					'end_date'	 => sprintf( 'last day of May %s', $financial_year_from ),
+				]
+			),
+			'Jun' => self::get_total(
+				$data,
+				[
+					'start_date' => sprintf( 'first day of Jun %s', $financial_year_from ),
+					'end_date'	 => sprintf( 'last day of Jun %s', $financial_year_from ),
+				]
+			),
+			'Jul' => self::get_total(
+				$data,
+				[
+					'start_date' => sprintf( 'first day of Jul %s', $financial_year_from ),
+					'end_date'	 => sprintf( 'last day of Jul %s', $financial_year_from ),
+				]
+			),
+			'Aug' => self::get_total(
+				$data,
+				[
+					'start_date' => sprintf( 'first day of Aug %s', $financial_year_from ),
+					'end_date'	 => sprintf( 'last day of Aug %s', $financial_year_from ),
+				]
+			),
+			'Sep' => self::get_total(
+				$data,
+				[
+					'start_date' => sprintf( 'first day of Sep %s', $financial_year_from ),
+					'end_date'	 => sprintf( 'last day of Sep %s', $financial_year_from ),
+				]
+			),
+			'Oct' => self::get_total(
+				$data,
+				[
+					'start_date' => sprintf( 'first day of Oct %s', $financial_year_from ),
+					'end_date'	 => sprintf( 'last day of Oct %s', $financial_year_from ),
+				]
+			),
+			'Nov' => self::get_total(
+				$data,
+				[
+					'start_date' => sprintf( 'first day of Nov %s', $financial_year_from ),
+					'end_date'	 => sprintf( 'last day of Nov %s', $financial_year_from ),
+				]
+			),
+			'Dec' => self::get_total(
+				$data,
+				[
+					'start_date' => sprintf( 'first day of Dec %s', $financial_year_from ),
+					'end_date'	 => sprintf( 'last day of Dec %s', $financial_year_from ),
+				]
+			),
+			'Jan' => self::get_total(
+				$data,
+				[
+					'start_date' => sprintf( 'first day of Jan %s', $financial_year_to ),
+					'end_date'	 => sprintf( 'last day of Jan %s', $financial_year_to ),
+				]
+			),
+			'Feb'  => self::get_total(
+				$data,
+				[
+					'start_date' => sprintf( 'first day of Feb %s', $financial_year_to ),
+					'end_date'	 => sprintf( 'last day of Feb %s', $financial_year_to ),
+				]
+			),
+			'Mar'  => self::get_total(
+				$data,
+				[
+					'start_date' => sprintf( 'first day of Mar %s', $financial_year_to ),
+					'end_date'	 => sprintf( 'last day of Mar %s', $financial_year_to ),
+				]
+			)
+		];
+
+		return array_values( $data );
 	}
 
 	/**

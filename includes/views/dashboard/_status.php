@@ -54,7 +54,7 @@ use LubusIN\Munim\Helpers;
 					<span class="text-gray-500">Overdue</span>
 				</div>
 				<div class="w-full flex flex-col p-4">
-					<button class="flex justify-center w-full lg:w-1/2 border-2 border-blue-500 bg-blue-100 rounded-lg p-2 mx-auto align-center">
+					<button class="flex justify-center w-full xl:w-1/2 border-2 border-blue-500 bg-blue-100 rounded-lg p-2 mx-auto align-center">
 						<svg class="fill-current w-4 mr-2" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 							<g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
 								<g id="icon-shape">

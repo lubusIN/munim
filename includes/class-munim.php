@@ -140,12 +140,27 @@ final class Munim {
 		);
 		wp_enqueue_script( 'munim-dashboard' );
 
+		// Script data.
+		wp_localize_script( 'munim-dashboard', 'munim',
+			[
+				'monthly_trend' => Helpers::get_monthly_turnover(),
+			]
+    	);
+
 		// Styles.
 		wp_register_style(
-			'munim',
-			MUNIM_PLUGIN_URL . 'assets/css/style.css',
+			'munim-tailwind',
+			MUNIM_PLUGIN_URL . 'assets/css/tailwind.css',
 			[],
-			filemtime( MUNIM_PLUGIN_DIR . 'assets/css/style.css' )
+			filemtime( MUNIM_PLUGIN_DIR . 'assets/css/tailwind.css' )
+		);
+		wp_enqueue_style( 'munim-tailwind' );
+
+		wp_register_style(
+			'munim',
+			MUNIM_PLUGIN_URL . 'assets/css/munim.css',
+			[],
+			filemtime( MUNIM_PLUGIN_DIR . 'assets/css/munim.css' )
 		);
 		wp_enqueue_style( 'munim' );
 	}
