@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings View.
+ * Settings import / export.
  *
  * @author  Ajit Bohra <ajit@lubus.in>
  * @license MIT
@@ -12,7 +12,7 @@
  */
 
 ?>
-<div class="wrap cmb2-options-page option-<?php echo $cmb_options->option_key; ?>">
+<div class="wrap">
 	<?php if ( get_admin_page_title() ) : ?>
 		<h2 class="flex">
 			<svg class="fill-current w-6 mr-2" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -25,18 +25,11 @@
 			<?php echo wp_kses_post( get_admin_page_title() ); ?>
 		</h2>
 	<?php endif; ?>
-	<h2 class="nav-tab-wrapper">
-		<?php foreach ( $tabs as $option_key => $tab_title ) : ?>
-			<a class="nav-tab
-							<?php
-							if ( isset( $_GET['page'] ) && $option_key === $_GET['page'] ) :
-								?>
-											nav-tab-active<?php endif; ?>" href="<?php menu_page_url( $option_key ); ?>"><?php echo wp_kses_post( $tab_title ); ?></a>
-		<?php endforeach; ?>
-	</h2>
-	<form class="cmb-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" id="<?php echo $cmb_options->cmb->cmb_id; ?>" enctype="multipart/form-data" encoding="multipart/form-data">
-		<input type="hidden" name="action" value="<?php echo esc_attr( $cmb_options->option_key ); ?>">
-		<?php $cmb_options->options_page_metabox(); ?>
-		<?php submit_button( esc_attr( $cmb_options->cmb->prop( 'save_button' ) ), 'primary', 'submit-cmb' ); ?>
-	</form>
+
+	<div class="flex flex-wrap -mx-2 mt-4">
+		<?php
+			require __DIR__ . '/import.php';
+			require __DIR__ . '/export.php';
+		?>
+	</div>
 </div>

@@ -26,12 +26,25 @@ class Settings {
 	private static $options_prefix = 'munim_settings_';
 
 	/**
+	 * Option keys without prefix
+	 *
+	 * @var array
+	 */
+	private static $option_keys = [
+		'business',
+		'invoice',
+		'bank',
+		'template',
+	];
+
+	/**
 	 * Init  plugin settings.
 	 *
 	 * @return void
 	 */
 	public static function init() {
-		add_action( 'cmb2_admin_init', [ __CLASS__, 'register_settings' ] );
+		add_action( 'cmb2_admin_init', [ __CLASS__, 'register' ] );
+		add_action( 'admin_init', [ __CLASS__, 'process_data' ] );
 	}
 
 	/**
@@ -39,16 +52,16 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public static function register_settings() {
+	public static function register() {
 		// Register business settings.
 		$args = [
 			'id'           => self::$options_prefix . 'business',
-			'title'        => 'Munim Settings > Business',
+			'title'        => 'Business',
 			'object_types' => [ 'options-page' ],
 			'option_key'   => self::$options_prefix . 'business',
 			'tab_group'    => 'munim_settings',
 			'tab_title'    => 'Business',
-			'display_cb'   => [ __CLASS__, 'render_settings' ],
+			'display_cb'   => [ __CLASS__, 'render' ],
 			'parent_slug'  => 'admin.php?page=munim',
 			'menu_title'   => 'Settings',
 		];
@@ -173,12 +186,12 @@ class Settings {
 		// Invoice Settings.
 		$args = [
 			'id'           => self::$options_prefix . 'invoice',
-			'title'        => 'Munim Settings > Invoice',
+			'title'        => 'Invoice',
 			'object_types' => [ 'options-page' ],
 			'option_key'   => self::$options_prefix . 'invoice',
 			'tab_group'    => 'munim_settings',
 			'tab_title'    => 'Invoice',
-			'display_cb'   => [ __CLASS__, 'render_settings' ],
+			'display_cb'   => [ __CLASS__, 'render' ],
 			'parent_slug'  => 'admin.php?page=munim_settings_business',
 		];
 
@@ -250,12 +263,12 @@ class Settings {
 		// Bank Settings.
 		$args = [
 			'id'           => self::$options_prefix . 'bank',
-			'title'        => 'Munim Settings > Bank',
+			'title'        => 'Bank',
 			'object_types' => [ 'options-page' ],
 			'option_key'   => self::$options_prefix . 'bank',
 			'tab_group'    => 'munim_settings',
 			'tab_title'    => 'Bank',
-			'display_cb'   => [ __CLASS__, 'render_settings' ],
+			'display_cb'   => [ __CLASS__, 'render' ],
 			'parent_slug'  => 'admin.php?page=munim_settings_business',
 		];
 
@@ -299,12 +312,12 @@ class Settings {
 		// Template Settings.
 		$args = [
 			'id'           => self::$options_prefix . 'template',
-			'title'        => 'Munim Settings > Template',
+			'title'        => 'Template',
 			'object_types' => [ 'options-page' ],
 			'option_key'   => self::$options_prefix . 'template',
 			'tab_group'    => 'munim_settings',
 			'tab_title'    => 'Template',
-			'display_cb'   => [ __CLASS__, 'render_settings' ],
+			'display_cb'   => [ __CLASS__, 'render' ],
 			'parent_slug'  => 'admin.php?page=munim_settings_business',
 		];
 
@@ -350,8 +363,69 @@ class Settings {
 	 * @param CMB2_Options_Hookup $cmb_options The CMB2_Options_Hookup object.
 	 * @return void
 	 */
-	public static function render_settings( $cmb_options ) {
+	public static function render( $cmb_options ) {
 		$tabs = self::get_tabs( $cmb_options );
 		include 'views/settings.php';
+	}
+
+	/**
+	 * Process settings import / export
+	 *
+	 * @return void
+	 */
+	public static function process_data() {
+		// Bailout.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		if ( empty( $_POST['munim_action'] ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_POST['munim_export_nonce'], 'munim_export_nonce' ) ) {
+			return;
+		}
+
+		// Process action.
+		ignore_user_abort( true );
+
+		switch ( $_POST['munim_action'] ) {
+			case 'import_settings':
+					self::import();
+				break;
+
+			case 'export_settings':
+					self::export();
+				break;
+		}
+	}
+
+	public static function import() {
+
+	}
+
+	/**
+	 * Export settings to .json
+	 *
+	 * @return void
+	 */
+	public static function export() {
+		// Get settings.
+		$settings = [];
+
+		foreach ( self::$option_keys as $option ) {
+			$option_id           = self::$options_prefix . $option;
+			$settings[ $option ] = get_option( $option_id );
+		}
+
+		// Generate .json file.
+		nocache_headers();
+		header( 'Content-Type: application/json; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=munim-settings-' . date( 'm-d-Y' ) . '.json' );
+		header( 'Expires: 0' );
+		echo wp_json_encode( $settings );
+
+		exit;
 	}
 }

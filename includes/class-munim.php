@@ -98,8 +98,17 @@ final class Munim {
 
 		$screen = get_current_screen();
 
+		$plugin_pages = [
+			'toplevel_page_admin?page=munim',
+			'munim_page_munim_settings_business',
+			'admin_page_munim_settings_invoice',
+			'admin_page_munim_settings_bank',
+			'admin_page_munim_settings_template',
+			'munim_page_admin?page=munim_import_export',
+		];
+
 		// Bailout if not munim dashboard
-		if ( 'toplevel_page_admin?page=munim' !== $screen->id ) {
+		if ( ! in_array( $screen->id, $plugin_pages ) ) {
 			return;
 		}
 
@@ -144,6 +153,7 @@ final class Munim {
 		wp_localize_script( 'munim-dashboard', 'munim',
 			[
 				'monthly_trend' => Helpers::get_monthly_turnover( 'gross' ),
+				'screen_id' => $screen,
 			]
     	);
 
@@ -169,21 +179,33 @@ final class Munim {
 	 * Register Menu
 	 */
 	public function register_menu() {
+		// Add munim menu
 		add_menu_page(
 			__( 'Munim - Simple Invoicing', 'munim' ),
 			'Munim',
 			'manage_options',
 			'admin.php?page=munim',
-			[ $this, 'render_page' ],
+			[ $this, 'render_dashboard' ],
 			'dashicons-analytics'
 		);
 
+		// Rename sub menu for munim to dashboard
 		add_submenu_page(
 			'admin.php?page=munim',
-			'Munim > Dashboard',
+			'Dashboard',
 			'Dashboard',
 			'manage_options',
 			'admin.php?page=munim'
+		);
+
+		// Settings import / export
+		add_submenu_page(
+			'admin.php?page=munim',
+			'Import / Export',
+			'Import / Export',
+			'manage_options',
+			'admin.php?page=munim_import_export',
+			[ $this, 'render_import_export' ]
 		);
 	}
 
@@ -200,7 +222,8 @@ final class Munim {
 				$munim_submenu[0]                = $menu_items[2]; // Dashboard.
 				$munim_submenu[1]                = $menu_items[0]; // Clients.
 				$munim_submenu[2]                = $menu_items[1]; // Invoices.
-				$munim_submenu[3]                = $menu_items[3]; // Settings.
+				$munim_submenu[3]                = $menu_items[4]; // Settings.
+				$munim_submenu[4]                = $menu_items[3]; // Import / Export.
 				$submenu['admin.php?page=munim'] = $munim_submenu;
 				break;
 			}
@@ -208,11 +231,20 @@ final class Munim {
 	}
 
 	/**
-	 * Render plugin landing page.
+	 * Render dashboard.
 	 *
 	 * @return void
 	 */
-	public function render_page() {
+	public function render_dashboard() {
 		include 'views/dashboard/index.php';
+	}
+
+	/**
+	 * Render settings import / export.
+	 *
+	 * @return void
+	 */
+	public function render_import_export() {
+		include 'views/import-export/index.php';
 	}
 }
