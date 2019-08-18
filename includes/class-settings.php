@@ -383,30 +383,54 @@ class Settings {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_POST['munim_export_nonce'], 'munim_export_nonce' ) ) {
-			return;
-		}
-
 		// Process action.
 		ignore_user_abort( true );
 
 		switch ( $_POST['munim_action'] ) {
 			case 'import_settings':
+				if ( wp_verify_nonce( $_POST['munim_import_nonce'], 'munim_import_nonce' ) ) {
 					self::import();
+				}
 				break;
 
 			case 'export_settings':
+				if ( wp_verify_nonce( $_POST['munim_export_nonce'], 'munim_export_nonce' ) ) {
 					self::export();
+				}
 				break;
 		}
 	}
 
+	/**
+	 * Import settings from .json file
+	 *
+	 * @return void
+	 */
 	public static function import() {
+		// File validation.
+		$filename = explode( '.', $_FILES['munim_import_file']['name'] );
+		$extension = end( $filename );
+		if ( 'json' !== $extension ) {
+			Helpers::add_admin_notice( 'error', 'Please upload a valid .json file' );
+		}
 
+		$import_file = $_FILES['munim_import_file']['tmp_name'];
+		if ( empty( $import_file ) ) {
+			Helpers::add_admin_notice( 'error', 'Please upload a file to import' );
+		}
+
+		// Process import.
+		$settings = json_decode( file_get_contents( $import_file ), true );
+
+		foreach ( $settings as $key => $value ) {
+			update_option( $key, $value );
+		}
+
+		Helpers::add_admin_notice( 'success', 'Settings imported successfully' );
 	}
 
 	/**
-	 * Export settings to .json
+	 * Export settings to .json file
 	 *
 	 * @return void
 	 */
@@ -416,7 +440,7 @@ class Settings {
 
 		foreach ( self::$option_keys as $option ) {
 			$option_id           = self::$options_prefix . $option;
-			$settings[ $option ] = get_option( $option_id );
+			$settings[ $option_id ] = get_option( $option_id );
 		}
 
 		// Generate .json file.

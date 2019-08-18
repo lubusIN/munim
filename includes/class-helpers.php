@@ -389,7 +389,7 @@ class Helpers {
 					'start_date' => sprintf( 'first day of Mar %s', $financial_year_to ),
 					'end_date'	 => sprintf( 'last day of Mar %s', $financial_year_to ),
 				]
-			)
+			),
 		];
 
 		return array_values( $data );
@@ -408,5 +408,27 @@ class Helpers {
 		$receipts = $total > 0 ? $total - $tds : 0;
 
 		return $receipts;
+	}
+
+	/**
+	 * Add admin notices.
+	 *
+	 * @param string $type (error, warning, info, success).
+	 * @param string $msg notice message.
+	 * @return void
+	 */
+	public static function add_admin_notice( $type, $msg ) {
+		// Notice message.
+		$notice = '<div class="notice notice-%s">
+					<p>%s</p>
+				  </div>';
+
+		// Add to admin.
+		add_action(
+			'admin_notices',
+			function () use ( $notice, $type, $msg ) {
+				printf( $notice, $type, $msg );
+			}
+		);
 	}
 }

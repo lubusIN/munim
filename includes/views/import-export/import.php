@@ -20,7 +20,7 @@
 		</p>
 		<form method="post" enctype="multipart/form-data">
 			<input type="hidden" name="munim_action" value="import_settings">
-			<input type="file" name="munim_import_file"/>
+			<input type="file" name="munim_import_file" accept="application/json" required>
 			<?php wp_nonce_field( 'munim_import_nonce', 'munim_import_nonce' ); ?>
 			<input class="px-4 py-2 cursor-pointer bg-blue-500 text-white rounded" id="munim_import" name="munim_import" type="submit" value="Import">
 		</form>
