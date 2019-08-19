@@ -12,10 +12,10 @@
  */
 
 ?>
-<div id="munim-export" class="w-full md:w-1/2 px-2">
+<div id="munim-export" class="w-full md:w-1/2 px-2 flex flex-col">
 	<h2 class="font-bold px-4 py-2 bg-white border border-b-0 border-gray-300">Export Settings</h2>
-	<div class="flex flex-col flex-wrap bg-white border border-gray-300 p-4">
-	<p class="mb-4">
+	<div class="flex flex-col flex-1 flex-wrap bg-white border border-gray-300 p-4">
+		<p class="mb-4">
 			Export settings to `.json` file for migrating settings to other munim setup.
 		</p>
 		<form method="post">

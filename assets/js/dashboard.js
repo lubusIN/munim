@@ -26,6 +26,11 @@ var options = {
 	},
 	xaxis: {
 	  categories: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+	  labels: {
+		show: true,
+		rotate: -45,
+		rotateAlways: true,
+	  },
 	},
 	yaxis: {
 		labels: {

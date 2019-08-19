@@ -14,21 +14,14 @@ use LubusIN\Munim\Helpers;
  */
 
 ?>
-<div id="munim-recent-invoices" class="w-full md:w-1/2 xl:w-1/3 px-2 mt-4 xl:mt-0">
+<div id="munim-recent-invoices" class="w-full md:w-1/2 xl:w-1/3 px-2 mt-4 xl:mt-0 flex flex-col">
 	<h2 class="font-bold px-4 py-2 bg-white border border-b-0 border-gray-300">Recent</h2>
-	<div class="flex flex-wrap bg-white border border-2 border-gray-300">
-		<?php $munim_recent_invoices = Helpers::get_recent_invoices(); ?>
+	<div class="flex flex-wrap bg-white border border-2 border-gray-300 flex flex-1">
 		<ul class="py-4 w-full">
-			<li class="flex flex-wrap font-bold px-4 mb-4">
-					<span class="w-4/6">Name</span>
-					<span class="w-1/6">Amount</span>
-					<span class="w-1/6">Status</span>
-			</li>
-
-			<?php foreach ($munim_recent_invoices as $invoice) : ?>
+			<?php foreach ( Helpers::get_recent_invoices() as $invoice ) : ?>
 				<li class="flex flex-wrap px-4 mb-4">
 					<span class="w-4/6 text-blue-600">
-						<a href="<?php echo get_edit_post_link( $invoice );  ?>">
+						<a href="<?php echo get_edit_post_link ( $invoice ); ?>">
 							<?php echo $invoice->post_title; ?>
 						</a>
 					</span>
@@ -44,7 +37,7 @@ use LubusIN\Munim\Helpers;
 				</li>
 			<?php endforeach; ?>
 		</ul>
-		<div class="p-4 w-full text-center border-t border-gray-300 font-medium">
+		<div class="p-4 w-full text-center border-t border-gray-300 font-medium self-end">
 			<a href="<?php echo admin_url( 'edit.php?post_type=munim_invoice' ); ?>">View All</a>
 		</div>
 	</div>
