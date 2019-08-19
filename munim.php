@@ -47,6 +47,27 @@ if ( ! defined( 'MUNIM_PLUGIN_BASENAME' ) ) {
 	define( 'MUNIM_PLUGIN_BASENAME', plugin_basename( MUNIM_PLUGIN_FILE ) );
 }
 
+// Plugin upload path aka: "/wp-content/uploads/munim".
+if ( ! defined( 'MUNIM_PLUGIN_UPLOAD' ) ) {
+	$upload     = wp_upload_dir();
+	$upload_dir = $upload['basedir'];
+	$upload_dir = $upload_dir . '/munim/';
+	define( 'MUNIM_PLUGIN_UPLOAD', $upload_dir );
+}
+
+/**
+ * Munim install on activation
+ *
+ * @return void
+ */
+function munim_install() {
+	// Create directory under uploads.
+	if ( ! is_dir( MUNIM_PLUGIN_UPLOAD ) ) {
+		mkdir( MUNIM_PLUGIN_UPLOAD, 0700 );
+	}
+}
+register_activation_hook( __FILE__, 'munim_install' );
+
 // Autoloader.
 require_once 'vendor/autoload.php';
 require_once 'vendor/cmb2/init.php';

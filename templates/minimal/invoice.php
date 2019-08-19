@@ -19,7 +19,7 @@ $munim_settings_invoice      = get_option( 'munim_settings_invoice', [] );
 $munim_settings_invoice_info = $munim_settings_invoice['info'];
 
 // Invoice Data.
-$invoice_id          = $_GET['munim_invoice_id'];
+$invoice_id          = $invoice_id;
 $invoice_name        = get_the_title( $invoice_id );
 $invoice_data        = Helpers::array_shift( get_post_meta( $invoice_id ) );
 $invoice_date        = date( $munim_settings_invoice['date_format'], $invoice_data['munim_invoice_date'] );

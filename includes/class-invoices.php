@@ -46,6 +46,7 @@ class Invoices {
 		add_action( 'save_post_munim_invoice', [ __CLASS__, 'update_number' ], 10, 3 );
 		add_action( 'wp_insert_post', [ __CLASS__, 'update_totals' ], 10, 3 );
 		add_action( 'admin_init', [ __CLASS__, 'generate_pdf' ] );
+		add_action( 'admin_init', [ __CLASS__, 'generate_zip' ] );
 		add_action( 'post_submitbox_misc_actions', [ __CLASS__, 'add_pdf_actions' ] );
 	}
 
@@ -541,30 +542,29 @@ class Invoices {
 	}
 
 	/**
-	 * Check if pdf requested
-	 *
-	 * @return boolean
-	 */
-	public static function is_pdf_request() {
-		return ( isset( $_GET['munim_invoice_id'], $_GET['munim_action'], $_GET['nonce'] ) );
-	}
-
-	/**
 	 * Generate pdf.
 	 *
+	 * @param  int    $invoice_id post id.
+	 * @param  string $action invoice action (view/download/save).
+	 * @param  string $nonce $updated_settings.
 	 * @return void
 	 */
-	public static function generate_pdf() {
-		if ( ! self::is_pdf_request() ) {
+	public static function generate_pdf( $invoice_id = 0, $action = 'view', $nonce = null ) {
+		// Bailout.
+		if ( ! isset( $_REQUEST['munim_action'], $_REQUEST['nonce'] ) ) {
+			return;
+		}
+
+		if ( 'save' !== $action && ! isset( $_REQUEST['munim_invoice_id'] ) ) {
 			return;
 		}
 
 		// sanitize data and verify nonce.
-		$invoice_id = sanitize_key( $_GET['munim_invoice_id'] );
-		$action     = sanitize_key( $_GET['munim_action'] );
-		$nonce      = sanitize_key( $_GET['nonce'] );
+		$action     = sanitize_key( 'zip' ===  $_REQUEST['munim_action'] ? $action :  $_REQUEST['munim_action']  );
+		$nonce      = sanitize_key( $_REQUEST['nonce'] );
+		$invoice_id = sanitize_key( 'save' === $action ? $invoice_id : $_REQUEST['munim_invoice_id'] );
 
-		if ( ! wp_verify_nonce( $nonce, $action ) ) {
+		if ( 'save' !== $action && ! wp_verify_nonce( $nonce, $action ) ) {
 			wp_die( 'Invalid request.' );
 		}
 
@@ -584,14 +584,20 @@ class Invoices {
 		$dompdf->setPaper( 'A4', 'portrait' );
 		$dompdf->setBasePath( $munim_template_path );
 		$dompdf->render();
-		$dompdf->stream(
-			Helpers::get_file_name( $invoice_id ),
-			[
-				'compress'   => true,
-				'Attachment' => ( 'download' === $action ),
-			]
-		);
-		exit();
+
+		if ( 'save' === $action ) {
+			file_put_contents( MUNIM_PLUGIN_UPLOAD . Helpers::get_file_name( $invoice_id ), $dompdf->output() ); // Save pdf
+		} else {
+			// View or download pdf
+			$dompdf->stream(
+				Helpers::get_file_name( $invoice_id ),
+				[
+					'compress'   => true,
+					'Attachment' => ( 'download' === $action ),
+				]
+			);
+			exit();
+		}
 	}
 
 	/**
@@ -642,5 +648,98 @@ class Invoices {
 			echo '<a href="' . self::get_download_url() . '" class="button button-secondary"><span class="dashicons dashicons-download" style="margin-top: 3px"></span>Download</a>';
 			echo '</div>';
 		}
+	}
+
+	/**
+	 * Generate zip arvhive with pdf invoices for previous month
+	 *
+	 * @return void
+	 */
+	public static function generate_zip() {
+		// Bailout.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		if ( empty( $_POST['munim_action'] ) ) {
+			return;
+		}
+
+		if ( 'zip' !== $_POST['munim_action'] ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_POST['nonce'], 'zip' ) ) {
+			wp_die( 'invalid request' );
+		}
+
+		ignore_user_abort( true );
+
+		// Get invoices for previous month.
+		$invoice_args = [
+			'posts_per_page' => '-1',
+			'post_type'      => 'munim_invoice',
+			'potst_status'   => [
+				'publish',
+				'paid',
+				'partial',
+			],
+			'meta_query'      =>  [
+				[
+					'key'     => 'munim_invoice_date',
+					'compare' => 'BETWEEN',
+					'value'   => [
+						strtotime( 'last day of -2 months', time() ),
+						strtotime( 'last day of previous month', time() ),
+					],
+					'type'    => 'numeric',
+				],
+			],
+		];
+
+		$invoice_query = new \WP_Query( $invoice_args );
+		$invoices      = $invoice_query->get_posts();
+
+		// Generate pdf.
+		foreach ( $invoices as $invoice ) {
+			self::generate_pdf( $invoice->ID, 'save' );
+		}
+
+		// Generate zip.
+		$invoice_month = Date( 'F-Y', strtotime( 'last month' ) );
+		$zip_file      = 'munim-' . $invoice_month . '.zip';
+		$root_path     = MUNIM_PLUGIN_UPLOAD;
+		$zip_path      = $root_path . $zip_file;
+
+		$zip = new \ZipArchive();
+		$zip->open( $zip_path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE );
+
+		$files = new \RecursiveIteratorIterator(
+			new \RecursiveDirectoryIterator( $root_path ),
+			\RecursiveIteratorIterator::LEAVES_ONLY
+		);
+
+		foreach ( $files as $name => $file ) {
+			if ( ! $file->isDir() ) {
+				$file_path     = $file->getRealPath();
+				$relative_path = substr( $file_path, strlen( $root_path ) );
+				$zip->addFile( $file_path, $relative_path );
+			}
+		}
+
+		$zip->close();
+
+		// Download.
+		if ( file_exists( $zip_path ) ) {
+			header( 'Content-Type: application/zip' );
+			header( 'Content-Disposition: attachment; filename="' . basename( $zip_path ) . '"' );
+			header( 'Content-Length: ' . filesize( $zip_path ) );
+
+			flush();
+			readfile( $zip_path );
+		}
+
+		// Clean up all files.
+		array_map( 'unlink', glob( MUNIM_PLUGIN_UPLOAD . '*' ) );
 	}
 }
