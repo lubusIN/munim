@@ -107,8 +107,8 @@ final class Munim {
 			'munim_page_admin?page=munim_import_export',
 		];
 
-		// Bailout if not munim dashboard
-		if ( ! in_array( $screen->id, $plugin_pages ) ) {
+		// Bailout if not munim dashboard.
+		if ( ! in_array( $screen->id, $plugin_pages, true ) ) {
 			return;
 		}
 
@@ -150,12 +150,14 @@ final class Munim {
 		wp_enqueue_script( 'munim-dashboard' );
 
 		// Script data.
-		wp_localize_script( 'munim-dashboard', 'munim',
+		wp_localize_script(
+			'munim-dashboard',
+			'munim',
 			[
-				'monthly_trend' => Helpers::get_monthly_turnover( 'gross' ),
-				'screen_id' => $screen,
+				'monthly_trend_gross' => Helpers::get_monthly_trend( 'gross' ),
+				'monthly_trend_net'   => Helpers::get_monthly_trend(),
 			]
-    	);
+		);
 
 		// Styles.
 		wp_register_style(

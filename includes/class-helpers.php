@@ -297,102 +297,60 @@ class Helpers {
 
 	/**
 	 * Get monthly turnover
-	 * @param string $data
 	 *
+	 * @param string $data type of data to fetch (gross/net/taces/tds).
 	 * @return array
 	 */
-	public static function get_monthly_turnover( $data = 'net' ) {
-		$financial_year_to = ( date( 'm' ) > 3 ) ? date( 'Y' ) +1 : date( 'Y' );
+	public static function get_monthly_trend( $data = 'net' ) {
+		$financial_year_to   = ( date( 'm' ) > 3 ) ? date( 'Y' ) + 1 : date( 'Y' );
 		$financial_year_from = $financial_year_to - 1;
 
-		$data = [
-			'Apr' => self::get_total(
-				$data,
-				[
-					'start_date' => sprintf( 'first day of Apr %s', $financial_year_from ),
-					'end_date'	 => sprintf( 'last day of Apr %s', $financial_year_from ),
-				]
-			),
-			'May' => self::get_total(
-				$data,
-				[
-					'start_date' => sprintf( 'first day of May %s', $financial_year_from ),
-					'end_date'	 => sprintf( 'last day of May %s', $financial_year_from ),
-				]
-			),
-			'Jun' => self::get_total(
-				$data,
-				[
-					'start_date' => sprintf( 'first day of Jun %s', $financial_year_from ),
-					'end_date'	 => sprintf( 'last day of Jun %s', $financial_year_from ),
-				]
-			),
-			'Jul' => self::get_total(
-				$data,
-				[
-					'start_date' => sprintf( 'first day of Jul %s', $financial_year_from ),
-					'end_date'	 => sprintf( 'last day of Jul %s', $financial_year_from ),
-				]
-			),
-			'Aug' => self::get_total(
-				$data,
-				[
-					'start_date' => sprintf( 'first day of Aug %s', $financial_year_from ),
-					'end_date'	 => sprintf( 'last day of Aug %s', $financial_year_from ),
-				]
-			),
-			'Sep' => self::get_total(
-				$data,
-				[
-					'start_date' => sprintf( 'first day of Sep %s', $financial_year_from ),
-					'end_date'	 => sprintf( 'last day of Sep %s', $financial_year_from ),
-				]
-			),
-			'Oct' => self::get_total(
-				$data,
-				[
-					'start_date' => sprintf( 'first day of Oct %s', $financial_year_from ),
-					'end_date'	 => sprintf( 'last day of Oct %s', $financial_year_from ),
-				]
-			),
-			'Nov' => self::get_total(
-				$data,
-				[
-					'start_date' => sprintf( 'first day of Nov %s', $financial_year_from ),
-					'end_date'	 => sprintf( 'last day of Nov %s', $financial_year_from ),
-				]
-			),
-			'Dec' => self::get_total(
-				$data,
-				[
-					'start_date' => sprintf( 'first day of Dec %s', $financial_year_from ),
-					'end_date'	 => sprintf( 'last day of Dec %s', $financial_year_from ),
-				]
-			),
-			'Jan' => self::get_total(
-				$data,
-				[
-					'start_date' => sprintf( 'first day of Jan %s', $financial_year_to ),
-					'end_date'	 => sprintf( 'last day of Jan %s', $financial_year_to ),
-				]
-			),
-			'Feb'  => self::get_total(
-				$data,
-				[
-					'start_date' => sprintf( 'first day of Feb %s', $financial_year_to ),
-					'end_date'	 => sprintf( 'last day of Feb %s', $financial_year_to ),
-				]
-			),
-			'Mar'  => self::get_total(
-				$data,
-				[
-					'start_date' => sprintf( 'first day of Mar %s', $financial_year_to ),
-					'end_date'	 => sprintf( 'last day of Mar %s', $financial_year_to ),
-				]
-			),
+		// Financial year months.
+		$months = [
+			'Apr' => sprintf( 'Apr %s', $financial_year_from ),
+			'May' => sprintf( 'May %s', $financial_year_from ),
+			'Jun' => sprintf( 'Jun %s', $financial_year_from ),
+			'Jul' => sprintf( 'Jul %s', $financial_year_from ),
+			'Aug' => sprintf( 'Aug %s', $financial_year_from ),
+			'Sep' => sprintf( 'Sep %s', $financial_year_from ),
+			'Oct' => sprintf( 'Oct %s', $financial_year_from ),
+			'Nov' => sprintf( 'Nov %s', $financial_year_from ),
+			'Dec' => sprintf( 'Dec %s', $financial_year_from ),
+			'Jan' => sprintf( 'Jan %s', $financial_year_to ),
+			'Feb' => sprintf( 'Feb %s', $financial_year_to ),
+			'Mar' => sprintf( 'Mar %s', $financial_year_to ),
 		];
 
-		return array_values( $data );
+		$trend_data = [];
+
+		// Process data.
+		foreach ( $months as $key => $value ) {
+
+			// Get total (net/gross).
+			$total = self::get_total(
+				$data,
+				[
+					'start_date' => sprintf( 'first day of %s', $value ),
+					'end_date'   => sprintf( 'last day of %s', $value ),
+				]
+			);
+
+			// Subtract tds from net total if net requested.
+			if ( 'net' === $data ) {
+				$tds   = self::get_total(
+					'tds',
+					[
+						'start_date' => sprintf( 'first day of %s', $value ),
+						'end_date'   => sprintf( 'last day of %s', $value ),
+					]
+				);
+				$total = $total - $tds;
+			}
+
+			$trend_data[ $key ] = $total;
+		}
+
+		return array_values( $trend_data );
 	}
 
 	/**

@@ -15,15 +15,15 @@ var options = {
 	  curve: 'straight'
 	},
 	series: [{
-	  name: "Turnover",
-	  data: munim.monthly_trend // Dynamic data passed via 'wp_localize_script'
-	}],
-	grid: {
-	  row: {
-		colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-		opacity: 0.5
-	  },
+	  name: 'Turnover',
+	  type: 'column',
+	  data: munim.monthly_trend_gross // Dynamic data passed via 'wp_localize_script'
 	},
+	{
+		name: 'Revenue',
+		type: 'line',
+		data: munim.monthly_trend_net // Dynamic data passed via 'wp_localize_script'
+	}],
 	xaxis: {
 	  categories: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
 	  labels: {
@@ -41,10 +41,10 @@ var options = {
 	  },
   }
 
-  var chart = new ApexCharts(
+  var munimTrendChart = new ApexCharts(
 	document.querySelector("#munim-trend-chart"),
 	options
   );
 
-  chart.render();
+  munimTrendChart.render();
 
