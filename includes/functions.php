@@ -1,5 +1,28 @@
 <?php
 /**
+ * Global functions.
+ *
+ * @author  Ajit Bohra <ajit@lubus.in>
+ * @license MIT
+ *
+ * @see   https://www.munim.com/
+ *
+ * @copyright 2019 LUBUS
+ * @package   Munim
+ */
+
+/**
+ * Get Base Currency Code.
+ *
+ * @return string
+ */
+function get_munim_currency() {
+	$munim_business_settings = get_option( 'munim_settings_business' );
+	$munim_currency          = isset( $munim_business_settings['currency'] ) ? $munim_business_settings['currency'] : 'INR';
+	return apply_filters( 'munim_currency', $munim_currency );
+}
+
+/**
  * Get full list of currency codes.
  *
  * @return array
@@ -180,6 +203,7 @@ function get_munim_currencies() {
 	}
 	return $currencies;
 }
+
 /**
  * Get Currency symbol.
  *
@@ -362,5 +386,3 @@ function get_munim_currency_symbol( $currency = '' ) {
 	$currency_symbol = isset( $symbols[ $currency ] ) ? $symbols[ $currency ] : '';
 	return apply_filters( 'munim_currency_symbol', $currency_symbol, $currency );
 }
-
-?>

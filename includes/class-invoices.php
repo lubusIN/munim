@@ -380,7 +380,7 @@ class Invoices {
 				'name'         => 'Amount',
 				'id'           => 'amount',
 				'type'         => 'text_small',
-				'before_field' => '₹',
+				'before_field' => get_munim_currency_symbol(),
 			]
 		);
 

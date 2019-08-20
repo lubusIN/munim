@@ -161,6 +161,17 @@ class Settings {
 
 		$business_settings->add_field(
 			[
+				'name'             => 'Currency',
+				'desc'             => 'Select an currency',
+				'id'               => 'currency',
+				'type'             => 'select',
+				'show_option_none' => true,
+				'options'          => get_munim_currencies(),
+			]
+		);
+
+		$business_settings->add_field(
+			[
 				'name' => 'Contact',
 				'id'   => 'contact',
 				'type' => 'text_small',

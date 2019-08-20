@@ -26,11 +26,11 @@ $invoice_date        = date( $munim_settings_invoice['date_format'], $invoice_da
 
 $invoice_client_id   = $invoice_data['munim_invoice_client_id'];
 $invoice_client_data = Helpers::array_shift( get_post_meta( $invoice_client_id ) );
-$invoice_client_info = isset( $invoice_client_data['munim_client_additional_info'] ) ?? maybe_unserialize( $invoice_client_data['munim_client_additional_info'] );
+$invoice_client_info = isset( $invoice_client_data['munim_client_additional_info'] ) ? maybe_unserialize( $invoice_client_data['munim_client_additional_info'] ) : false;
 $invoice_client_name = get_the_title( $invoice_client_id );
 $invoice_items       = maybe_unserialize( $invoice_data['munim_invoice_items'] );
 $invoice_currency    = $invoice_client_data['munim_client_currency'];
-$invoice_tax_items   = isset( $invoice_data['munim_invoice_taxes'] ) ?? maybe_unserialize( $invoice_data['munim_invoice_taxes'] );
+$invoice_tax_items   = isset( $invoice_data['munim_invoice_taxes'] ) ? maybe_unserialize( $invoice_data['munim_invoice_taxes'] ) : false;
 $invoice_logo        = get_attached_file( $munim_settings_business['logo_id'] );
 $invoice_icon        = get_attached_file( $munim_settings_business['secondary_logo_id'] );
 
@@ -70,9 +70,14 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 				<div id="business" class="float-left width-40">
 					<h2>Company Details</h2>
 					<ul class="data-list">
-						<?php foreach ( $munim_settings_invoice_info as $info ) { ?>
+						<?php
+						if ( is_array( $munim_settings_invoice_info ) ) {
+							foreach ( $munim_settings_invoice_info as $info ) { ?>
 							<li><?php echo $info['name'] . ': ' . $info['value']; ?></li>
-						<?php } ?>
+								<?php
+							}
+						}
+						?>
 					</ul>
 				</div>
 
@@ -113,9 +118,9 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 							?>
 						</li>
 						<?php
-						if ( $invoice_client_info ) {
+						if ( is_array( $invoice_client_info ) ) {
 							foreach ( $invoice_client_info as $info ) { ?>
-								<li><?php echo $info['name'] ?>: <?php echo $info['value']; ?></li>
+								<li><?php echo $info['name']; ?>: <?php echo $info['value']; ?></li>
 								<?php
 							}
 						}
@@ -134,14 +139,22 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ( $invoice_items as $item ) { ?>
-						<tr class="border-bottom">
-							<td><?php echo $item['name']; ?></td>
-							<td class="text-right">
-								<?php echo $invoice_currency; ?> <?php echo $item['amount']; ?>
-							</td>
-						</tr>
-					<?php } ?>
+					<?php
+					if ( is_array( $invoice_items ) ) {
+						foreach ( $invoice_items as $item ) {
+							?>
+							<tr class="border-bottom">
+								<td><?php echo $item['name']; ?></td>
+								<td class="text-right">
+									<span class="currency-symbol">
+										<?php echo get_munim_currency_symbol( $invoice_currency ); ?>
+									</span><?php echo number_format( $item['amount'] ); ?>
+								</td>
+							</tr>
+							<?php
+						}
+					}
+					?>
 				</tbody>
 			</table>
 		</div>
@@ -149,13 +162,17 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 		<div id="taxes" class="clear-both">
 			<table width="100%">
 				<tbody>
-					<?php if ( $invoice_tax_items ) { ?>
+					<?php if ( is_array( $invoice_tax_items ) ) { ?>
 						<!-- Sub Total -->
 						<tr id="sub-total" class="border-bottom">
 							<td width="30%" class="filler"></td>
 							<td width="30%" class="filler"></td>
 							<td width="20%">Sub-Total</td>
-							<td width="20%" class="text-right"><?php echo $invoice_currency; ?> <?php echo $invoice_subtotal; ?></td>
+							<td width="20%" class="text-right">
+							<span class="currency-symbol">
+								<?php echo get_munim_currency_symbol( $invoice_currency ); ?>
+							</span><?php echo number_format( $invoice_subtotal ); ?>
+							</td>
 						</tr>
 
 						<!-- Taxes -->
@@ -164,7 +181,11 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 								<td width="30%" class="filler"></td>
 								<td width="30%" class="filler"></td>
 								<td width="20%"><?php echo $tax_item['name']; ?> (<?php echo $tax_item['rate']; ?>%)</td>
-								<td width="20%" class="text-right"><?php echo $invoice_currency; ?> <?php echo round ( ( $tax_item['rate'] / 100 ) * $invoice_subtotal ); ?></td>
+								<td width="20%" class="text-right">
+									<span class="currency-symbol">
+										<?php echo get_munim_currency_symbol( $invoice_currency ); ?>
+									</span><?php echo number_format ( round ( ( $tax_item['rate'] / 100 ) * $invoice_subtotal ) ); ?>
+								</td>
 							</tr>
 						<?php } // End Taxes ?>
 					<?php } // End Invoice Taxes check ?>
@@ -174,7 +195,13 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 						<td width="30%" class="filler"></td>
 						<td width="30%" class="filler"></td>
 						<td width="20%"><h2>Total</h2></td>
-						<td width="20%" class="text-right"><h2><?php echo $invoice_currency; ?> <?php echo round( $invoice_total ); ?></h2></td>
+						<td width="20%" class="text-right">
+							<h2>
+									<span class="currency-symbol">
+										<?php echo get_munim_currency_symbol( $invoice_currency ); ?>
+									</span><?php echo number_format( round( $invoice_total ) ); ?>
+							</h2>
+						</td>
 					</tr>
 				</tbody>
 			</table>

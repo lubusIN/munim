@@ -26,7 +26,7 @@ use LubusIN\Munim\Helpers;
 						</a>
 					</span>
 					<span class="w-1/6">
-						₹ <?php echo number_format( $invoice->munim_invoice_total ); ?>
+						<?php echo get_munim_currency_symbol(); ?> <?php echo number_format( $invoice->munim_invoice_total ); ?>
 					</span>
 					<span class="w-1/6">
 						<?php $invoice_status = Helpers::get_invoice_status( $invoice->post_status ); ?>

@@ -14,7 +14,7 @@
 ?>
 <div class="wrap">
 	<?php if ( get_admin_page_title() ) : ?>
-		<h2 class="flex">
+		<h2 class="flex items-center">
 			<svg class="fill-current w-6 h-6 mr-2" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 				<g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
 					<g id="icon-shape">

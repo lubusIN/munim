@@ -121,6 +121,10 @@ tr.border-bottom th{
 	padding: 0 50px;
 }
 
+span.currency-symbol {
+	font-family: "DejaVu Sans";
+}
+
 #footer{
 	padding: 50px;
 	position: fixed;
