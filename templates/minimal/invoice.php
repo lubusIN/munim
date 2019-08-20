@@ -26,11 +26,11 @@ $invoice_date        = date( $munim_settings_invoice['date_format'], $invoice_da
 
 $invoice_client_id   = $invoice_data['munim_invoice_client_id'];
 $invoice_client_data = Helpers::array_shift( get_post_meta( $invoice_client_id ) );
-$invoice_client_info = maybe_unserialize( $invoice_client_data['munim_client_additional_info'] );
+$invoice_client_info = isset( $invoice_client_data['munim_client_additional_info'] ) ?? maybe_unserialize( $invoice_client_data['munim_client_additional_info'] );
 $invoice_client_name = get_the_title( $invoice_client_id );
 $invoice_items       = maybe_unserialize( $invoice_data['munim_invoice_items'] );
 $invoice_currency    = $invoice_client_data['munim_client_currency'];
-$invoice_tax_items   = maybe_unserialize( $invoice_data['munim_invoice_taxes'] );
+$invoice_tax_items   = isset( $invoice_data['munim_invoice_taxes'] ) ?? maybe_unserialize( $invoice_data['munim_invoice_taxes'] );
 $invoice_logo        = get_attached_file( $munim_settings_business['logo_id'] );
 $invoice_icon        = get_attached_file( $munim_settings_business['secondary_logo_id'] );
 
@@ -81,11 +81,36 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 					<ul class="data-list">
 						<li><?php echo $invoice_client_name; ?></li>
 						<li>
-							<?php echo $invoice_client_data['munim_client_address_1']; ?><br />
-							<?php echo $invoice_client_data['munim_client_address_2']; ?><br />
-							<?php echo $invoice_client_data['munim_client_city']; ?>,
-							<?php echo $invoice_client_data['munim_client_state']; ?>
-							<?php echo $invoice_client_data['munim_client_zip']; ?>
+							<?php
+								echo isset( $invoice_client_data['munim_client_address_1'] )
+								? $invoice_client_data['munim_client_address_1']
+								: '';
+							?>
+							<br />
+
+							<?php
+								echo isset( $invoice_client_data['munim_client_address_2'] )
+								? $invoice_client_data['munim_client_address_2']
+								: '';
+							?>
+							<br />
+
+							<?php
+								echo isset( $invoice_client_data['munim_client_city'] )
+								? $invoice_client_data['munim_client_city']
+								: ''; ?>,
+
+							<?php
+								echo isset( $invoice_client_data['munim_client_state'] )
+								? $invoice_client_data['munim_client_state']
+								: '';
+							?>
+
+							<?php
+								echo isset( $invoice_client_data['munim_client_zip'] )
+								? $invoice_client_data['munim_client_zip']
+								: '';
+							?>
 						</li>
 						<?php
 						if ( $invoice_client_info ) {

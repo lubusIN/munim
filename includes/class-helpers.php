@@ -44,8 +44,10 @@ class Helpers {
 	public static function get_tax_total( $taxes, $subtotal ) {
 		$tax_amount = [];
 
-		foreach ( $taxes as $tax_item ) {
-			$tax_amount[] = ( $tax_item['rate'] / 100 ) * $subtotal;
+		if ( ! empty( $taxes ) ) {
+			foreach ( $taxes as $tax_item ) {
+				$tax_amount[] = ( $tax_item['rate'] / 100 ) * $subtotal;
+			}
 		}
 
 		return array_sum( $tax_amount );
