@@ -389,4 +389,82 @@ class Helpers {
 			}
 		);
 	}
+
+
+	/**
+	 * Check if invoice is for international client.
+	 *
+	 * @param int $client_currency client currency code.
+	 * @return boolean
+	 */
+	public static function is_international( $client_currency ) {
+
+		$international = false;
+		$international = get_munim_currency() !== $client_currency;
+
+		return $international;
+	}
+
+	/**
+	 * Get exchange rate
+	 *
+	 * @param string $from from currency.
+	 * @param string $to to currency.
+	 * @return int
+	 */
+	public static function get_exchange_rate( $from, $to ) {
+		$rate = 0;
+
+		// Return cached rates if available.
+		$exchange_rates = get_transient( 'munim_exchange_rates' );
+
+		if ( $exchange_rates ) {
+			$rate_info = json_decode( $exchange_rates );
+			$rate      = $rate_info->rates->$to;
+			return $rate;
+		}
+
+		// Fetch and store live rates if not already cached.
+		$request_uri      = sprintf( 'https://api.exchangeratesapi.io/latest?base=%s&symbols=%s', $from, $to );
+		$request_response = wp_remote_get( $request_uri );
+
+		if ( ! is_wp_error( $request_response ) ) {
+			set_transient( 'munim_exchange_rates', $request_response['body'], 24 * HOURS_IN_SECONDS );
+			$rate = $exchange_rates['rates']['INR'];
+		}
+
+		return $rate;
+	}
+
+	/**
+	 * Get exchange rate amount
+	 *
+	 * @param int    $amount imount to convert.
+	 * @param string $from from currency.
+	 * @param string $to to currency.
+	 * @return int
+	 */
+	public static function get_exchange_rate_amount( $amount, $from, $to ) {
+		$rate   = self::get_exchange_rate( $from, $to );
+		$amount = $amount * $rate;
+
+		return $amount;
+	}
+
+	/**
+	 * Convert amount using exchange rates if international invoice
+	 *
+	 * @param int    $amount amount to convert.
+	 * @param string $client_currency client currency code.
+	 * @return int
+	 */
+	public static function maybe_convert_amount( $amount, $client_currency ) {
+		$base_currency = get_munim_currency();
+
+		if ( get_munim_currency() !== $client_currency ) {
+			$amount = self::get_exchange_rate_amount( $amount, $client_currency, $base_currency );
+		}
+
+		return $amount;
+	}
 }

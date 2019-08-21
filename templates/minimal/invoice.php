@@ -30,7 +30,7 @@ $invoice_client_info = isset( $invoice_client_data['munim_client_additional_info
 $invoice_client_name = get_the_title( $invoice_client_id );
 $invoice_items       = maybe_unserialize( $invoice_data['munim_invoice_items'] );
 $invoice_currency    = $invoice_client_data['munim_client_currency'];
-$invoice_tax_items   = isset( $invoice_data['munim_invoice_taxes'] ) ? maybe_unserialize( $invoice_data['munim_invoice_taxes'] ) : false;
+$invoice_tax_items   = isset( $invoice_data['munim_invoice_taxes'] ) ? maybe_unserialize( $invoice_data['munim_invoice_taxes'] ) : [];
 $invoice_logo        = get_attached_file( $munim_settings_business['logo_id'] );
 $invoice_icon        = get_attached_file( $munim_settings_business['secondary_logo_id'] );
 

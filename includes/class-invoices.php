@@ -520,10 +520,17 @@ class Invoices {
 			return;
 		}
 
-		// Update items and taxes total.
+		// Update invoice currency.
+		$client_info     = Helpers::array_shift( get_post_meta( $post->munim_invoice_client_id ) );
+		$client_currency = $client_info['munim_client_currency'];
+		update_post_meta( $post_id, 'munim_invoice_currency', $client_currency );
+
+		// Update subtotal.
 		$items_total = array_sum( wp_list_pluck( $post->munim_invoice_items, 'amount' ) );
+		$items_total = Helpers::maybe_convert_amount( $items_total, $client_currency );
 		update_post_meta( $post_id, 'munim_invoice_subtotal', $items_total );
 
+		// Update taxes.
 		if ( isset( $post->munim_invoice_taxes ) ) {
 			$taxes_total = Helpers::get_tax_total( $post->munim_invoice_taxes, $items_total );
 			$total       = $items_total + $taxes_total;
@@ -538,7 +545,6 @@ class Invoices {
 		// Update tds amount.
 		$amount = ( $items_total * $post->munim_invoice_tds_percent ) / 100;
 		update_post_meta( $post_id, 'munim_invoice_tds_amount', $amount );
-
 	}
 
 	/**
