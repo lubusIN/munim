@@ -288,6 +288,24 @@ class Settings {
 			]
 		);
 
+		$invoice_settings->add_group_field(
+			$invoice_info,
+			[
+				'name' => 'Hide on invoice',
+				'id'   => 'hide_on_invoice',
+				'type' => 'checkbox',
+			]
+		);
+
+		$invoice_settings->add_group_field(
+			$invoice_info,
+			[
+				'name' => 'Hide on dashboard',
+				'id'   => 'hide_on_dashboard',
+				'type' => 'checkbox',
+			]
+		);
+
 		// Bank Settings.
 		$args = [
 			'id'           => self::$options_prefix . 'bank',
@@ -334,6 +352,24 @@ class Settings {
 				'name' => 'Value',
 				'id'   => 'value',
 				'type' => 'text',
+			]
+		);
+
+		$bank_settings->add_group_field(
+			$bank_info,
+			[
+				'name' => 'Hide on invoice',
+				'id'   => 'hide_on_invoice',
+				'type' => 'checkbox',
+			]
+		);
+
+		$bank_settings->add_group_field(
+			$bank_info,
+			[
+				'name' => 'Hide on dashboard',
+				'id'   => 'hide_on_dashboard',
+				'type' => 'checkbox',
 			]
 		);
 

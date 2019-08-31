@@ -74,9 +74,11 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 						<?php
 						if ( is_array( $munim_settings_invoice_info ) ) {
 							foreach ( $munim_settings_invoice_info as $info ) {
-								?>
-							<li><?php echo esc_html( sprintf( '%s: %s', $info['name'], $info['value'] ) ); ?></li>
-								<?php
+								if ( ! isset( $info['hide_on_dashboard'] ) || ! $info['hide_on_dashboard'] ) {
+									?>
+										<li><?php echo esc_html( sprintf( '%s: %s', $info['name'], $info['value'] ) ); ?></li>
+									<?php
+								}
 							}
 						}
 						?>

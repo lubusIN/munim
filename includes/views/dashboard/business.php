@@ -27,40 +27,50 @@
 
 		<div class="w-1/2 mb-2">
 			<div class="munim-bank-details">
-				<?php foreach ( $munim_settings_bank as $bank_info ) : ?>
-
-					<div class="flex flex-col mt-2">
-						<span class="text-xs text-gray-600">
-							<?php echo esc_html( $bank_info['name'] ); ?>
-						</span>
-						<span class="text-base">
-							<?php echo esc_html( $bank_info['value'] ); ?>
-						</span>
-					</div>
-
-				<?php endforeach; ?>
+				<?php
+				foreach ( $munim_settings_bank as $bank_info ) :
+					if ( ! isset( $bank_info['hide_on_dashboard'] ) || ! $bank_info['hide_on_dashboard'] ) :
+						?>
+						<div class="flex flex-col mt-2">
+							<span class="text-xs text-gray-600">
+								<?php echo esc_html( $bank_info['name'] ); ?>
+							</span>
+							<span class="text-base">
+								<?php echo esc_html( $bank_info['value'] ); ?>
+							</span>
+						</div>
+						<?php
+					endif;
+				endforeach;
+				?>
 			</div>
 		</div>
 		<div class="w-1/2 relative">
 			<div class="munim-invoice-details">
-				<?php foreach ( $munim_settings_invoice as $invoice_info ) : ?>
-
-					<div class="flex flex-col my-2">
-						<span class="text-xs text-gray-600">
-							<?php echo esc_html( $invoice_info['name'] ); ?>
-						</span>
-						<span class="text-base">
-							<?php echo esc_html( $invoice_info['value'] ); ?>
-						</span>
-					</div>
-
-				<?php endforeach; ?>
+				<?php
+				foreach ( $munim_settings_invoice as $invoice_info ) :
+					if ( ! isset( $invoice_info['hide_on_dashboard'] ) || ! $invoice_info['hide_on_dashboard'] ) :
+						?>
+						<div class="flex flex-col my-2">
+							<span class="text-xs text-gray-600">
+								<?php echo esc_html( $invoice_info['name'] ); ?>
+							</span>
+							<span class="text-base">
+								<?php echo esc_html( $invoice_info['value'] ); ?>
+							</span>
+						</div>
+						<?php
+					endif;
+				endforeach;
+				?>
 			</div>
 
 			<?php
 			$clipboard_data = '';
 			foreach ( $munim_clipboard_info as $info ) {
-				$clipboard_data .= sprintf( '%s: %s &#10;', $info['name'], $info['value'] );
+				if ( ! isset( $info['hide_on_dashboard'] ) || ! $info['hide_on_dashboard'] ) {
+					$clipboard_data .= sprintf( '%s: %s &#10;', $info['name'], $info['value'] );
+				}
 			}
 			?>
 			<button
