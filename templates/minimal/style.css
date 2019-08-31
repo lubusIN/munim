@@ -139,8 +139,15 @@ span.currency-symbol {
 	margin-bottom: 10px;
 }
 #note{
-	padding-top: 118px;
+	padding-top: 94px;
+	text-align: right;
+	width: 100%;
 }
+
+#note p{
+	font-size: 12px;
+}
+
 
 #heart{
 	width: 16px;

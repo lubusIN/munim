@@ -33,6 +33,7 @@ $invoice_currency    = $invoice_client_data['munim_client_currency'];
 $invoice_tax_items   = isset( $invoice_data['munim_invoice_taxes'] ) ? maybe_unserialize( $invoice_data['munim_invoice_taxes'] ) : [];
 $invoice_logo        = get_attached_file( $munim_settings_business['logo_id'] );
 $invoice_icon        = get_attached_file( $munim_settings_business['secondary_logo_id'] );
+$invoice_note        = isset( $munim_settings_invoice['note'] ) ? $munim_settings_invoice['note'] : '';
 
 // Totals.
 $invoice_subtotal = array_sum( wp_list_pluck( $invoice_items, 'amount' ) );
@@ -238,6 +239,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 				</ul>
 			</div>
 			<div id="note" class="float-right">
+				<p><?php echo esc_html( $invoice_note ); ?></p>
 				<h1><?php esc_html_e( 'Thank You', 'munim' ); ?></h1>
 			</div>
 		</div>
