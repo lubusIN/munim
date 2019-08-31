@@ -38,9 +38,11 @@ class Invoices {
 		add_filter( 'gettext', [ __CLASS__, 'rename_text' ] );
 		add_filter( 'ngettext', [ __CLASS__, 'rename_text' ] );
 		add_action( 'init', [ __CLASS__, 'register_status' ] );
-		add_action( 'admin_footer-edit.php', [ __CLASS__, 'render_status_in_quick_edit' ] );
+
+		add_action( 'admin_footer-edit.php', [ __CLASS__, 'render_status_in_edit' ] );
 		add_action( 'admin_footer-post.php', [ __CLASS__, 'render_status_in_edit' ] );
 		add_action( 'admin_footer-post-new.php', [ __CLASS__, 'render_status_in_edit' ] );
+
 		add_action( 'post_row_actions', [ __CLASS__, 'render_row_actions' ], 10, 2 );
 		add_action( 'cmb2_admin_init', [ __CLASS__, 'register_cmb' ] );
 		add_action( 'save_post_munim_invoice', [ __CLASS__, 'update_number' ], 10, 3 );
@@ -185,33 +187,6 @@ class Invoices {
 	}
 
 	/**
-	 * Render status in quick edit screen.
-	 *
-	 * @return void
-	 */
-	public static function render_status_in_quick_edit() {
-		// Bailout if not invoices.
-		if ( 'munim_invoice' !== get_post_type() ) {
-			return;
-		}
-
-		$invoice_status_slug = get_post_status();
-
-		$script = "<script>
-				jQuery(document).ready( function() {
-					jQuery( 'select[name=\"_status\"]' )
-						.append( '<option value=\"outstanding\">Outstanding</option>' )
-						.append( '<option value=\"paid\">Paid</option>' )
-						.append( '<option value=\"partial\">Partial</option>' )
-						.append( '<option value=\"cancelled\">Cancelled</option>' )
-						.val('%1\$s');
-					});
-			</script>";
-
-			echo esc_js( sprintf( $script, $invoice_status_slug ) );
-	}
-
-	/**
 	 * Render status in add/edit screen.
 	 *
 	 * @return void
@@ -227,7 +202,7 @@ class Invoices {
 
 		$script = "<script>
 				jQuery(document).ready( function() {
-					jQuery( 'select[name=\"post_status\"]' )
+					jQuery( 'select[name=\"post_status\"], select[name=\"_status\"]' )
 						.append( '<option value=\"outstanding\">Outstanding</option>' )
 						.append( '<option value=\"paid\">Paid</option>' )
 						.append( '<option value=\"partial\">Partial</option>' )
@@ -237,7 +212,8 @@ class Invoices {
 				jQuery( '#post-status-display' ).text( '%2\$s' );
 			</script>";
 
-		echo esc_js( sprintf( $script, $invoice_status_slug, $invoice_status_label ) );
+		// phpcs:ignore
+		echo sprintf( $script, $invoice_status_slug, $invoice_status_label );
 	}
 
 	/**
