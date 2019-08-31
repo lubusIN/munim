@@ -213,7 +213,7 @@ class Settings {
 			[
 				'name'    => 'Last Number',
 				'id'      => 'last_number',
-				'type'    => 'text',
+				'type'    => 'text_small',
 				'default' => '0000',
 			]
 		);
@@ -222,7 +222,7 @@ class Settings {
 			[
 				'name'    => 'Date Format',
 				'id'      => 'date_format',
-				'type'    => 'text',
+				'type'    => 'text_small',
 				'default' => 'd/m/Y',
 			]
 		);
@@ -231,8 +231,25 @@ class Settings {
 			[
 				'name'    => 'TDS %',
 				'id'      => 'tds',
-				'type'    => 'text',
+				'type'    => 'text_small',
 				'default' => '10',
+			]
+		);
+
+		$invoice_settings->add_field(
+			[
+				'name'    => 'Credit Period',
+				'id'      => 'credit',
+				'type'    => 'text_small',
+				'default' => '15',
+			]
+		);
+
+		$invoice_settings->add_field(
+			[
+				'name' => 'Note',
+				'id'   => 'note',
+				'type' => 'text',
 			]
 		);
 
