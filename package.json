@@ -9,7 +9,9 @@
   "devDependencies": {
     "cross-env": "^5.2.0",
     "laravel-mix": "^4.0.16",
+    "laravel-mix-purgecss": "^4.1.0",
     "live-server": "^1.2.1",
+    "mix-tailwindcss": "^1.1.0",
     "tailwindcss": "^1.0.4"
   },
   "scripts": {
