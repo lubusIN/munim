@@ -1,6 +1,4 @@
 <?php
-use LubusIN\Munim\Helpers;
-
 /**
  * Dashboard Status.
  *
@@ -13,45 +11,69 @@ use LubusIN\Munim\Helpers;
  * @package   Munim
  */
 
+use LubusIN\Munim\Helpers;
+
 ?>
 <div id="munim-status" class="w-full md:w-1/2 xl:w-1/3 px-2 mt-4 md:mt-0 flex flex-col">
-			<h2 class="font-bold px-4 py-2 bg-white border border-b-0 border-gray-300">Status</h2>
+			<h2 class="font-bold px-4 py-2 bg-white border border-b-0 border-gray-300">
+				<?php esc_html_e( 'Status', 'munim' ); ?>
+			</h2>
 			<div class="flex flex-1 flex-wrap bg-white border border-2 border-gray-300">
 				<div class="w-1/2 flex flex-col p-4 border-b border-r border-gray-300" >
 					<span class="text-xl mb-2">
-						<?php echo Helpers::get_invoice_status_count();  ?>
+						<?php echo esc_html( Helpers::get_invoice_status_count() ); ?>
 					</span>
-					<span class="text-gray-500">Issued</span>
+					<span class="text-gray-500">
+						<?php esc_html_e( 'Issued', 'munim' ); ?>
+					</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-gray-300">
 					<span class="text-xl mb-2">
-						<?php echo Helpers::get_invoice_status_count( 'cancelled' );  ?>
+						<?php echo esc_html( Helpers::get_invoice_status_count( 'cancelled' ) ); ?>
 					</span>
-					<span class="text-gray-500">Cancelled</span>
+					<span class="text-gray-500">
+						<?php esc_html_e( 'Cancelled', 'munim' ); ?>
+					</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-r border-gray-300">
 					<span class="text-xl mb-2">
-						<?php echo Helpers::get_invoice_status_count( 'paid' );  ?>
+						<?php echo esc_html( Helpers::get_invoice_status_count( 'paid' ) ); ?>
 					</span>
-					<span class="text-gray-500">Paid</span>
+					<span class="text-gray-500">
+						<?php esc_html_e( 'Paid', 'munim' ); ?>
+					</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b xborder-gray-300">
 					<span class="text-xl mb-2">
-						<?php echo Helpers::get_invoice_status_count( 'partial' );  ?>
+						<?php echo esc_html( Helpers::get_invoice_status_count( 'partial' ) ); ?>
 					</span>
-					<span class="text-gray-500">Partially Paid</span>
+					<span class="text-gray-500">
+						<?php esc_html_e( 'Partially Paid', 'munim' ); ?>
+					</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-r  border-gray-300">
 					<span class="text-xl mb-2">
-						<?php echo Helpers::get_invoice_status_count() - Helpers::get_invoice_status_count( ['paid', 'cancelled'] );  ?>
+						<?php
+							$munim_all_invoices   = Helpers::get_invoice_status_count();
+							$munim_paid_cancelled = Helpers::get_invoice_status_count( [ 'paid', 'cancelled' ] );
+							echo esc_html( $munim_all_invoices - $munim_paid_cancelled );
+						?>
 					</span>
-					<span class="text-gray-500">Due</span>
+					<span class="text-gray-500">
+						<?php esc_html_e( 'Due', 'munim' ); ?>
+					</span>
 				</div>
 				<div class="w-1/2 flex flex-col p-4 border-b border-gray-300">
 					<span class="text-xl mb-2">
-						<?php echo Helpers::get_invoice_status_count( 'all', 'previous' ) - Helpers::get_invoice_status_count( ['paid', 'cancelled'], 'previous' );  ?>
+						<?php
+							$munim_previous_all  = Helpers::get_invoice_status_count( 'all', 'previous' );
+							$munim_previous_paid = Helpers::get_invoice_status_count( [ 'paid', 'cancelled' ], 'previous' );
+							echo esc_html( $munim_previous_all - $munim_previous_paid );
+						?>
 					</span>
-					<span class="text-gray-500">Overdue</span>
+					<span class="text-gray-500">
+						<?php esc_html_e( 'Overdue', 'munim' ); ?>
+					</span>
 				</div>
 				<div class="w-full flex flex-col px-4 py-2 bg-blue-100">
 					<form method="post" class="hidden lg:block">
@@ -66,8 +88,12 @@ use LubusIN\Munim\Helpers;
 								</g>
 							</svg>
 							<div class="flex flex-col">
-								<span class="text-base text-gray-700 font-medium leading-none">Download Invoices</span>
-								<span class="text-left text-xs font-medium leading-normal text-gray-500">for previous month</span>
+								<span class="text-base text-gray-700 font-medium leading-none">
+									<?php esc_html_e( 'Download Invoices', 'munim' ); ?>
+								</span>
+								<span class="text-left text-xs font-medium leading-normal text-gray-500">
+									<?php esc_html_e( 'for previous month', 'munim' ); ?>
+								</span>
 							</div>
 						</button>
 					</form>

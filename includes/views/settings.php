@@ -12,7 +12,7 @@
  */
 
 ?>
-<div class="wrap cmb2-options-page option-<?php echo $cmb_options->option_key; ?>">
+<div class="wrap cmb2-options-page option-<?php echo esc_attr( $cmb_options->option_key ); ?>">
 	<?php if ( get_admin_page_title() ) : ?>
 		<h2 class="flex items-center" style="margin-bottom: 0">
 			<svg class="fill-current w-6 h-6 mr-2" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -29,12 +29,13 @@
 		<?php foreach ( $tabs as $option_key => $tab_title ) : ?>
 			<a class="nav-tab
 							<?php
+							// phpcs:ignore
 							if ( isset( $_GET['page'] ) && $option_key === $_GET['page'] ) :
 								?>
-											nav-tab-active<?php endif; ?>" href="<?php menu_page_url( $option_key ); ?>"><?php echo wp_kses_post( $tab_title ); ?></a>
+								nav-tab-active<?php endif; ?>" href="<?php menu_page_url( $option_key ); ?>"><?php echo wp_kses_post( $tab_title ); ?></a>
 		<?php endforeach; ?>
 	</h2>
-	<form class="cmb-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" id="<?php echo $cmb_options->cmb->cmb_id; ?>" enctype="multipart/form-data" encoding="multipart/form-data">
+	<form class="cmb-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" id="<?php echo esc_attr( $cmb_options->cmb->cmb_id ); ?>" enctype="multipart/form-data" encoding="multipart/form-data">
 		<input type="hidden" name="action" value="<?php echo esc_attr( $cmb_options->option_key ); ?>">
 		<?php $cmb_options->options_page_metabox(); ?>
 		<?php submit_button( esc_attr( $cmb_options->cmb->prop( 'save_button' ) ), 'primary', 'submit-cmb' ); ?>

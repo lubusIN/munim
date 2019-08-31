@@ -67,12 +67,12 @@ class Helpers {
 	/**
 	 * Get invoice status count
 	 *
-	 * @param string $status
-	 * @param string $period
+	 * @param string $status invoice status.
+	 * @param string $period period for invoices (current, previous).
 	 * @return int
 	 */
 	public static function get_invoice_status_count( $status = '', $period = 'current' ) {
-		$count = 0;
+		$count      = 0;
 		$count_args = [
 			'post_type' => 'munim_invoice',
 		];
@@ -89,6 +89,7 @@ class Helpers {
 		}
 
 		if ( 'current' === $period ) {
+			// phpcs:ignore
 			$count_args['meta_query'] = [
 				[
 					'key'     => 'munim_invoice_date',
@@ -100,6 +101,7 @@ class Helpers {
 		}
 
 		if ( 'previous' === $period ) {
+			// phpcs:ignore
 			$count_args['meta_query'] = [
 				[
 					'key'     => 'munim_invoice_date',
@@ -111,7 +113,7 @@ class Helpers {
 		}
 
 		$count_query = new \WP_Query( $count_args );
-		$count = $count_query->found_posts;
+		$count       = $count_query->found_posts;
 
 		return $count;
 	}
@@ -124,7 +126,7 @@ class Helpers {
 	public static function get_recent_invoices() {
 		$recent_args = [
 			'posts_per_page' => '5',
-			'post_type' => 'munim_invoice',
+			'post_type'      => 'munim_invoice',
 		];
 
 		$invoices = new \WP_Query( $recent_args );
@@ -135,7 +137,7 @@ class Helpers {
 	/**
 	 * Get status for display
 	 *
-	 * @param string $status
+	 * @param string $status invoice status.
 	 * @return string
 	 */
 	public static function get_invoice_status( $status ) {
@@ -146,10 +148,10 @@ class Helpers {
 	/**
 	 * Get css classes for status
 	 *
-	 * @param string $status
+	 * @param string $status invoice status.
 	 * @return string
 	 */
-	public static function get_status_classes( $status ){
+	public static function get_status_classes( $status ) {
 		$classes = '';
 		switch ( $status ) {
 			case 'outstanding':
@@ -174,21 +176,21 @@ class Helpers {
 	/**
 	 * Get data total
 	 *
-	 * @param string $data
-	 * @param string $period
-	 * @param string $status
+	 * @param string $data type of data to fetch (gross,net,taxes,tds).
+	 * @param string $period for invoices (current, previous, financial).
+	 * @param string $status invoice status.
 	 * @return int total
 	 */
-	public static function get_total( $data, $period = 'current', $status = 'all'  ) {
-		$stat = 0;
-		$financial_year_to = ( date( 'm' ) > 3 ) ? date( 'y' ) +1 : date( 'y' );
-		$financial_year_from = $financial_year_to - 1;
+	public static function get_total( $data, $period = 'current', $status = 'all' ) {
+		$stat                 = 0;
+		$financial_year_to    = ( date( 'm' ) > 3 ) ? date( 'y' ) + 1 : date( 'y' );
+		$financial_year_from  = $financial_year_to - 1;
 		$financial_start_date = date( $financial_year_from . '-04-01' );
-		$financial_end_date = date( $financial_year_to . '-03-31' );
+		$financial_end_date   = date( $financial_year_to . '-03-31' );
 
 		$stat_args = [
 			'posts_per_page' => '-1',
-			'post_type' => 'munim_invoice',
+			'post_type'      => 'munim_invoice',
 		];
 
 		if ( 'all' === $status ) {
@@ -202,6 +204,7 @@ class Helpers {
 		}
 
 		if ( 'current' === $period ) {
+			// phpcs:ignore
 			$stat_args['meta_query'] = [
 				[
 					'key'     => 'munim_invoice_date',
@@ -213,13 +216,14 @@ class Helpers {
 		}
 
 		if ( 'financial' === $period ) {
+			// phpcs:ignore
 			$stat_args['meta_query'] = [
 				[
 					'key'     => 'munim_invoice_date',
 					'compare' => 'BETWEEN',
 					'value'   => [
 						strtotime( $financial_start_date ),
-						strtotime( $financial_end_date )
+						strtotime( $financial_end_date ),
 					],
 					'type'    => 'numeric',
 				],
@@ -227,13 +231,14 @@ class Helpers {
 		}
 
 		if ( is_array( $period ) ) {
+			// phpcs:ignore
 			$stat_args['meta_query'] = [
 				[
 					'key'     => 'munim_invoice_date',
 					'compare' => 'BETWEEN',
 					'value'   => [
 						strtotime( $period['start_date'] ),
-						strtotime( $period['end_date'] )
+						strtotime( $period['end_date'] ),
 					],
 					'type'    => 'numeric',
 				],
@@ -241,13 +246,14 @@ class Helpers {
 		}
 
 		if ( 'previous' === $period ) {
+			// phpcs:ignore
 			$stat_args['meta_query'] = [
 				[
 					'key'     => 'munim_invoice_date',
 					'compare' => 'BETWEEN',
 					'value'   => [
 						strtotime( 'last day of -2 months', time() ),
-						strtotime( 'last day of previous month', time() )
+						strtotime( 'last day of previous month', time() ),
 					],
 					'type'    => 'numeric',
 				],
@@ -256,7 +262,7 @@ class Helpers {
 
 		if ( 'tds' === $data ) {
 			$stat_args['meta_query']['relation'] = 'AND';
-			$stat_args['meta_query'][] =
+			$stat_args['meta_query'][]           =
 				[
 					'key'     => 'munim_invoice_tds',
 					'compare' => '=',
@@ -264,12 +270,12 @@ class Helpers {
 				];
 		}
 
-		$stat_query = new \WP_Query( $stat_args );
+		$stat_query    = new \WP_Query( $stat_args );
 		$stat_invoices = $stat_query->get_posts();
 
 		if ( $stat_invoices ) {
 			foreach ( $stat_invoices as $invoice ) {
-				switch ($data) {
+				switch ( $data ) {
 					case 'gross':
 							$stat += $invoice->munim_invoice_total;
 						break;
@@ -356,7 +362,7 @@ class Helpers {
 	/**
 	 * Get net receipts
 	 *
-	 * @param string $period
+	 * @param string $period peroid for invoice.
 	 * @return int
 	 */
 	public static function get_receipts( $period = 'current' ) {
@@ -385,7 +391,7 @@ class Helpers {
 		add_action(
 			'admin_notices',
 			function () use ( $notice, $type, $msg ) {
-				printf( $notice, $type, $msg );
+				echo esc_html( sprintf( $notice, $type, $msg ) );
 			}
 		);
 	}

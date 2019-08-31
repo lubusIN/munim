@@ -11,7 +11,6 @@
  * @package   Munim
  */
 
-use LubusIN\Munim\Helpers;
 ?>
 <div class="wrap">
 	<h2 class="flex items-center">
@@ -22,7 +21,7 @@ use LubusIN\Munim\Helpers;
 				</g>
 			</g>
 		</svg>
-		<?php echo wp_kses_post( get_admin_page_title() ); ?>
+		<?php echo esc_html( get_admin_page_title() ); ?>
 	</h2>
 
 	<div class="flex flex-wrap -mx-2 mt-4">

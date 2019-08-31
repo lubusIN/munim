@@ -35,8 +35,8 @@ class Invoices {
 	 */
 	public static function init() {
 		add_action( 'init', [ __CLASS__, 'register_cpt' ], 0 );
-		add_filter( 'gettext', [ __CLASS__, 'rename_text'] );
-		add_filter( 'ngettext', [ __CLASS__, 'rename_text'] );
+		add_filter( 'gettext', [ __CLASS__, 'rename_text' ] );
+		add_filter( 'ngettext', [ __CLASS__, 'rename_text' ] );
 		add_action( 'init', [ __CLASS__, 'register_status' ] );
 		add_action( 'admin_footer-edit.php', [ __CLASS__, 'render_status_in_quick_edit' ] );
 		add_action( 'admin_footer-post.php', [ __CLASS__, 'render_status_in_edit' ] );
@@ -111,8 +111,8 @@ class Invoices {
 	/**
 	 * Rename text
 	 *
-	 * @param string $translated
-	 * @return void
+	 * @param string $translated translated text.
+	 * @return string
 	 */
 	public static function rename_text( $translated ) {
 		// Bailout if not invoices.
@@ -121,12 +121,11 @@ class Invoices {
 		}
 
 		$words = array(
-			// 'word to translate' = > 'translation'
 			'Published' => 'Issued',
 			'Publish'   => 'Issue',
 		);
 
-		$translated = str_ireplace(  array_keys($words),  $words,  $translated );
+		$translated = str_ireplace( array_keys( $words ), $words, $translated );
 		return $translated;
 	}
 
@@ -209,8 +208,8 @@ class Invoices {
 					});
 			</script>";
 
-			echo sprintf( $script, $invoice_status_slug);
-		}
+			echo esc_js( sprintf( $script, $invoice_status_slug ) );
+	}
 
 	/**
 	 * Render status in add/edit screen.
@@ -223,7 +222,7 @@ class Invoices {
 			return;
 		}
 
-		$invoice_status_slug = get_post_status();
+		$invoice_status_slug  = get_post_status();
 		$invoice_status_label = get_post_status_object( $invoice_status_slug )->label;
 
 		$script = "<script>
@@ -238,7 +237,7 @@ class Invoices {
 				jQuery( '#post-status-display' ).text( '%2\$s' );
 			</script>";
 
-		echo sprintf( $script, $invoice_status_slug, $invoice_status_label );
+		echo esc_js( sprintf( $script, $invoice_status_slug, $invoice_status_label ) );
 	}
 
 	/**
@@ -313,8 +312,8 @@ class Invoices {
 				'name'        => 'Date',
 				'id'          => self::$meta_prefix . 'date',
 				'type'        => 'text_date_timestamp',
-				'date_format' => isset( $munim_settings_invoice['date_format']) ? $munim_settings_invoice['date_format'] : 'd/m/Y',
-				'column'     => [
+				'date_format' => isset( $munim_settings_invoice['date_format'] ) ? $munim_settings_invoice['date_format'] : 'd/m/Y',
+				'column'      => [
 					'position' => 3,
 					'name'     => 'Invoice Date',
 				],
@@ -323,9 +322,9 @@ class Invoices {
 
 		$invoice_details->add_field(
 			[
-				'name'        => 'TDS',
-				'id'          => self::$meta_prefix . 'tds',
-				'type'        => 'checkbox',
+				'name' => 'TDS',
+				'id'   => self::$meta_prefix . 'tds',
+				'type' => 'checkbox',
 			]
 		);
 
@@ -449,7 +448,7 @@ class Invoices {
 	 */
 	public static function get_tds() {
 		$settings = get_option( 'munim_settings_invoice', array() );
-		$tds   = ! empty( $settings ) && isset( $settings['tds'] ) ? $settings['tds'] : 10;
+		$tds      = ! empty( $settings ) && isset( $settings['tds'] ) ? $settings['tds'] : 10;
 
 		return $tds;
 	}
@@ -566,7 +565,7 @@ class Invoices {
 		}
 
 		// sanitize data and verify nonce.
-		$action     = sanitize_key( 'zip' ===  $_REQUEST['munim_action'] ? $action :  $_REQUEST['munim_action']  );
+		$action     = sanitize_key( 'zip' === $_REQUEST['munim_action'] ? $action : $_REQUEST['munim_action'] );
 		$nonce      = sanitize_key( $_REQUEST['nonce'] );
 		$invoice_id = sanitize_key( 'save' === $action ? $invoice_id : $_REQUEST['munim_invoice_id'] );
 
@@ -592,9 +591,10 @@ class Invoices {
 		$dompdf->render();
 
 		if ( 'save' === $action ) {
+			// phpcs:ignore
 			file_put_contents( MUNIM_PLUGIN_UPLOAD . Helpers::get_file_name( $invoice_id ), $dompdf->output() ); // Save pdf
 		} else {
-			// View or download pdf
+			// View or download pdf.
 			$dompdf->stream(
 				Helpers::get_file_name( $invoice_id ),
 				[
@@ -649,9 +649,9 @@ class Invoices {
 	public static function add_pdf_actions( $post ) {
 		if ( 'munim_invoice' === $post->post_type ) {
 			echo '<div class="misc-pub-section misc-pub-section-pdf">';
-			echo '<a href="' . self::get_view_url() . '" class="button button-secondary" target="_blank"><span class="dashicons dashicons-visibility" style="margin-top: 3px"></span> View</a>';
+			echo '<a href="' . esc_url( self::get_view_url() ) . '" class="button button-secondary" target="_blank"><span class="dashicons dashicons-visibility" style="margin-top: 3px"></span> View</a>';
 			echo '&nbsp;&nbsp;';
-			echo '<a href="' . self::get_download_url() . '" class="button button-secondary"><span class="dashicons dashicons-download" style="margin-top: 3px"></span>Download</a>';
+			echo '<a href="' . esc_url( self::get_download_url() ) . '" class="button button-secondary"><span class="dashicons dashicons-download" style="margin-top: 3px"></span>Download</a>';
 			echo '</div>';
 		}
 	}
@@ -675,7 +675,7 @@ class Invoices {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_POST['nonce'], 'zip' ) ) {
+		if ( isset( $_POST['nonce'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'zip' ) ) {
 			wp_die( 'invalid request' );
 		}
 
@@ -690,7 +690,8 @@ class Invoices {
 				'paid',
 				'partial',
 			],
-			'meta_query'      =>  [
+			// phpcs:ignore
+			'meta_query'     => [
 				[
 					'key'     => 'munim_invoice_date',
 					'compare' => 'BETWEEN',
@@ -742,6 +743,7 @@ class Invoices {
 			header( 'Content-Length: ' . filesize( $zip_path ) );
 
 			flush();
+			// phpcs:ignore
 			readfile( $zip_path );
 		}
 

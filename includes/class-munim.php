@@ -117,7 +117,7 @@ final class Munim {
 			'apexcharts-script',
 			'https://cdn.jsdelivr.net/npm/apexcharts',
 			[],
-			null,
+			'3.8.4',
 			true
 		);
 		wp_enqueue_script( 'apexcharts-script' );
@@ -134,7 +134,7 @@ final class Munim {
 		wp_register_script(
 			'munim-script',
 			MUNIM_PLUGIN_URL . 'assets/js/script.js',
-			['apexcharts-script','munim-clipboard','jquery'],
+			[ 'apexcharts-script', 'munim-clipboard', 'jquery' ],
 			filemtime( MUNIM_PLUGIN_DIR . 'assets/js/script.js' ),
 			true
 		);
@@ -181,7 +181,7 @@ final class Munim {
 	 * Register Menu
 	 */
 	public function register_menu() {
-		// Add munim menu
+		// Add munim menu.
 		add_menu_page(
 			__( 'Munim - Simple Invoicing', 'munim' ),
 			'Munim',
@@ -191,20 +191,20 @@ final class Munim {
 			'dashicons-analytics'
 		);
 
-		// Rename sub menu for munim to dashboard
+		// Rename sub menu for munim to dashboard.
 		add_submenu_page(
 			'admin.php?page=munim',
-			'Dashboard',
-			'Dashboard',
+			__( 'Dashboard', 'munim' ),
+			__( 'Dashboard', 'munim' ),
 			'manage_options',
 			'admin.php?page=munim'
 		);
 
-		// Settings import / export
+		// Settings import / export.
 		add_submenu_page(
 			'admin.php?page=munim',
-			'Import / Export',
-			'Import / Export',
+			__( 'Import / Export', 'munim' ),
+			__( 'Import / Export', 'munim' ),
 			'manage_options',
 			'admin.php?page=munim_import_export',
 			[ $this, 'render_import_export' ]
@@ -221,11 +221,12 @@ final class Munim {
 		$munim_submenu = [];
 		foreach ( $submenu as $menu_name => $menu_items ) {
 			if ( 'admin.php?page=munim' === $menu_name ) {
-				$munim_submenu[0]                = $menu_items[2]; // Dashboard.
-				$munim_submenu[1]                = $menu_items[0]; // Clients.
-				$munim_submenu[2]                = $menu_items[1]; // Invoices.
-				$munim_submenu[3]                = $menu_items[4]; // Settings.
-				$munim_submenu[4]                = $menu_items[3]; // Import / Export.
+				$munim_submenu[0] = $menu_items[2]; // Dashboard.
+				$munim_submenu[1] = $menu_items[0]; // Clients.
+				$munim_submenu[2] = $menu_items[1]; // Invoices.
+				$munim_submenu[3] = $menu_items[4]; // Settings.
+				$munim_submenu[4] = $menu_items[3]; // Import / Export.
+				// phpcs:ignore
 				$submenu['admin.php?page=munim'] = $munim_submenu;
 				break;
 			}

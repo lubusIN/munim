@@ -341,8 +341,10 @@ class Settings {
 				'id'      => 'template',
 				'type'    => 'radio_inline',
 				'options' => array(
-					'minimal' => __( 'Minimal <br/> <br/><img width="200px" src="' . $screenshot_path . 'minimal/screenshot.png" />', 'munim' ),
-					'modern'  => __( 'Modern <br/> <br/><img width="200px" src="' . $screenshot_path . 'modern/screenshot.png" />', 'munim' ),
+					'minimal' => sprintf(
+						'Minimal <br/> <br/><img width="200px" src="%sminimal/screenshot.png" />',
+						$screenshot_path
+					),
 				),
 				'default' => 'minimal',
 			]
@@ -397,18 +399,23 @@ class Settings {
 		// Process action.
 		ignore_user_abort( true );
 
-		switch ( $_POST['munim_action'] ) {
-			case 'import_settings':
-				if ( wp_verify_nonce( $_POST['munim_import_nonce'], 'munim_import_nonce' ) ) {
-					self::import();
-				}
-				break;
+		if ( isset( $_REQUEST['munim_import_nonce'] ) || isset( $_REQUEST['munim_export_nonce'] ) ) {
+			switch ( $_POST['munim_action'] ) {
+				case 'import_settings':
+					$import_nonce = sanitize_text_field( wp_unslash( $_REQUEST['munim_import_nonce'] ) );
 
-			case 'export_settings':
-				if ( wp_verify_nonce( $_POST['munim_export_nonce'], 'munim_export_nonce' ) ) {
-					self::export();
-				}
-				break;
+					if ( wp_verify_nonce( $import_nonce, 'munim_import_nonce' ) ) {
+						self::import();
+					}
+					break;
+				case 'export_settings':
+					$export_nonce = sanitize_text_field( wp_unslash( $_REQUEST['munim_export_nonce'] ) );
+
+					if ( wp_verify_nonce( $export_nonce, 'munim_export_nonce' ) ) {
+						self::export();
+					}
+					break;
+			}
 		}
 	}
 
@@ -419,25 +426,34 @@ class Settings {
 	 */
 	public static function import() {
 		// File validation.
-		$filename = explode( '.', $_FILES['munim_import_file']['name'] );
-		$extension = end( $filename );
-		if ( 'json' !== $extension ) {
-			Helpers::add_admin_notice( 'error', 'Please upload a valid .json file' );
+		if ( isset( $_FILES['munim_import_file'] ) ) {
+
+			$import_file = sanitize_text_field( wp_unslash( $_FILES['munim_import_file'] ) );
+
+			$filename  = explode( '.', $import_file['name'] );
+			$extension = end( $filename );
+			if ( 'json' !== $extension ) {
+				Helpers::add_admin_notice( 'error', 'Please upload a valid .json file' );
+			}
+
+			$import_file = $import_file['tmp_name'];
+			if ( empty( $import_file ) ) {
+				Helpers::add_admin_notice( 'error', 'Please upload a file to import' );
+			}
+
+			// Process import.
+			// phpcs:ignore
+			$settings = json_decode( file_get_contents( $import_file ), true );
+
+			foreach ( $settings as $key => $value ) {
+				update_option( $key, $value );
+			}
+
+			Helpers::add_admin_notice( 'success', 'Settings imported successfully' );
+
+		} else {
+			Helpers::add_admin_notice( 'error', 'Please upload valid settings file' );
 		}
-
-		$import_file = $_FILES['munim_import_file']['tmp_name'];
-		if ( empty( $import_file ) ) {
-			Helpers::add_admin_notice( 'error', 'Please upload a file to import' );
-		}
-
-		// Process import.
-		$settings = json_decode( file_get_contents( $import_file ), true );
-
-		foreach ( $settings as $key => $value ) {
-			update_option( $key, $value );
-		}
-
-		Helpers::add_admin_notice( 'success', 'Settings imported successfully' );
 	}
 
 	/**
@@ -450,7 +466,7 @@ class Settings {
 		$settings = [];
 
 		foreach ( self::$option_keys as $option ) {
-			$option_id           = self::$options_prefix . $option;
+			$option_id              = self::$options_prefix . $option;
 			$settings[ $option_id ] = get_option( $option_id );
 		}
 
