@@ -105,6 +105,7 @@ final class Munim {
 			'admin_page_munim_settings_bank',
 			'admin_page_munim_settings_template',
 			'munim_page_admin?page=munim_import_export',
+			'edit-munim_invoice',
 		];
 
 		// Bailout if not munim dashboard.
@@ -171,7 +172,7 @@ final class Munim {
 		wp_register_style(
 			'munim',
 			MUNIM_PLUGIN_URL . 'assets/css/munim.css',
-			[],
+			[ 'munim-tailwind' ],
 			filemtime( MUNIM_PLUGIN_DIR . 'assets/css/munim.css' )
 		);
 		wp_enqueue_style( 'munim' );

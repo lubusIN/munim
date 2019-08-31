@@ -34,21 +34,32 @@ class Invoices {
 	 * @return void
 	 */
 	public static function init() {
+		// Register CPT, CMB and renaming words.
 		add_action( 'init', [ __CLASS__, 'register_cpt' ], 0 );
+		add_action( 'cmb2_admin_init', [ __CLASS__, 'register_cmb' ] );
 		add_filter( 'gettext', [ __CLASS__, 'rename_text' ] );
 		add_filter( 'ngettext', [ __CLASS__, 'rename_text' ] );
-		add_action( 'init', [ __CLASS__, 'register_status' ] );
 
+		// Admin columns.
+		add_filter( 'manage_munim_invoice_posts_columns', [ __CLASS__, 'admin_columns' ] );
+		add_action( 'manage_munim_invoice_posts_custom_column', [ __CLASS__, 'admin_columns_render' ], 10, 2 );
+
+		// Status.
+		add_action( 'init', [ __CLASS__, 'register_status' ] );
 		add_action( 'admin_footer-edit.php', [ __CLASS__, 'render_status_in_edit' ] );
 		add_action( 'admin_footer-post.php', [ __CLASS__, 'render_status_in_edit' ] );
 		add_action( 'admin_footer-post-new.php', [ __CLASS__, 'render_status_in_edit' ] );
 
-		add_action( 'post_row_actions', [ __CLASS__, 'render_row_actions' ], 10, 2 );
-		add_action( 'cmb2_admin_init', [ __CLASS__, 'register_cmb' ] );
+		// Processing data.
 		add_action( 'save_post_munim_invoice', [ __CLASS__, 'update_number' ], 10, 3 );
 		add_action( 'wp_insert_post', [ __CLASS__, 'update_totals' ], 10, 3 );
+
+		// Generate Files.
 		add_action( 'admin_init', [ __CLASS__, 'generate_pdf' ] );
 		add_action( 'admin_init', [ __CLASS__, 'generate_zip' ] );
+
+		// PDF download action render.
+		add_action( 'post_row_actions', [ __CLASS__, 'render_row_actions' ], 10, 2 );
 		add_action( 'post_submitbox_misc_actions', [ __CLASS__, 'add_pdf_actions' ] );
 	}
 
@@ -129,6 +140,57 @@ class Invoices {
 
 		$translated = str_ireplace( array_keys( $words ), $words, $translated );
 		return $translated;
+	}
+
+	/**
+	 * Admin list columns.
+	 *
+	 * @param array $columns columns for admin list.
+	 * @return array
+	 */
+	public static function admin_columns( $columns ) {
+		$columns = [
+			'cb'                   => $columns['cb'],
+			'title'                => __( 'Title', 'munim' ),
+			'munim_invoice_date'   => __( 'Invoice Date', 'munim' ),
+			'munim_invoice_amount' => __( 'Amount', 'munim' ),
+			'munim_invoice_status' => __( 'Status', 'munim' ),
+			'date'                 => __( 'Date', 'munim' ),
+		];
+
+		return $columns;
+	}
+
+	/**
+	 * Render admin column.
+	 *
+	 * @param string $column column name.
+	 * @param int    $post_id post id.
+	 * @return void
+	 */
+	public static function admin_columns_render( $column, $post_id ) {
+		switch ( $column ) {
+			case 'munim_invoice_amount':
+					$amount          = number_format( get_post_meta( $post_id, 'munim_invoice_total', true ) );
+					$currency_symbol = get_munim_currency_symbol();
+					$render_amount   = sprintf( '%s %s', $currency_symbol, $amount );
+
+					echo esc_html( $render_amount );
+				break;
+
+			case 'munim_invoice_status':
+					$html          = '<span class="%s inline-block rounded-full px-2 text-center text-xs font-medium">%s</span>';
+					$status        = get_post_status( $post_id );
+					$classes       = Helpers::get_status_classes( $status );
+					$render_column = sprintf( $html, $classes, $status );
+
+					// phpcs:ignore
+					echo $render_column;
+				break;
+
+			default:
+				break;
+		}
 	}
 
 	/**
