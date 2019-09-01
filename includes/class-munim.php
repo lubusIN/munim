@@ -61,6 +61,7 @@ final class Munim {
 		add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
 		add_action( 'admin_menu', [ $this, 'register_menu' ] );
 		add_action( 'custom_menu_order', [ $this, 'reorder_menu' ] );
+		add_filter( 'submenu_file', [ $this, 'submenu_active' ] );
 
 		// Modules.
 		Settings::init();
@@ -99,12 +100,12 @@ final class Munim {
 		$screen = get_current_screen();
 
 		$plugin_pages = [
-			'toplevel_page_admin?page=munim',
+			'toplevel_page_munim',
 			'munim_page_munim_settings_business',
 			'admin_page_munim_settings_invoice',
 			'admin_page_munim_settings_bank',
 			'admin_page_munim_settings_template',
-			'munim_page_admin?page=munim_import_export',
+			'munim_page_munim_import_export',
 			'edit-munim_invoice',
 		];
 
@@ -187,27 +188,27 @@ final class Munim {
 			__( 'Munim - Simple Invoicing', 'munim' ),
 			'Munim',
 			'manage_options',
-			'admin.php?page=munim',
+			'munim',
 			[ $this, 'render_dashboard' ],
 			'dashicons-analytics'
 		);
 
 		// Rename sub menu for munim to dashboard.
 		add_submenu_page(
-			'admin.php?page=munim',
+			'munim',
 			__( 'Dashboard', 'munim' ),
 			__( 'Dashboard', 'munim' ),
 			'manage_options',
-			'admin.php?page=munim'
+			'munim'
 		);
 
 		// Settings import / export.
 		add_submenu_page(
-			'admin.php?page=munim',
+			'munim',
 			__( 'Import / Export', 'munim' ),
 			__( 'Import / Export', 'munim' ),
 			'manage_options',
-			'admin.php?page=munim_import_export',
+			'munim_import_export',
 			[ $this, 'render_import_export' ]
 		);
 	}
@@ -221,17 +222,39 @@ final class Munim {
 		global $submenu;
 		$munim_submenu = [];
 		foreach ( $submenu as $menu_name => $menu_items ) {
-			if ( 'admin.php?page=munim' === $menu_name ) {
+			if ( 'munim' === $menu_name ) {
 				$munim_submenu[0] = $menu_items[2]; // Dashboard.
 				$munim_submenu[1] = $menu_items[0]; // Clients.
 				$munim_submenu[2] = $menu_items[1]; // Invoices.
 				$munim_submenu[3] = $menu_items[4]; // Settings.
 				$munim_submenu[4] = $menu_items[3]; // Import / Export.
 				// phpcs:ignore
-				$submenu['admin.php?page=munim'] = $munim_submenu;
+				$submenu['munim'] = $munim_submenu;
 				break;
 			}
 		}
+	}
+
+	/**
+	 * Set active submenu
+	 *
+	 * @param string $submenu_file parent file.
+	 * @return string
+	 */
+	public static function submenu_active( $submenu_file ) {
+		global $current_screen, $parent_file;
+
+		$settings_screen = [
+			'admin_page_munim_settings_invoice',
+			'admin_page_munim_settings_bank',
+			'admin_page_munim_settings_template',
+		];
+
+		if ( in_array( $current_screen->base, $settings_screen, true ) ) {
+			$submenu_file = 'munim_settings_business';
+		}
+
+		return $submenu_file;
 	}
 
 	/**

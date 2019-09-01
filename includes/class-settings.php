@@ -55,14 +55,14 @@ class Settings {
 	public static function register() {
 		// Register business settings.
 		$args = [
-			'id'           => self::$options_prefix . 'business',
+			'id'           => self::$options_prefix . 'business_page',
 			'title'        => 'Business',
 			'object_types' => [ 'options-page' ],
 			'option_key'   => self::$options_prefix . 'business',
 			'tab_group'    => 'munim_settings',
 			'tab_title'    => 'Business',
 			'display_cb'   => [ __CLASS__, 'render' ],
-			'parent_slug'  => 'admin.php?page=munim',
+			'parent_slug'  => 'munim',
 			'menu_title'   => 'Settings',
 		];
 
@@ -196,14 +196,14 @@ class Settings {
 
 		// Invoice Settings.
 		$args = [
-			'id'           => self::$options_prefix . 'invoice',
+			'id'           => self::$options_prefix . 'invoice_page',
 			'title'        => 'Invoice',
 			'object_types' => [ 'options-page' ],
 			'option_key'   => self::$options_prefix . 'invoice',
 			'tab_group'    => 'munim_settings',
 			'tab_title'    => 'Invoice',
 			'display_cb'   => [ __CLASS__, 'render' ],
-			'parent_slug'  => 'admin.php?page=munim_settings_business',
+			'parent_slug'  => 'admin.php?page=munim',
 		];
 
 		$invoice_settings = new_cmb2_box( $args );
@@ -308,14 +308,14 @@ class Settings {
 
 		// Bank Settings.
 		$args = [
-			'id'           => self::$options_prefix . 'bank',
+			'id'           => self::$options_prefix . 'bank_page',
 			'title'        => 'Bank',
 			'object_types' => [ 'options-page' ],
 			'option_key'   => self::$options_prefix . 'bank',
 			'tab_group'    => 'munim_settings',
 			'tab_title'    => 'Bank',
 			'display_cb'   => [ __CLASS__, 'render' ],
-			'parent_slug'  => 'admin.php?page=munim_settings_business',
+			'parent_slug'  => 'admin.php?page=munim',
 		];
 
 		$bank_settings = new_cmb2_box( $args );
@@ -375,14 +375,14 @@ class Settings {
 
 		// Template Settings.
 		$args = [
-			'id'           => self::$options_prefix . 'template',
+			'id'           => self::$options_prefix . 'template_page',
 			'title'        => 'Template',
 			'object_types' => [ 'options-page' ],
 			'option_key'   => self::$options_prefix . 'template',
 			'tab_group'    => 'munim_settings',
 			'tab_title'    => 'Template',
 			'display_cb'   => [ __CLASS__, 'render' ],
-			'parent_slug'  => 'admin.php?page=munim_settings_business',
+			'parent_slug'  => 'admin.php?page=munim',
 		];
 
 		$template_settings = new_cmb2_box( $args );

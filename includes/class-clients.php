@@ -79,7 +79,7 @@ class Clients {
 			'hierarchical'        => false,
 			'public'              => true,
 			'show_ui'             => true,
-			'show_in_menu'        => 'admin.php?page=munim',
+			'show_in_menu'        => 'munim',
 			'menu_position'       => 5,
 			'show_in_admin_bar'   => true,
 			'show_in_nav_menus'   => false,
