@@ -62,6 +62,7 @@ final class Munim {
 		add_action( 'admin_menu', [ $this, 'register_menu' ] );
 		add_action( 'custom_menu_order', [ $this, 'reorder_menu' ] );
 		add_filter( 'submenu_file', [ $this, 'submenu_active' ] );
+		add_action( 'admin_head', [ $this, 'menu_active' ] );
 
 		// Modules.
 		Settings::init();
@@ -242,7 +243,7 @@ final class Munim {
 	 * @return string
 	 */
 	public static function submenu_active( $submenu_file ) {
-		global $current_screen, $parent_file;
+		global $current_screen;
 
 		$settings_screen = [
 			'admin_page_munim_settings_invoice',
@@ -255,6 +256,33 @@ final class Munim {
 		}
 
 		return $submenu_file;
+	}
+
+	/**
+	 * Set active submenu
+	 *
+	 * @return void
+	 */
+	public static function menu_active() {
+		global $current_screen;
+
+		$settings_screen = [
+			'admin_page_munim_settings_invoice',
+			'admin_page_munim_settings_bank',
+			'admin_page_munim_settings_template',
+		];
+
+		if ( in_array( $current_screen->base, $settings_screen, true ) ) {
+			$script = '<script type="text/javascript">
+						jQuery(document).ready( function($) {
+								$(\'#toplevel_page_munim\').removeClass(\'wp-not-current-submenu\').addClass(\'wp-has-current-submenu\');
+								$(\'#toplevel_page_munim > a\').addClass(\'wp-has-current-submenu\');
+							});
+						</script>';
+
+			// phpcs:ignore
+			echo $script;
+		}
 	}
 
 	/**
