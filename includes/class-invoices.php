@@ -50,6 +50,9 @@ class Invoices {
 		add_action( 'admin_footer-post.php', [ __CLASS__, 'render_status_in_edit' ] );
 		add_action( 'admin_footer-post-new.php', [ __CLASS__, 'render_status_in_edit' ] );
 
+		// Edit screen info / actions.
+		add_action( 'add_meta_boxes', [ __CLASS__, 'info_box' ] );
+
 		// Processing data.
 		add_action( 'save_post_munim_invoice', [ __CLASS__, 'update_number' ], 10, 3 );
 		add_action( 'wp_insert_post', [ __CLASS__, 'update_totals' ], 10, 3 );
@@ -171,11 +174,15 @@ class Invoices {
 	public static function admin_columns_render( $column, $post_id ) {
 		switch ( $column ) {
 			case 'munim_invoice_amount':
-					$amount          = number_format( get_post_meta( $post_id, 'munim_invoice_total', true ) );
-					$currency_symbol = get_munim_currency_symbol();
-					$render_amount   = sprintf( '%s %s', $currency_symbol, $amount );
+				if ( ! empty( get_post_meta( $post_id, 'munim_invoice_total', true ) ) ) {
+					$amount = number_format( get_post_meta( $post_id, 'munim_invoice_total', true ) );
+				} else {
+					$amount = 0;
+				}
+				$currency_symbol = get_munim_currency_symbol();
+				$render_amount   = sprintf( '%s %s', $currency_symbol, $amount );
 
-					echo esc_html( $render_amount );
+				echo esc_html( $render_amount );
 				break;
 
 			case 'munim_invoice_status':
@@ -465,6 +472,36 @@ class Invoices {
 				'before_field' => '%',
 			]
 		);
+	}
+
+	/**
+	 * Register metabox for invoice info.
+	 *
+	 * @return void
+	 */
+	public static function info_box() {
+		global $hook_suffix;
+
+		if ( 'post.php' !== $hook_suffix ) {
+			return;
+		}
+
+		add_meta_box(
+			'munim_invoice_info_box',
+			'Quick Info',
+			[ __CLASS__, 'render_info_box' ],
+			'munim_invoice',
+			'side'
+		);
+	}
+
+	/**
+	 * Render invoice info box.
+	 *
+	 * @return void
+	 */
+	public static function render_info_box() {
+		include_once 'views/invoice/info.php';
 	}
 
 	/**

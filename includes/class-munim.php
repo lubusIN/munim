@@ -100,6 +100,7 @@ final class Munim {
 
 		$screen = get_current_screen();
 
+		// Pages to enqueue assets.
 		$plugin_pages = [
 			'toplevel_page_munim',
 			'munim_page_munim_settings_business',
@@ -108,6 +109,7 @@ final class Munim {
 			'admin_page_munim_settings_template',
 			'munim_page_munim_import_export',
 			'edit-munim_invoice',
+			'munim_invoice',
 		];
 
 		// Bailout if not munim dashboard.
