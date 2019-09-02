@@ -170,6 +170,10 @@ class Helpers {
 					$classes = 'bg-red-100 border-2 border-red-200 text-red-500';
 				break;
 
+			case 'cancelled':
+					$classes = 'bg-gray-100 border-2 border-gray-200 text-gray-500';
+				break;
+
 			default:
 					$classes = 'bg-indigo-100 border-2 border-indigo-200 text-indigo-500';
 				break;
