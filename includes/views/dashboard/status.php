@@ -66,9 +66,7 @@ use LubusIN\Munim\Helpers;
 				<div class="w-1/2 flex flex-col p-4 border-b border-gray-300">
 					<span class="text-xl mb-2">
 						<?php
-							$munim_previous_all  = Helpers::get_invoice_status_count( 'all', 'previous' );
-							$munim_previous_paid = Helpers::get_invoice_status_count( [ 'paid', 'cancelled' ], 'previous' );
-							echo esc_html( $munim_previous_all - $munim_previous_paid );
+							echo esc_html( Helpers::get_invoice_status_count( 'overdue', 'All' ) );
 						?>
 					</span>
 					<span class="text-gray-500">

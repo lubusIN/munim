@@ -64,6 +64,10 @@ class Invoices {
 		// PDF download action render.
 		add_action( 'post_row_actions', [ __CLASS__, 'render_row_actions' ], 10, 2 );
 		add_action( 'post_submitbox_misc_actions', [ __CLASS__, 'add_pdf_actions' ] );
+
+		// Schedule events.
+		add_action( 'munim_update_status', [ __CLASS__, 'munim_update_status' ] );
+		add_action( 'wp', [ __CLASS__, 'munim_schedule_status_update' ] );
 	}
 
 	/**
@@ -253,6 +257,18 @@ class Invoices {
 			'exclude_from_search'       => true,
 		];
 		register_post_status( 'cancelled', $args );
+
+		// Overdue.
+		$args = [
+			'label'                     => _x( 'Overdue', 'Overdue Invoices', 'munim' ),
+			/* translators: Overdue invoices count */
+			'label_count'               => _n_noop( 'Overdue <span class="count">(%s)</span>', 'Overdue <span class="count">(%s)</span>', 'munim' ),
+			'public'                    => true,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			'exclude_from_search'       => true,
+		];
+		register_post_status( 'overdue', $args );
 	}
 
 	/**
@@ -824,5 +840,50 @@ class Invoices {
 
 		// Clean up all files.
 		array_map( 'unlink', glob( MUNIM_PLUGIN_UPLOAD . '*' ) );
+	}
+
+	/**
+	 * Action hook for invoice status update.
+	 *
+	 * @return void
+	 */
+	public static function munim_update_status() {
+		// Get all issued invoices.
+		$args = array(
+			'post_type'   => 'munim_invoice',
+			'post_status' => 'publish',
+			'numberposts' => -1,
+		);
+
+		$invoices = get_posts( $args );
+
+		if ( $invoices ) {
+			// Get credit period.
+			$munim_settings_invoice = get_option( 'munim_settings_invoice', [] );
+			$credit_peroid          = trim( $munim_settings_invoice['credit_peroid'] );
+
+			// Update status.
+			foreach ( $invoices as $invoice ) {
+				$invoice_date = $invoice->munim_invoice_date;
+				if ( $invoice_date > strtotime( sprintf( '+%s days', $credit_peroid ), $invoice_date ) ) {
+					$post = array(
+						'ID'          => $invoice->ID,
+						'post_status' => 'overdue',
+					);
+					wp_update_post( $post );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Schedule event to updating invoice status.
+	 *
+	 * @return void
+	 */
+	public static function munim_schedule_status_update() {
+		if ( ! wp_next_scheduled( 'munim_update_status' ) ) {
+			wp_schedule_event( time(), 'daily', 'munim_update_status' );
+		}
 	}
 }

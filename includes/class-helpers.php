@@ -165,6 +165,11 @@ class Helpers {
 			case 'partial':
 					$classes = 'bg-orange-100 border-2 border-orange-200 text-orange-500';
 				break;
+
+			case 'overdue':
+					$classes = 'bg-red-100 border-2 border-red-200 text-red-500';
+				break;
+
 			default:
 					$classes = 'bg-indigo-100 border-2 border-indigo-200 text-indigo-500';
 				break;
