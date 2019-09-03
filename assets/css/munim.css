@@ -14,3 +14,9 @@
 @media (min-width: 1280px) {
 
 }
+
+/* FIX: WP Styles conflict */
+.wp-menu-image img{
+    border-style: none;
+    display: initial;
+}
