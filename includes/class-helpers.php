@@ -207,6 +207,7 @@ class Helpers {
 				'publish',
 				'paid',
 				'partial',
+				'overdue',
 			];
 		} else {
 			$stat_args['post_status'] = $status;
