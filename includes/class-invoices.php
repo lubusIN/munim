@@ -808,7 +808,7 @@ class Invoices {
 		}
 
 		// Generate zip.
-		$invoice_month = Date( 'F-Y', strtotime( 'last month' ) );
+		$invoice_month = strtolower ( Date( 'F-Y', strtotime( 'last month' ) ) );
 		$zip_file      = 'munim-' . $invoice_month . '.zip';
 		$root_path     = MUNIM_PLUGIN_UPLOAD;
 		$zip_path      = $root_path . $zip_file;
@@ -840,10 +840,13 @@ class Invoices {
 			flush();
 			// phpcs:ignore
 			readfile( $zip_path );
-		}
 
-		// Clean up all files.
-		array_map( 'unlink', glob( MUNIM_PLUGIN_UPLOAD . '*' ) );
+			// Clean up all files and exit.
+			array_map( 'unlink', glob( MUNIM_PLUGIN_UPLOAD . '*' ) );
+			exit();
+		} else {
+			Helpers::add_admin_notice( 'error', 'Error generating invoice archive !' );
+		}
 	}
 
 	/**
