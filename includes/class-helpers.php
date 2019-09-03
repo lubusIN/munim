@@ -400,7 +400,8 @@ class Helpers {
 		add_action(
 			'admin_notices',
 			function () use ( $notice, $type, $msg ) {
-				echo esc_html( sprintf( $notice, $type, $msg ) );
+				// phpcs:ignore
+				echo sprintf( $notice, $type, $msg );
 			}
 		);
 	}

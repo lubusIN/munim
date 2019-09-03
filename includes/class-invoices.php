@@ -52,18 +52,19 @@ class Invoices {
 
 		// Edit screen info / actions.
 		add_action( 'add_meta_boxes', [ __CLASS__, 'info_box' ] );
+		add_action( 'add_meta_boxes', [ __CLASS__, 'actions_box' ] );
 
 		// Processing data.
 		add_action( 'save_post_munim_invoice', [ __CLASS__, 'update_number' ], 10, 3 );
 		add_action( 'wp_insert_post', [ __CLASS__, 'update_totals' ], 10, 3 );
 
-		// Generate Files.
+		// Process action.
 		add_action( 'admin_init', [ __CLASS__, 'generate_pdf' ] );
 		add_action( 'admin_init', [ __CLASS__, 'generate_zip' ] );
+		add_action( 'admin_init', [ __CLASS__, 'send_email' ] );
 
-		// PDF download action render.
+		// Row actions.
 		add_action( 'post_row_actions', [ __CLASS__, 'render_row_actions' ], 10, 2 );
-		add_action( 'post_submitbox_misc_actions', [ __CLASS__, 'add_pdf_actions' ] );
 
 		// Schedule events.
 		add_action( 'munim_update_status', [ __CLASS__, 'munim_update_status' ] );
@@ -191,7 +192,7 @@ class Invoices {
 
 			case 'munim_invoice_status':
 					$html          = '<span class="%s inline-block rounded-full px-2 text-center text-xs font-medium">%s</span>';
-					$status        = get_post_status( $post_id );
+					$status        = Helpers::get_invoice_status( get_post_status( $post_id ) );
 					$classes       = Helpers::get_status_classes( $status );
 					$render_column = sprintf( $html, $classes, $status );
 
@@ -291,6 +292,7 @@ class Invoices {
 						.append( '<option value=\"outstanding\">Outstanding</option>' )
 						.append( '<option value=\"paid\">Paid</option>' )
 						.append( '<option value=\"partial\">Partial</option>' )
+						.append( '<option value=\"overdue\">Overdue</option>' )
 						.append( '<option value=\"cancelled\">Cancelled</option>' )
 						.val('%1\$s');
 				});
@@ -310,10 +312,8 @@ class Invoices {
 	 */
 	public static function render_row_actions( $actions, $post ) {
 		if ( 'munim_invoice' === $post->post_type ) {
-			unset( $actions['view'] ); // Remove post preview.
-
-			$actions['view']     = '<a href="' . self::get_view_url() . '" target="_blank">View</a>';
-			$actions['download'] = '<a href="' . self::get_download_url() . '">Download</a>';
+			$actions['view']     = sprintf( '<a href="%s" target="_blank">%s</a>', self::get_url( 'view' ), __( 'View', 'munim' ) );
+			$actions['download'] = sprintf( '<a href="%s">%s</a>', self::get_url( 'download' ), __( 'Download', 'munim' ) );
 		}
 
 		return $actions;
@@ -521,6 +521,36 @@ class Invoices {
 	}
 
 	/**
+	 * Register metabox for invoice actions.
+	 *
+	 * @return void
+	 */
+	public static function actions_box() {
+		global $hook_suffix;
+
+		if ( 'post.php' !== $hook_suffix ) {
+			return;
+		}
+
+		add_meta_box(
+			'munim_invoice_actions_box',
+			'Actions',
+			[ __CLASS__, 'render_actions_box' ],
+			'munim_invoice',
+			'side'
+		);
+	}
+
+	/**
+	 * Render invoice actions box.
+	 *
+	 * @return void
+	 */
+	public static function render_actions_box() {
+		include_once 'views/invoice/actions.php';
+	}
+
+	/**
 	 * Generate invoice number
 	 *
 	 * @return string invoice number
@@ -646,8 +676,17 @@ class Invoices {
 	 * @return void
 	 */
 	public static function generate_pdf( $invoice_id = 0, $action = 'view', $nonce = null ) {
+		$actions = [ 'view', 'save' ];
+
 		// Bailout.
 		if ( ! isset( $_REQUEST['munim_action'], $_REQUEST['nonce'] ) ) {
+			return;
+		}
+
+		$action = sanitize_key( 'zip' === $_REQUEST['munim_action'] ? $action : $_REQUEST['munim_action'] );
+		$nonce  = sanitize_key( $_REQUEST['nonce'] );
+
+		if ( ! in_array( $action, $actions, true ) ) {
 			return;
 		}
 
@@ -655,14 +694,11 @@ class Invoices {
 			return;
 		}
 
-		// sanitize data and verify nonce.
-		$action     = sanitize_key( 'zip' === $_REQUEST['munim_action'] ? $action : $_REQUEST['munim_action'] );
-		$nonce      = sanitize_key( $_REQUEST['nonce'] );
-		$invoice_id = sanitize_key( 'save' === $action ? $invoice_id : $_REQUEST['munim_invoice_id'] );
-
 		if ( 'save' !== $action && ! wp_verify_nonce( $nonce, $action ) ) {
 			wp_die( 'Invalid request.' );
 		}
+
+		$invoice_id = sanitize_key( 'save' === $action ? $invoice_id : $_REQUEST['munim_invoice_id'] );
 
 		// Get template.
 		$munim_settings_template = get_option( 'munim_settings_template', [] );
@@ -698,53 +734,21 @@ class Invoices {
 	}
 
 	/**
-	 * PDF view url.
+	 * Get url.
 	 *
-	 * @return array
+	 * @param string $action name of url action.
+	 * @return string
 	 */
-	public static function get_view_url() {
+	public static function get_url( $action ) {
 		global $post;
-		$view_url = add_query_arg(
+		$url = add_query_arg(
 			[
-				'munim_action'     => 'view',
+				'munim_action'     => $action,
 				'munim_invoice_id' => $post->ID,
-				'nonce'            => wp_create_nonce( 'view' ),
+				'nonce'            => wp_create_nonce( $action ),
 			]
 		);
-		return $view_url;
-	}
-
-	/**
-	 * PDF download url.
-	 *
-	 * @return array
-	 */
-	public static function get_download_url() {
-		global $post;
-		$download_url = add_query_arg(
-			[
-				'munim_action'     => 'download',
-				'munim_invoice_id' => $post->ID,
-				'nonce'            => wp_create_nonce( 'download' ),
-			]
-		);
-		return $download_url;
-	}
-
-	/**
-	 * Add pdf actions to publish metabox
-	 *
-	 * @param WP_Post $post invoice post object.
-	 * @return void
-	 */
-	public static function add_pdf_actions( $post ) {
-		if ( 'munim_invoice' === $post->post_type ) {
-			echo '<div class="misc-pub-section misc-pub-section-pdf">';
-			echo '<a href="' . esc_url( self::get_view_url() ) . '" class="button button-secondary" target="_blank"><span class="dashicons dashicons-visibility" style="margin-top: 3px"></span> View</a>';
-			echo '&nbsp;&nbsp;';
-			echo '<a href="' . esc_url( self::get_download_url() ) . '" class="button button-secondary"><span class="dashicons dashicons-download" style="margin-top: 3px"></span>Download</a>';
-			echo '</div>';
-		}
+		return $url;
 	}
 
 	/**
@@ -840,6 +844,24 @@ class Invoices {
 
 		// Clean up all files.
 		array_map( 'unlink', glob( MUNIM_PLUGIN_UPLOAD . '*' ) );
+	}
+
+	/**
+	 * Send email.
+	 *
+	 * @return void
+	 */
+	public static function send_email() {
+		// Bailout.
+		if ( ! isset( $_REQUEST['munim_action'], $_REQUEST['nonce'] ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ), 'email' ) ) {
+			wp_die( 'invalid request' );
+		}
+
+		Helpers::add_admin_notice( 'success', 'Will trigger email request' );
 	}
 
 	/**

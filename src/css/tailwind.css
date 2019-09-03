@@ -1,3 +1,10 @@
+/* Load Tailwindcss */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* FIX: WP Styles conflict */
+.wp-menu-image img{
+    border-style: none;
+    display: initial;
+}
