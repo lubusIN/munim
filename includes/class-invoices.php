@@ -885,12 +885,13 @@ class Invoices {
 		if ( $invoices ) {
 			// Get credit period.
 			$munim_settings_invoice = get_option( 'munim_settings_invoice', [] );
-			$credit_peroid          = trim( $munim_settings_invoice['credit_peroid'] );
+			$credit_peroid          = trim( $munim_settings_invoice['credit'] );
 
 			// Update status.
 			foreach ( $invoices as $invoice ) {
 				$invoice_date = $invoice->munim_invoice_date;
-				if ( $invoice_date > strtotime( sprintf( '+%s days', $credit_peroid ), $invoice_date ) ) {
+				// Check if today is more then invoice date + 15 days credit.
+				if ( time() > strtotime( sprintf( '+%s days', $credit_peroid ), $invoice_date ) ) {
 					$post = array(
 						'ID'          => $invoice->ID,
 						'post_status' => 'overdue',
