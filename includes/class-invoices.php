@@ -593,7 +593,8 @@ class Invoices {
 		}
 
 		// Bailout if post status is auto-draft.
-		if ( 'auto-draft' === $post->post_status ) {
+		$allowed_status = [ 'draft', 'publish' ];
+		if ( ! in_array( $post->post_status, $allowed_status, true ) ) {
 			return;
 		}
 
