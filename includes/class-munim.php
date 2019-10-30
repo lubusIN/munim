@@ -28,6 +28,22 @@ final class Munim {
 	private static $instance;
 
 	/**
+	 * Plugin pages
+	 *
+	 * @var array
+	 */
+	public static $plugin_pages = [
+		'toplevel_page_munim',
+		'munim_page_munim_settings_business',
+		'admin_page_munim_settings_invoice',
+		'admin_page_munim_settings_bank',
+		'admin_page_munim_settings_template',
+		'munim_page_munim_import_export',
+		'edit-munim_invoice',
+		'munim_invoice',
+	];
+
+	/**
 	 * Singleton pattern.
 	 *
 	 * @since
@@ -100,20 +116,8 @@ final class Munim {
 
 		$screen = get_current_screen();
 
-		// Pages to enqueue assets.
-		$plugin_pages = [
-			'toplevel_page_munim',
-			'munim_page_munim_settings_business',
-			'admin_page_munim_settings_invoice',
-			'admin_page_munim_settings_bank',
-			'admin_page_munim_settings_template',
-			'munim_page_munim_import_export',
-			'edit-munim_invoice',
-			'munim_invoice',
-		];
-
 		// Bailout if not munim dashboard.
-		if ( ! in_array( $screen->id, $plugin_pages, true ) ) {
+		if ( ! in_array( $screen->id, self::$plugin_pages, true ) ) {
 			return;
 		}
 
