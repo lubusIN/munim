@@ -53,6 +53,7 @@ class Invoices {
 		// Edit screen info / actions.
 		add_action( 'add_meta_boxes', [ __CLASS__, 'info_box' ] );
 		add_action( 'add_meta_boxes', [ __CLASS__, 'actions_box' ] );
+		add_filter( 'preview_post_link', [ __CLASS__, 'preview_invoice_link' ], 10, 2 );
 
 		// Processing data.
 		add_action( 'save_post_munim_invoice', [ __CLASS__, 'update_number' ], 10, 3 );
@@ -317,6 +318,21 @@ class Invoices {
 		}
 
 		return $actions;
+	}
+
+	/**
+	 * Invoice preview link
+	 *
+	 * @param  string  $link preview link.
+	 * @param  WP_Post $post current post object.
+	 * @return string
+	 */
+	public static function preview_invoice_link( $link, $post ) {
+		if ( 'munim_invoice' === $post->post_type ) {
+			return self::get_url( 'view', admin_url( 'edit.php' ) );
+		} else {
+			return $link;
+		}
 	}
 
 	/**
@@ -740,14 +756,15 @@ class Invoices {
 	 * @param string $action name of url action.
 	 * @return string
 	 */
-	public static function get_url( $action ) {
+	public static function get_url( $action, $url = null ) {
 		global $post;
 		$url = add_query_arg(
 			[
 				'munim_action'     => $action,
 				'munim_invoice_id' => $post->ID,
 				'nonce'            => wp_create_nonce( $action ),
-			]
+			],
+			$url
 		);
 		return $url;
 	}
