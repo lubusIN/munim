@@ -481,17 +481,19 @@ class Settings {
 		// File validation.
 		if ( isset( $_FILES['munim_import_file'] ) ) {
 
-			$import_file = sanitize_text_field( wp_unslash( $_FILES['munim_import_file'] ) );
+			$import_file = $_FILES['munim_import_file'];
 
 			$filename  = explode( '.', $import_file['name'] );
 			$extension = end( $filename );
 			if ( 'json' !== $extension ) {
 				Helpers::add_admin_notice( 'error', 'Please upload a valid .json file' );
+				return;
 			}
 
 			$import_file = $import_file['tmp_name'];
 			if ( empty( $import_file ) ) {
 				Helpers::add_admin_notice( 'error', 'Please upload a file to import' );
+				return;
 			}
 
 			// Process import.
@@ -503,9 +505,11 @@ class Settings {
 			}
 
 			Helpers::add_admin_notice( 'success', 'Settings imported successfully' );
+			return;
 
 		} else {
 			Helpers::add_admin_notice( 'error', 'Please upload valid settings file' );
+			return;
 		}
 	}
 
