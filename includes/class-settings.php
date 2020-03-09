@@ -253,6 +253,15 @@ class Settings {
 			]
 		);
 
+		$invoice_settings->add_field(
+			[
+				'name'        => 'Exchange Rate API Key',
+				'id'          => 'exchange_rate_api_key',
+				'type'        => 'text',
+				'description' => __( '<a href="https://www.exchangerate-api.com/app/sign-up" target="_blank">Get API Key</a>', 'munim' )
+			]
+		);
+
 		$invoice_info = $invoice_settings->add_field(
 			[
 				'id'         => 'info',

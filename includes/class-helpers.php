@@ -433,21 +433,27 @@ class Helpers {
 		$rate = 0;
 
 		// Return cached rates if available.
-		$exchange_rates = get_transient( 'munim_exchange_rates' );
+		$exchange_rates = get_transient( 'munim_exchange_rates_' . $from );
 
 		if ( $exchange_rates ) {
-			$rate_info = json_decode( $exchange_rates );
-			$rate      = $rate_info->rates->$to;
+			$rate = $exchange_rates->conversion_rates->$to;
+
 			return $rate;
 		}
 
+		// Get API Key.
+		$invoice_settings = get_option( 'munim_settings_invoice' );
+		$api_key          = $invoice_settings['exchange_rate_api_key'];
+
 		// Fetch and store live rates if not already cached.
-		$request_uri      = sprintf( 'https://api.exchangeratesapi.io/latest?base=%s&symbols=%s', $from, $to );
+		$request_uri      = "https://prime.exchangerate-api.com/v5/${api_key}/latest/${from}";
 		$request_response = wp_remote_get( $request_uri );
 
 		if ( ! is_wp_error( $request_response ) ) {
-			set_transient( 'munim_exchange_rates', $request_response['body'], 24 * HOURS_IN_SECONDS );
-			$rate = $exchange_rates['rates']['INR'];
+			$exchange_rates = json_decode( wp_remote_retrieve_body( $request_response ) );
+			$rate           = $exchange_rates->conversion_rates->$to;
+
+			set_transient( 'munim_exchange_rates_' . $from, $exchange_rates, DAY_IN_SECONDS );
 		}
 
 		return $rate;
@@ -456,7 +462,7 @@ class Helpers {
 	/**
 	 * Get exchange rate amount
 	 *
-	 * @param int    $amount imount to convert.
+	 * @param int    $amount amount to convert.
 	 * @param string $from from currency.
 	 * @param string $to to currency.
 	 * @return int
@@ -478,7 +484,7 @@ class Helpers {
 	public static function maybe_convert_amount( $amount, $client_currency ) {
 		$base_currency = get_munim_currency();
 
-		if ( get_munim_currency() !== $client_currency ) {
+		if ( $base_currency !== $client_currency ) {
 			$amount = self::get_exchange_rate_amount( $amount, $client_currency, $base_currency );
 		}
 
