@@ -126,7 +126,7 @@ final class Munim {
 			'apexcharts-script',
 			'https://cdn.jsdelivr.net/npm/apexcharts',
 			[],
-			'3.8.4',
+			'3.17.0',
 			true
 		);
 		wp_enqueue_script( 'apexcharts-script' );
