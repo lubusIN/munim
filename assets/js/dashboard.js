@@ -1,5 +1,6 @@
 var options = {
 	chart: {
+		height: '100%',
 	  type: 'line',
 	  zoom: {
 		enabled: false
