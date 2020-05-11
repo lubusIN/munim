@@ -1,5 +1,12 @@
 const mix = require('laravel-mix');
+require('mix-tailwindcss');
+require('laravel-mix-purgecss');
 
-const plugins = [require("tailwindcss")];
+mix.postCss('src/css/tailwind.css', 'assets/css')
+   .tailwind();
 
-mix.postCss("src/css/tailwind.css", "assets/css", plugins);
+if (mix.inProduction()) {
+	mix.purgeCss({
+		folders: ['includes'],
+	});
+}
