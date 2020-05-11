@@ -1,4 +1,7 @@
 module.exports = {
+  purge: [
+	  './includes/**/*.php'
+  ],
   theme: {
     extend: {}
   },
