@@ -50,6 +50,4 @@ vendor
 
 # Build folders
 build
-
-# package manager
-package-lock.json
+assets
