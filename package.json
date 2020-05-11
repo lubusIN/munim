@@ -7,20 +7,18 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "cross-env": "^5.2.1",
-    "laravel-mix": "^4.0.16",
-    "laravel-mix-purgecss": "^4.1.0",
+    "cross-env": "^7.0.2",
+    "laravel-mix": "^5.0.4",
     "live-server": "^1.2.1",
-    "mix-tailwindcss": "^1.1.0",
-    "tailwindcss": "^1.1.2"
+    "tailwindcss": "^1.4.6"
   },
   "scripts": {
     "serve": "live-server . --host=localhost --port=8080",
-    "dev": "yarn run development",
+    "dev": "npm run development",
     "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch": "yarn run development -- --watch",
+    "watch": "npm run development -- --watch",
     "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "prod": "yarn run production",
+    "prod": "npm run production",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   }
 }
