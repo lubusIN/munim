@@ -1,0 +1,22 @@
+/* S: Mobile */
+
+/* M: Tablet */
+@media (min-width: 768px) {
+
+}
+
+/* L: Laptop */
+@media (min-width: 1024px) {
+
+}
+
+/* XL: Desktop */
+@media (min-width: 1280px) {
+
+}
+
+/* FIX: WP Styles conflict */
+.wp-menu-image img{
+    border-style: none;
+    display: initial;
+}
