@@ -142,18 +142,18 @@ final class Munim {
 
 		wp_register_script(
 			'munim-script',
-			MUNIM_PLUGIN_URL . 'assets/js/script.js',
+			MUNIM_PLUGIN_URL . 'assets/js/script.min.js',
 			[ 'apexcharts-script', 'munim-clipboard', 'jquery' ],
-			filemtime( MUNIM_PLUGIN_DIR . 'assets/js/script.js' ),
+			filemtime( MUNIM_PLUGIN_DIR . 'assets/js/script.min.js' ),
 			true
 		);
 		wp_enqueue_script( 'munim-script' );
 
 		wp_register_script(
 			'munim-dashboard',
-			MUNIM_PLUGIN_URL . 'assets/js/dashboard.js',
+			MUNIM_PLUGIN_URL . 'assets/js/dashboard.min.js',
 			[],
-			filemtime( MUNIM_PLUGIN_DIR . 'assets/js/dashboard.js' ),
+			filemtime( MUNIM_PLUGIN_DIR . 'assets/js/dashboard.min.js' ),
 			true
 		);
 		wp_enqueue_script( 'munim-dashboard' );
