@@ -51,3 +51,6 @@ vendor
 # Build folders
 build
 assets
+
+# Yarn
+yarn.lock
