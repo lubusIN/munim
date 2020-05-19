@@ -55,11 +55,11 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 	<div id="invoice">
 		<div id="meta">
 			<div id="header">
-				<div id="logo" class="float-left width-half">
+				<div id="logo" class="tw-float-left width-half">
 					<img src="<?php echo esc_url( $invoice_logo ); ?>" alt="Logo">
 				</div>
 
-				<div id="info" class="float-right text-right width-half">
+				<div id="info" class="tw-float-right tw-text-right width-half">
 					<h1><?php esc_html_e( 'Tax Invoice', 'munim' ); ?></h1>
 					<ul class="data-list">
 						<li>#<?php echo esc_html( $invoice_data['munim_invoice_number'] ); ?></li>
@@ -68,8 +68,8 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 				</div>
 			</div>
 
-			<div id="details" class="clear-both">
-				<div id="business" class="float-left width-40">
+			<div id="details" class="tw-clear-both">
+				<div id="business" class="tw-float-left tw-width-40">
 					<h2><?php esc_html_e( 'Company Details', 'munim' ); ?></h2>
 					<ul class="data-list">
 						<?php
@@ -86,7 +86,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 					</ul>
 				</div>
 
-				<div id="client" class="float-right width-60 text-right">
+				<div id="client" class="tw-float-right tw-width-60 tw-text-right">
 					<h2><?php esc_html_e( 'Recipient', 'munim' ); ?></h2>
 					<ul class="data-list">
 						<li><?php echo esc_html( $invoice_client_name ); ?></li>
@@ -138,12 +138,12 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 			</div>
 		</div>
 
-		<div id="items" class="clear-both">
+		<div id="items" class="tw-clear-both">
 			<table width="100%">
 				<thead>
-					<tr class="border-bottom">
+					<tr class="tw-border-bottom">
 						<th ><?php esc_html_e( 'Item', 'munim' ); ?></th>
-						<th class="text-right"><?php esc_html_e( 'Amount', 'munim' ); ?></th>
+						<th class="tw-text-right"><?php esc_html_e( 'Amount', 'munim' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -151,9 +151,9 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 					if ( is_array( $invoice_items ) ) {
 						foreach ( $invoice_items as $item ) {
 							?>
-							<tr class="border-bottom">
+							<tr class="tw-border-bottom">
 								<td><?php echo esc_html( $item['name'] ); ?></td>
-								<td class="text-right">
+								<td class="tw-text-right">
 									<span class="currency-symbol">
 										<?php echo esc_html( get_munim_currency_symbol( $invoice_currency ) ); ?>
 									</span><?php echo number_format( $item['amount'] ); ?>
@@ -167,12 +167,12 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 			</table>
 		</div>
 
-		<div id="taxes" class="clear-both">
+		<div id="taxes" class="tw-clear-both">
 			<table width="100%">
 				<tbody>
 					<?php if ( is_array( $invoice_tax_items ) ) { ?>
 						<!-- Sub Total -->
-						<tr id="sub-total" class="border-bottom">
+						<tr id="sub-total" class="tw-border-bottom">
 							<td width="30%" class="filler"></td>
 							<td width="30%" class="filler"></td>
 							<td width="20%"><?php esc_html_e( 'Sub-Total', 'munim' ); ?></td>
@@ -185,11 +185,11 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 
 						<!-- Taxes -->
 						<?php foreach ( $invoice_tax_items as $tax_item ) { ?>
-							<tr class="border-bottom">
+							<tr class="tw-border-bottom">
 								<td width="30%" class="filler"></td>
 								<td width="30%" class="filler"></td>
 								<td width="20%"><?php echo esc_html( sprintf( '%s (%s%%)', $tax_item['name'], $tax_item['rate'] ) ); ?></td>
-								<td width="20%" class="text-right">
+								<td width="20%" class="tw-text-right">
 									<span class="currency-symbol">
 										<?php echo esc_html( get_munim_currency_symbol( $invoice_currency ) ); ?>
 									</span><?php echo number_format( round( ( $tax_item['rate'] / 100 ) * $invoice_subtotal ) ); ?>
@@ -203,7 +203,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 						<td width="30%" class="filler"></td>
 						<td width="30%" class="filler"></td>
 						<td width="20%"><h2><?php esc_html_e( 'Total', 'munim' ); ?></h2></td>
-						<td width="20%" class="text-right">
+						<td width="20%" class="tw-text-right">
 							<h2>
 									<span class="currency-symbol">
 										<?php echo esc_html( get_munim_currency_symbol( $invoice_currency ) ); ?>
@@ -215,8 +215,8 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 			</table>
 		</div>
 
-		<div id="footer" class="clear-both">
-			<div id="contact" class="float-left">
+		<div id="footer" class="tw-clear-both">
+			<div id="contact" class="tw-float-left">
 				<ul class="data-list">
 					<li id="brand-icon"><img src="<?php echo esc_url( $invoice_icon ); ?>" alt="Logo"></li>
 					<li>E - <?php echo esc_html( $munim_settings_business['email'] ); ?></li>
@@ -238,7 +238,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 					</li>
 				</ul>
 			</div>
-			<div id="note" class="float-right">
+			<div id="note" class="tw-float-right">
 				<p><?php echo esc_html( $invoice_note ); ?></p>
 				<h1><?php esc_html_e( 'Thank You', 'munim' ); ?></h1>
 			</div>

@@ -192,7 +192,7 @@ class Invoices {
 				break;
 
 			case 'munim_invoice_status':
-					$html          = '<span class="%s inline-block rounded-full px-2 text-center text-xs font-medium">%s</span>';
+					$html          = '<span class="%s tw-inline-block tw-rounded-full tw-px-2 tw-text-center tw-text-xs tw-font-medium">%s</span>';
 					$status        = Helpers::get_invoice_status( get_post_status( $post_id ) );
 					$classes       = Helpers::get_status_classes( $status );
 					$render_column = sprintf( $html, $classes, $status );
