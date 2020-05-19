@@ -5,12 +5,15 @@
   "repository": "git@github.com:lubusin/munim.git",
   "author": "Ajit Bohra <ajit@lubus.in>",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "clipboard": "^2.0.6"
+  },
   "devDependencies": {
     "cross-env": "^7.0.2",
     "laravel-mix": "^5.0.4",
     "live-server": "^1.2.1",
-    "tailwindcss": "^1.4.6"
+    "tailwindcss": "^1.4.6",
+    "vue-template-compiler": "^2.6.11"
   },
   "scripts": {
     "serve": "live-server . --host=localhost --port=8080",
