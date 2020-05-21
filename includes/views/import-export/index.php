@@ -26,7 +26,7 @@
 		</h2>
 	<?php endif; ?>
 
-	<div class="tw-flex tw-flex-wrap -tw-mx-2 tw-mt-4">
+	<div class="tw-flex tw-flex-wrap tw--mx-2 tw-mt-4">
 		<?php
 			require __DIR__ . '/import.php';
 			require __DIR__ . '/export.php';
