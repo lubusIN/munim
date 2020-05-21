@@ -24,7 +24,7 @@
 		<?php echo esc_html( get_admin_page_title() ); ?>
 	</h2>
 
-	<div class="tw-flex tw-flex-wrap -tw-mx-2 tw-mt-4">
+	<div class="tw-flex tw-flex-wrap tw--mx-2 tw-mt-4">
 		<?php
 			require 'overview.php';
 			require 'status.php';
