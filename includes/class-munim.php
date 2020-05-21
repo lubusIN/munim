@@ -116,13 +116,13 @@ final class Munim {
 
         $screen = get_current_screen();
         
-        // Use minified libraries if SCRIPT_DEBUG is turned off
-        $suffix = ( defined( 'WP_DEBUG' ) && true === SCRIPT_DEBUG ) ? '' : '.min';
-
 		// Bailout if not munim dashboard.
 		if ( ! in_array( $screen->id, self::$plugin_pages, true ) ) {
 			return;
-		}
+        }
+        
+        // Use minified libraries if SCRIPT_DEBUG is turned off
+        $suffix = ( defined( 'WP_DEBUG' ) && true === SCRIPT_DEBUG ) ? '' : '.min';
 
 		// Scripts.
 		wp_register_script(
