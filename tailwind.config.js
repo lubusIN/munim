@@ -1,4 +1,5 @@
 module.exports = {
+  prefix: 'tw-',
   purge: [
 	  './includes/**/*.php'
   ],

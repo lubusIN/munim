@@ -12,11 +12,11 @@
  */
 
 ?>
-<div id="munim-monthly-trend" class="w-full md:w-1/2 xl:w-1/3 px-2 mt-4 flex flex-col">
-	<h2 class="font-bold px-4 py-2 bg-white border border-b-0 border-gray-300">
+<div id="munim-monthly-trend" class="tw-w-full md:tw-w-1/2 xl:tw-w-1/3 tw-px-2 tw-mt-4 tw-flex tw-flex-col">
+	<h2 class="tw-font-bold tw-px-4 tw-py-2 tw-bg-white tw-border tw-border-b-0 tw-border-gray-300">
 		<?php esc_html_e( 'Trend', 'munim' ); ?>
 	</h2>
-	<div class="flex flex-1 flex-wrap bg-white border border-2 border-gray-300 content-center">
+	<div class="tw-flex tw-flex-1 tw-flex-wrap tw-bg-white tw-border tw-border-2 tw-border-gray-300 tw-content-center">
 		<div id="munim-trend-chart" class="w-full">
 			<!-- Chart rendered by apexcharts -->
 		</div>
