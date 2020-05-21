@@ -114,12 +114,15 @@ final class Munim {
 	 */
 	public function register_assets() {
 
-		$screen = get_current_screen();
-
+        $screen = get_current_screen();
+        
 		// Bailout if not munim dashboard.
 		if ( ! in_array( $screen->id, self::$plugin_pages, true ) ) {
 			return;
-		}
+        }
+        
+        // Use minified libraries if SCRIPT_DEBUG is turned off
+        $suffix = ( defined( 'WP_DEBUG' ) && true === SCRIPT_DEBUG ) ? '' : '.min';
 
 		// Scripts.
 		wp_register_script(
@@ -142,18 +145,18 @@ final class Munim {
 
 		wp_register_script(
 			'munim-script',
-			MUNIM_PLUGIN_URL . 'assets/js/script.js',
+			MUNIM_PLUGIN_URL . 'assets/js/script' . $suffix . '.js',
 			[ 'apexcharts-script', 'munim-clipboard', 'jquery' ],
-			filemtime( MUNIM_PLUGIN_DIR . 'assets/js/script.js' ),
+			filemtime( MUNIM_PLUGIN_DIR . 'assets/js/script' . $suffix . '.js' ),
 			true
 		);
 		wp_enqueue_script( 'munim-script' );
 
 		wp_register_script(
 			'munim-dashboard',
-			MUNIM_PLUGIN_URL . 'assets/js/dashboard.js',
+			MUNIM_PLUGIN_URL . 'assets/js/dashboard' . $suffix . '.js',
 			[],
-			filemtime( MUNIM_PLUGIN_DIR . 'assets/js/dashboard.js' ),
+			filemtime( MUNIM_PLUGIN_DIR . 'assets/js/dashboard' . $suffix . '.js' ),
 			true
 		);
 		wp_enqueue_script( 'munim-dashboard' );
