@@ -12,7 +12,7 @@
  */
 
 ?>
-<div class="tw-wrap cmb2-options-page option-<?php echo esc_attr( $cmb_options->option_key ); ?>">
+<div class="wrap cmb2-options-page option-<?php echo esc_attr( $cmb_options->option_key ); ?>">
 	<?php if ( get_admin_page_title() ) : ?>
 		<h2 class="tw-flex tw-items-center" style="margin-bottom: 0">
 			<svg class="tw-fill-current tw-w-6 tw-h-6 tw-mr-2" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
