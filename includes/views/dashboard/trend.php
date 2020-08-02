@@ -17,7 +17,7 @@
 		<?php esc_html_e( 'Trend', 'munim' ); ?>
 	</h2>
 	<div class="tw-flex tw-flex-1 tw-flex-wrap tw-bg-white tw-border tw-border-2 tw-border-gray-300 tw-content-center">
-		<div id="munim-trend-chart" class="w-full">
+		<div id="munim-trend-chart" class="tw-w-full">
 			<!-- Chart rendered by apexcharts -->
 		</div>
 	</div>
