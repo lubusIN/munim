@@ -693,7 +693,7 @@ class Invoices {
 	 * @return void
 	 */
 	public static function generate_pdf( $invoice_id = 0, $action = 'view', $nonce = null ) {
-		$actions = [ 'view', 'save' ];
+		$actions = [ 'view', 'save', 'download' ];
 
 		// Bailout.
 		if ( ! isset( $_REQUEST['munim_action'], $_REQUEST['nonce'] ) ) {
@@ -707,11 +707,11 @@ class Invoices {
 			return;
 		}
 
-		if ( 'save' !== $action && ! isset( $_REQUEST['munim_invoice_id'] ) ) {
+		if ( ! in_array( $action, $actions, true ) && ! isset( $_REQUEST['munim_invoice_id'] ) ) {
 			return;
 		}
 
-		if ( 'save' !== $action && ! wp_verify_nonce( $nonce, $action ) ) {
+		if ( ! in_array( $action, $actions, true ) && ! wp_verify_nonce( $nonce, $action ) ) {
 			wp_die( 'Invalid request.' );
 		}
 
