@@ -39,7 +39,6 @@ $invoice_note        = isset( $munim_settings_invoice['note'] ) ? $munim_setting
 $invoice_subtotal = array_sum( wp_list_pluck( $invoice_items, 'amount' ) );
 $invoice_tax      = Helpers::get_tax_total( $invoice_tax_items, $invoice_subtotal );
 $invoice_total    = $invoice_subtotal + $invoice_tax;
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -93,28 +92,33 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 						<li>
 							<?php
 								echo isset( $invoice_client_data['munim_client_address_1'] )
-								? esc_html( $invoice_client_data['munim_client_address_1'] )
+								? esc_html( $invoice_client_data['munim_client_address_1'] ) . '<br />'
 								: '';
 							?>
-							<br />
 
 							<?php
 								echo isset( $invoice_client_data['munim_client_address_2'] )
-								? esc_html( $invoice_client_data['munim_client_address_2'] )
+								? esc_html( $invoice_client_data['munim_client_address_2'] ) . '<br />'
 								: '';
 							?>
-							<br />
+							
 
 							<?php
 								echo isset( $invoice_client_data['munim_client_city'] )
-								? esc_html( $invoice_client_data['munim_client_city'] )
+								? esc_html( $invoice_client_data['munim_client_city'] ) . ','
 								: '';
 							?>
-								,
+								
 
 							<?php
 								echo isset( $invoice_client_data['munim_client_state'] )
-								? esc_html( $invoice_client_data['munim_client_state'] )
+								? esc_html( $invoice_client_data['munim_client_state'] ) . ', <br />'
+								: '';
+							?>
+
+							<?php
+								echo isset( $invoice_client_data['munim_client_country'] )
+								? esc_html( $invoice_client_data['munim_client_country'] ) . ','
 								: '';
 							?>
 
