@@ -700,7 +700,7 @@ class Invoices {
 			return;
 		}
 
-		$action = sanitize_key( 'zip' === $_REQUEST['munim_action'] ? $action : $_REQUEST['munim_action'] );
+		$action = sanitize_key( 'zip' === $_REQUEST['munim_action'] ? 'save' : $_REQUEST['munim_action'] );
 		$nonce  = sanitize_key( $_REQUEST['nonce'] );
 
 		if ( ! in_array( $action, $actions, true ) ) {
@@ -822,7 +822,7 @@ class Invoices {
 
 		// Generate pdf.
 		foreach ( $invoices as $invoice ) {
-			self::generate_pdf( $invoice->ID, 'save' );
+			self::generate_pdf( $invoice->ID, 'save', $_POST['nonce'] );
 		}
 
 		// Generate zip.
