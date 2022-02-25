@@ -35,6 +35,7 @@ final class Munim {
 	public static $plugin_pages = [
 		'toplevel_page_munim',
 		'munim_page_munim_settings_business',
+		'admin_page_munim_settings_estimate',
 		'admin_page_munim_settings_invoice',
 		'admin_page_munim_settings_bank',
 		'admin_page_munim_settings_template',

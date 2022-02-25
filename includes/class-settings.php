@@ -193,6 +193,46 @@ class Settings {
 				'type' => 'text',
 			]
 		);
+		// Estimate Settings.
+		$args = [
+			'id'           => self::$options_prefix . 'estimate_page',
+			'title'        => 'Estimate',
+			'object_types' => [ 'options-page' ],
+			'option_key'   => self::$options_prefix . 'estimate',
+			'tab_group'    => 'munim_settings',
+			'tab_title'    => 'Estimate',
+			'display_cb'   => [ __CLASS__, 'render' ],
+			'parent_slug'  => 'admin.php?page=munim',
+		];
+
+		$estimate_settings = new_cmb2_box( $args );
+
+		// Estimate settings field.
+		$estimate_settings->add_field(
+			[
+				'name'    => 'Last Number',
+				'id'      => 'last_number',
+				'type'    => 'text_small',
+				'default' => '0000',
+			]
+		);
+
+		$estimate_settings->add_field(
+			[
+				'name'    => 'Validity Period',
+				'id'      => 'validity',
+				'type'    => 'text_small',
+				'default' => '15',
+			]
+		);
+
+		$estimate_settings->add_field(
+			[
+				'name' => 'Note',
+				'id'   => 'note',
+				'type' => 'text',
+			]
+		);
 
 		// Invoice Settings.
 		$args = [
