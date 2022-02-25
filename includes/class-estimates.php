@@ -57,6 +57,11 @@ class Estimates {
 
         // Edit screen info / actions.
 		add_action( 'add_meta_boxes', [ __CLASS__, 'info_box' ] );
+        add_action( 'add_meta_boxes', [ __CLASS__, 'actions_box' ] );
+		add_filter( 'preview_post_link', [ __CLASS__, 'preview_estimate_link' ], 10, 2 );
+
+        // Row actions.
+		add_action( 'post_row_actions', [ __CLASS__, 'render_row_actions' ], 10, 2 );
     }
 
 
@@ -553,4 +558,83 @@ class Estimates {
 		echo sprintf( $script, $estimate_status_slug, $estimate_status_label );
 	}
 
+    /**
+	 * Register metabox for estimate actions.
+	 *
+	 * @return void
+	 */
+	public static function actions_box() {
+		global $hook_suffix;
+
+		if ( 'post.php' !== $hook_suffix ) {
+			return;
+		}
+
+		add_meta_box(
+			'munim_estimate_actions_box',
+			'Actions',
+			[ __CLASS__, 'render_actions_box' ],
+			'munim_estimate',
+			'side'
+		);
+	}
+
+	/**
+	 * Render estimate actions box.
+	 *
+	 * @return void
+	 */
+	public static function render_actions_box() {
+		include_once 'views/estimate/actions.php';
+	}
+
+    /**
+	 * estimate preview link
+	 *
+	 * @param  string  $link preview link.
+	 * @param  WP_Post $post current post object.
+	 * @return string
+	 */
+	public static function preview_estimate_link( $link, $post ) {
+		if ( 'munim_estimate' === $post->post_type ) {
+			return self::get_url( 'view', admin_url( 'edit.php' ) );
+		} else {
+			return $link;
+		}
+	}
+
+    /**
+	 * Add custom row actions
+	 *
+	 * @param  array   $actions exisiting actions.
+	 * @param  WP_Post $post post object.
+	 * @return array
+	 */
+	public static function render_row_actions( $actions, $post ) {
+		if ( 'munim_estimate' === $post->post_type ) {
+			$actions['view']     = sprintf( '<a href="%s" target="_blank">%s</a>', self::get_url( 'view' ), __( 'View', 'munim' ) );
+			$actions['download'] = sprintf( '<a href="%s">%s</a>', self::get_url( 'download' ), __( 'Download', 'munim' ) );
+		}
+
+		return $actions;
+	}
+
+    /**
+	 * Get url.
+	 *
+	 * @param string $action name of url action.
+	 * @return string
+	 */
+	public static function get_url( $action, $url = null ) {
+		global $post;
+		$url = add_query_arg(
+			[
+				'munim_action'     => $action,
+				'munim_estimate_id' => $post->ID,
+				'nonce'            => wp_create_nonce( $action ),
+			],
+			$url
+		);
+		return $url;
+	}
 }
