@@ -44,6 +44,13 @@ class Estimates {
 		add_filter( 'manage_munim_estimate_posts_columns', [ __CLASS__, 'admin_columns' ] );
 		add_action( 'manage_munim_estimate_posts_custom_column', [ __CLASS__, 'admin_columns_render' ], 10, 2 );
 
+
+		// Status.
+		add_action( 'init', [ __CLASS__, 'register_status' ] );
+		add_action( 'admin_footer-edit.php', [ __CLASS__, 'render_status_in_edit' ] );
+		add_action( 'admin_footer-post.php', [ __CLASS__, 'render_status_in_edit' ] );
+		add_action( 'admin_footer-post-new.php', [ __CLASS__, 'render_status_in_edit' ] );
+
         // Processing data.
 		add_action( 'save_post_munim_estimate', [ __CLASS__, 'update_number' ], 10, 3 );
 		add_action( 'wp_insert_post', [ __CLASS__, 'update_totals' ], 10, 3 );
@@ -472,4 +479,78 @@ class Estimates {
 	public static function render_info_box() {
 		include_once 'views/estimate/info.php';
 	}
+
+    /**
+	 * Register custom status
+	 *
+	 * @return void
+	 */
+	public static function register_status() {
+        // Billed.
+		$args = [
+			'label'                     => _x( 'Billed', 'Billed estimates', 'munim' ),
+			/* translators: Billed estimates count */
+			'label_count'               => _n_noop( 'Billed <span class="count">(%s)</span>', 'Billed <span class="count">(%s)</span>', 'munim' ),
+			'public'                    => true,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			'exclude_from_search'       => true,
+		];
+		register_post_status( 'billed', $args );
+
+		// Invalid.
+		$args = [
+			'label'                     => _x( 'Invalid', 'Invalid estimates', 'munim' ),
+			/* translators: Invalid estimates count */
+			'label_count'               => _n_noop( 'Invalid <span class="count">(%s)</span>', 'Invalid <span class="count">(%s)</span>', 'munim' ),
+			'public'                    => true,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			'exclude_from_search'       => true,
+		];
+		register_post_status( 'invalid', $args );
+
+
+		// Cancelled.
+		$args = [
+			'label'                     => _x( 'Cancelled', 'Cancelled estimates', 'munim' ),
+			/* translators: Cancelled estimates count */
+			'label_count'               => _n_noop( 'Cancelled <span class="count">(%s)</span>', 'Cancelled <span class="count">(%s)</span>', 'munim' ),
+			'public'                    => true,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			'exclude_from_search'       => true,
+		];
+		register_post_status( 'cancelled', $args );
+	}
+
+	/**
+	 * Render status in add/edit screen.
+	 *
+	 * @return void
+	 */
+	public static function render_status_in_edit() {
+		// Bailout if not estimates.
+		if ( 'munim_estimate' !== get_post_type() ) {
+			return;
+		}
+
+		$estimate_status_slug  = get_post_status();
+		$estimate_status_label = get_post_status_object( $estimate_status_slug )->label;
+
+		$script = "<script>
+				jQuery(document).ready( function() {
+					jQuery( 'select[name=\"post_status\"], select[name=\"_status\"]' )
+						.append( '<option value=\"billed\">Billed</option>' )
+						.append( '<option value=\"invalid\">Invalid</option>' )
+						.append( '<option value=\"cancelled\">Cancelled</option>' )
+						.val('%1\$s');
+				});
+				jQuery( '#post-status-display' ).text( '%2\$s' );
+			</script>";
+
+		// phpcs:ignore
+		echo sprintf( $script, $estimate_status_slug, $estimate_status_label );
+	}
+
 }
