@@ -40,7 +40,9 @@ final class Munim {
 		'admin_page_munim_settings_bank',
 		'admin_page_munim_settings_template',
 		'munim_page_munim_import_export',
+		'edit-munim_estimate',
 		'edit-munim_invoice',
+		'munim_estimate',
 		'munim_invoice',
 	];
 
@@ -84,6 +86,7 @@ final class Munim {
 		// Modules.
 		Settings::init();
 		Clients::init();
+		Estimates::init();
 		Invoices::init();
 	}
 
@@ -234,11 +237,12 @@ final class Munim {
 		$munim_submenu = [];
 		foreach ( $submenu as $menu_name => $menu_items ) {
 			if ( 'munim' === $menu_name ) {
-				$munim_submenu[0] = $menu_items[2]; // Dashboard.
+				$munim_submenu[0] = $menu_items[3]; // Dashboard.
 				$munim_submenu[1] = $menu_items[0]; // Clients.
-				$munim_submenu[2] = $menu_items[1]; // Invoices.
-				$munim_submenu[3] = $menu_items[4]; // Settings.
-				$munim_submenu[4] = $menu_items[3]; // Import / Export.
+				$munim_submenu[2] = $menu_items[1]; // Estimates.
+				$munim_submenu[3] = $menu_items[2]; // Invoices.
+				$munim_submenu[4] = $menu_items[5]; // Settings.
+				$munim_submenu[5] = $menu_items[4]; // Import / Export.
 				// phpcs:ignore
 				$submenu['munim'] = $munim_submenu;
 				break;
