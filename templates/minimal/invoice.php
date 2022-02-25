@@ -15,6 +15,7 @@ use LubusIN\Munim\Helpers;
 
 // Settings.
 $munim_settings_business     = get_option( 'munim_settings_business', [] );
+$munim_settings_bank         = get_option( 'munim_settings_bank', [] )['info'];
 $munim_settings_invoice      = get_option( 'munim_settings_invoice', [] );
 $munim_settings_invoice_info = $munim_settings_invoice['info'];
 
@@ -220,31 +221,53 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 		</div>
 
 		<div id="footer" class="clear-both">
-			<div id="contact" class="float-left">
+			<div id="bank" class="float-left width-half">
 				<ul class="data-list">
-					<li id="brand-icon"><img src="<?php echo esc_url( $invoice_icon ); ?>" alt="Logo"></li>
-					<li>E - <?php echo esc_html( $munim_settings_business['email'] ); ?></li>
-					<li>W - <?php echo esc_html( $munim_settings_business['website'] ); ?></li>
-					<li>
-						<?php echo esc_html( $munim_settings_business['address_1'] ); ?><br />
-						<?php
-
-						echo esc_html(
-							sprintf(
-								'%s %s-%s',
-								$munim_settings_business['address_2'],
-								$munim_settings_business['city'],
-								$munim_settings_business['zip']
-							)
-						);
-						?>
-						<br />
-					</li>
+					<li><h2>Bank Transfer</h2></li>
+					<?php
+					foreach ( $munim_settings_bank as $bank_info ) :
+						if ( ! isset( $bank_info['hide_on_invoice'] ) || ! $bank_info['hide_on_invoice'] ) :
+							?>
+							<li class="bank-info-item">
+								<?php 
+									echo esc_html(
+										sprintf(
+											'%s: %s',
+											$bank_info['name'],
+											$bank_info['value'] 
+										)
+									); 
+								?>
+							</li>
+							<?php
+						endif;
+					endforeach;
+					?>
+					
 				</ul>
 			</div>
-			<div id="note" class="float-right">
+			<div id="note" class="float-right width-half">
 				<p><?php echo esc_html( $invoice_note ); ?></p>
-				<h1><?php esc_html_e( 'Thank You', 'munim' ); ?></h1>
+				<h2>
+					<img id="heart" src="<?php echo MUNIM_PLUGIN_DIR . 'templates/minimal/img/heart.png' ?>" alt="heart">
+					<?php esc_html_e( 'Thank You', 'munim' ); ?>
+				</h2>
+			</div>
+			
+			<div id="contact" class="clear-both">
+				<?php
+					echo esc_html(
+						sprintf(
+							'%s %s %s, %s | %s | %s',
+							$munim_settings_business['address_1'],
+							$munim_settings_business['address_2'],
+							$munim_settings_business['city'],
+							$munim_settings_business['zip'],
+							$munim_settings_business['email'],
+							$munim_settings_business['website'] 
+						)
+					);
+				?>
 			</div>
 		</div>
 

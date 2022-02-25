@@ -131,25 +131,35 @@ span.currency-symbol {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	height: 4cm;
+	height: 4.5cm;
 }
 
 #brand-icon img{
 	width: 30px;
 	margin-bottom: 10px;
 }
+
 #note{
-	padding-top: 94px;
+	padding-top: 82px;
 	text-align: right;
-	width: 100%;
 }
 
+.bank-info-item {
+	font-size: 14px;
+}
+
+#contact,
 #note p{
 	font-size: 12px;
 }
 
+#contact {
+	margin-top: 25px;
+	text-align: center;
+}
 
 #heart{
 	width: 16px;
 	margin-top: 1px;
+	margin-right: 2px;
 }

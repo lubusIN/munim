@@ -728,7 +728,7 @@ class Invoices {
 		ob_end_clean();
 
 		// Generate pdf.
-		$dompdf = new DOMPDF();
+		$dompdf = new DOMPDF(['debugLayout' => false]);
 		$dompdf->loadHtml( $html );
 		$dompdf->setPaper( 'A4', 'portrait' );
 		$dompdf->setBasePath( $munim_template_path );
