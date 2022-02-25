@@ -696,20 +696,12 @@ class Invoices {
 		$actions = [ 'view', 'save', 'download' ];
 
 		// Bailout.
-		if ( ! isset( $_REQUEST['munim_action'], $_REQUEST['nonce'] ) ) {
+		if ( ! isset( $_REQUEST['munim_action'], $_REQUEST['nonce']) ) {
 			return;
 		}
 
 		$action = sanitize_key( 'zip' === $_REQUEST['munim_action'] ? 'save' : $_REQUEST['munim_action'] );
 		$nonce  = sanitize_key( $_REQUEST['nonce'] );
-
-		if ( ! in_array( $action, $actions, true ) ) {
-			return;
-		}
-
-		if ( ! in_array( $action, $actions, true ) && ! isset( $_REQUEST['munim_invoice_id'] ) ) {
-			return;
-		}
 
 		if ( ! in_array( $action, $actions, true ) && ! wp_verify_nonce( $nonce, $action ) ) {
 			wp_die( 'Invalid request.' );
@@ -736,11 +728,11 @@ class Invoices {
 
 		if ( 'save' === $action ) {
 			// phpcs:ignore
-			file_put_contents( MUNIM_PLUGIN_UPLOAD . Helpers::get_file_name( $invoice_id ), $dompdf->output() ); // Save pdf
+			file_put_contents( MUNIM_PLUGIN_UPLOAD . Helpers::get_file_name( $invoice_id, 'invoice' ), $dompdf->output() ); // Save pdf
 		} else {
 			// View or download pdf.
 			$dompdf->stream(
-				Helpers::get_file_name( $invoice_id ),
+				Helpers::get_file_name( $invoice_id, 'invoice' ),
 				[
 					'compress'   => true,
 					'Attachment' => ( 'download' === $action ),
@@ -874,7 +866,7 @@ class Invoices {
 	 */
 	public static function send_email() {
 		// Bailout.
-		if ( ! isset( $_REQUEST['munim_action'], $_REQUEST['nonce'] ) ) {
+		if ( ! isset( $_REQUEST['munim_action'], $_REQUEST['nonce'], $_REQUEST['munim_invoice_id'] ) ) {
 			return;
 		}
 

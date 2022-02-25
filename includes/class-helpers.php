@@ -54,13 +54,14 @@ class Helpers {
 	/**
 	 * Get file name for pdf
 	 *
-	 * @param int $invoice_id invoice post id.
+	 * @param int $id invoice resource id.
+	 * @param int $id invoice resource type.
 	 * @return string
 	 */
-	public static function get_file_name( $invoice_id ) {
-		$invoice_number = get_post_meta( $invoice_id, 'munim_invoice_number', true );
-		$invoice_slug   = get_post_field( 'post_name', $invoice_id );
-		$pdf_filename   = $invoice_number . '.' . $invoice_slug . '.pdf';
+	public static function get_file_name( $id, $type ) {
+		$number = get_post_meta( $id, "munim_{$type}_number", true );
+		$slug   = get_post_field( 'post_name', $id );
+		$pdf_filename   = $number . '.' . $slug . '.pdf';
 		return $pdf_filename;
 	}
 

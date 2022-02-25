@@ -62,6 +62,10 @@ class Estimates {
 
         // Row actions.
 		add_action( 'post_row_actions', [ __CLASS__, 'render_row_actions' ], 10, 2 );
+
+        // Process action.
+		add_action( 'admin_init', [ __CLASS__, 'generate_pdf' ] );
+		add_action( 'admin_init', [ __CLASS__, 'send_email' ] );
     }
 
 
@@ -636,5 +640,82 @@ class Estimates {
 			$url
 		);
 		return $url;
+	}
+
+    /**
+	 * Generate pdf.
+	 *
+	 * @param  int    $estimate_id post id.
+	 * @param  string $action estimate action (view/download/save).
+	 * @param  string $nonce $updated_settings.
+	 * @return void
+	 */
+	public static function generate_pdf( $estimate_id = 0, $action = 'view', $nonce = null ) {
+		$actions = [ 'view', 'save', 'download' ];
+
+		// Bailout.
+		if ( ! isset( $_REQUEST['munim_action'], $_REQUEST['nonce'], $_REQUEST['munim_estimate_id'] ) ) {
+			return;
+		}
+
+		$action = sanitize_key( $_REQUEST['munim_action'] );
+		$nonce  = sanitize_key( $_REQUEST['nonce'] );
+
+
+		if ( ! in_array( $action, $actions, true ) && ! wp_verify_nonce( $nonce, $action ) ) {
+			wp_die( 'Invalid request.' );
+		}
+
+		$estimate_id = sanitize_key( 'save' === $action ? $estimate_id : $_REQUEST['munim_estimate_id'] );
+
+		// Get template.
+		$munim_settings_template = get_option( 'munim_settings_template', [] );
+		$munim_template_path     = MUNIM_PLUGIN_DIR . 'templates/' . $munim_settings_template['template'];
+
+		// Get HTML.
+		ob_start();
+		include $munim_template_path . '/estimate.php';
+		$html = ob_get_contents();
+		ob_end_clean();
+
+		// Generate pdf.
+		$dompdf = new DOMPDF(['debugLayout' => false]);
+		$dompdf->loadHtml( $html );
+		$dompdf->setPaper( 'A4', 'portrait' );
+		$dompdf->setBasePath( $munim_template_path );
+		$dompdf->render();
+
+		if ( 'save' === $action ) {
+			// phpcs:ignore
+			file_put_contents( MUNIM_PLUGIN_UPLOAD . Helpers::get_file_name( $estimate_id ), $dompdf->output() ); // Save pdf
+		} else {
+			// View or download pdf.
+			$dompdf->stream(
+				Helpers::get_file_name( $estimate_id, 'estimate' ),
+				[
+					'compress'   => true,
+					'Attachment' => ( 'download' === $action ),
+				]
+			);
+			exit();
+		}
+	}
+
+    /**
+	 * Send email.
+	 *
+	 * @return void
+	 */
+	public static function send_email() {
+		// Bailout.
+		if ( ! isset( $_REQUEST['munim_action'], $_REQUEST['nonce'], $_REQUEST['munim_estimate_id'] ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ), 'email' ) ) {
+			wp_die( 'invalid request' );
+		}
+
+		Helpers::add_admin_notice( 'success', 'Will trigger email request' );
 	}
 }
