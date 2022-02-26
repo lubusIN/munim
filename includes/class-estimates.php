@@ -65,6 +65,7 @@ class Estimates {
 
         // Process action.
 		add_action( 'admin_init', [ __CLASS__, 'generate_pdf' ] );
+		add_action( 'admin_init', [ __CLASS__, 'generate_invoice' ] );
 		add_action( 'admin_init', [ __CLASS__, 'send_email' ] );
 
 		// Schedule events.
@@ -632,9 +633,16 @@ class Estimates {
 	 * @return array
 	 */
 	public static function render_row_actions( $actions, $post ) {
-		if ( 'munim_estimate' === $post->post_type ) {
-			$actions['view']     = sprintf( '<a href="%s" target="_blank">%s</a>', self::get_url( 'view' ), __( 'View', 'munim' ) );
-			$actions['download'] = sprintf( '<a href="%s">%s</a>', self::get_url( 'download' ), __( 'Download', 'munim' ) );
+		// Bailout
+		if ( 'munim_estimate' !== $post->post_type ) {
+			return $actions;
+		}
+
+		$actions['view']     = sprintf( '<a href="%s" target="_blank">%s</a>', self::get_url( 'view' ), __( 'View', 'munim' ) );
+		$actions['download'] = sprintf( '<a href="%s">%s</a>', self::get_url( 'download' ), __( 'Download', 'munim' ) );
+
+		if ( 'approved' === $post->post_status ) {
+			$actions['generate_invoice'] = sprintf( '<a href="%s" target="_blank">%s</a>', self::get_url( 'generate_invoice' ), __( 'Generate Invoice', 'munim' ) );
 		}
 
 		return $actions;
@@ -679,8 +687,12 @@ class Estimates {
 		$nonce  = sanitize_key( $_REQUEST['nonce'] );
 
 
-		if ( ! in_array( $action, $actions, true ) && ! wp_verify_nonce( $nonce, $action ) ) {
-			wp_die( 'Invalid request.' );
+		if ( ! in_array( $action, $actions, true ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $nonce, $action ) ) {
+			wp_die( 'Invalid estimate pdf request.' );
 		}
 
 		$estimate_id = sanitize_key( 'save' === $action ? $estimate_id : $_REQUEST['munim_estimate_id'] );
@@ -729,8 +741,14 @@ class Estimates {
 			return;
 		}
 
+		$action = sanitize_key( $_REQUEST['munim_action'] );
+
+		if ( 'email' !== $action ) {
+			return;
+		}
+
 		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ), 'email' ) ) {
-			wp_die( 'invalid request' );
+			wp_die( 'Invalid estimate email request' );
 		}
 
 		Helpers::add_admin_notice( 'success', 'Will trigger email request' );
@@ -780,5 +798,65 @@ class Estimates {
 		if ( ! wp_next_scheduled( 'munim_update_estimate_status' ) ) {
 			wp_schedule_event( time(), 'daily', 'munim_update_estimate_status' );
 		}
+	}
+
+	 /**
+	 * Generate Invoice.
+	 *
+	 * @return void
+	 */
+	public static function generate_invoice() {
+		// Bailout.
+		if ( ! isset( $_REQUEST['munim_action'], $_REQUEST['nonce'], $_REQUEST['munim_estimate_id'] ) ) {
+			return;
+		}
+
+		$action = sanitize_key( $_REQUEST['munim_action'] );
+
+		if ( 'generate_invoice' !== $action ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ), 'generate_invoice' ) ) {
+			wp_die( 'Invalid generate invoice request' );
+		}
+
+		// Create invoice from estimate
+		// Get estimate  data
+		$estimate_id = $_REQUEST['munim_estimate_id'];
+		$estimate = get_post($estimate_id);
+		$estimate_meta =  Helpers::array_shift( get_post_meta( $estimate_id ) );
+
+		// Set invoice data
+		$remove_metadata = [ '_edit_last', '_edit_lock', 'munim_estimate_number' ];
+		$estimate_data = array_diff_key($estimate_meta, array_flip($remove_metadata));
+		$estimate_data = str_replace('estimate', 'invoice', array_flip($estimate_data));
+
+		$invoice_meta = array_flip($estimate_data);
+		$invoice_meta['munim_invoice_number'] = Invoices::get_number();
+		$invoice_meta['munim_invoice_date'] = time();
+		$invoice_meta['munim_invoice_items'] = maybe_unserialize($invoice_meta['munim_invoice_items']);
+		$invoice_meta['munim_invoice_taxes'] = maybe_unserialize($invoice_meta['munim_invoice_taxes']);
+
+		// Create invoice
+		$invoice = [
+			'post_title'  => $estimate->post_title,
+			'post_status' => 'publish',
+			'post_type'   => 'munim_invoice',
+			'meta_input'  => $invoice_meta
+		];
+
+		$invoice_id = wp_insert_post($invoice);
+		$invoice_pdf_url = Invoices::get_url('view', $invoice_id);
+
+		// Update invoice number.
+		$settings            = get_option( 'munim_settings_invoice', [] );
+		$invoice_number      = $settings['last_number'];
+		$last_invoice_number = [ 'last_number' => ++$invoice_number ];
+		$updated_settings    = wp_parse_args( $last_invoice_number, $settings );
+		update_option( 'munim_settings_invoice', $updated_settings );
+
+		// Redirect to view invoice pdf
+		wp_redirect($invoice_pdf_url);
 	}
 }

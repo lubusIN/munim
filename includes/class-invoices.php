@@ -653,7 +653,7 @@ class Invoices {
 		}
 
 		// Bailout if post status is auto-draft.
-		if ( 'auto-draft' === $post->post_status ) {
+		if ( 'auto-draft' === $post->post_status || 'trash' === $post->post_status ) {
 			return;
 		}
 
@@ -703,8 +703,12 @@ class Invoices {
 		$action = sanitize_key( 'zip' === $_REQUEST['munim_action'] ? 'save' : $_REQUEST['munim_action'] );
 		$nonce  = sanitize_key( $_REQUEST['nonce'] );
 
-		if ( ! in_array( $action, $actions, true ) && ! wp_verify_nonce( $nonce, $action ) ) {
-			wp_die( 'Invalid request.' );
+		if ( ! in_array( $action, $actions, true ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $nonce, $action ) ) {
+			wp_die( 'Invalid invoice pdf request.' );
 		}
 
 		$invoice_id = sanitize_key( 'save' === $action ? $invoice_id : $_REQUEST['munim_invoice_id'] );
@@ -748,12 +752,12 @@ class Invoices {
 	 * @param string $action name of url action.
 	 * @return string
 	 */
-	public static function get_url( $action, $url = null ) {
+	public static function get_url( $action, $id = null , $url = null ) {
 		global $post;
 		$url = add_query_arg(
 			[
 				'munim_action'     => $action,
-				'munim_invoice_id' => $post->ID,
+				'munim_invoice_id' => $id ?? $post->ID,
 				'nonce'            => wp_create_nonce( $action ),
 			],
 			$url
@@ -781,7 +785,7 @@ class Invoices {
 		}
 
 		if ( isset( $_POST['nonce'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'zip' ) ) {
-			wp_die( 'invalid request' );
+			wp_die( 'Invalid invoice zip request' );
 		}
 
 		ignore_user_abort( true );
@@ -870,8 +874,14 @@ class Invoices {
 			return;
 		}
 
+		$action = sanitize_key( $_REQUEST['munim_action'] );
+
+		if ( 'email' !== $action ) {
+			return;
+		}
+
 		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ), 'email' ) ) {
-			wp_die( 'invalid request' );
+			wp_die( 'Invalid invoice email request' );
 		}
 
 		Helpers::add_admin_notice( 'success', 'Will trigger email request' );

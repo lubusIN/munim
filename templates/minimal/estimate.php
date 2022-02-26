@@ -88,7 +88,7 @@ $estimate_total    = $estimate_subtotal + $estimate_tax;
 					</ul>
 				</div>
 
-				<div id="client" class="float-right width-60 text-right">
+				<div id="client" class="float-right text-right width-60">
 					<h2><?php esc_html_e( 'Recipient', 'munim' ); ?></h2>
 					<ul class="data-list">
 						<li><?php echo esc_html( $estimate_client_name ); ?></li>
@@ -104,14 +104,14 @@ $estimate_total    = $estimate_subtotal + $estimate_tax;
 								? esc_html( $estimate_client_data['munim_client_address_2'] ) . '<br />'
 								: '';
 							?>
-							
+
 
 							<?php
 								echo isset( $estimate_client_data['munim_client_city'] )
 								? esc_html( $estimate_client_data['munim_client_city'] ) . ','
 								: '';
 							?>
-								
+
 
 							<?php
 								echo isset( $estimate_client_data['munim_client_state'] )
@@ -223,7 +223,7 @@ $estimate_total    = $estimate_subtotal + $estimate_tax;
 		</div>
 
 		<div id="footer" class="clear-both">
-           
+
 			<div id="contact-info" class="float-left width-half">
                 <ul class="data-list">
                     <li class="contact-info-item"><?php echo esc_html($munim_settings_business['website']); ?></li>
