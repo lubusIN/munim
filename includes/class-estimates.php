@@ -507,6 +507,18 @@ class Estimates {
 		];
 		register_post_status( 'billed', $args );
 
+        // Approved.
+		$args = [
+			'label'                     => _x( 'Approved', 'Approved estimates', 'munim' ),
+			/* translators: Approved estimates count */
+			'label_count'               => _n_noop( 'Approved <span class="count">(%s)</span>', 'Approved <span class="count">(%s)</span>', 'munim' ),
+			'public'                    => true,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			'exclude_from_search'       => true,
+		];
+		register_post_status( 'approved', $args );
+
 		// Invalid.
 		$args = [
 			'label'                     => _x( 'Invalid', 'Invalid estimates', 'munim' ),
@@ -550,6 +562,7 @@ class Estimates {
 		$script = "<script>
 				jQuery(document).ready( function() {
 					jQuery( 'select[name=\"post_status\"], select[name=\"_status\"]' )
+						.append( '<option value=\"approved\">Approved</option>' )
 						.append( '<option value=\"billed\">Billed</option>' )
 						.append( '<option value=\"invalid\">Invalid</option>' )
 						.append( '<option value=\"cancelled\">Cancelled</option>' )
