@@ -66,6 +66,10 @@ class Estimates {
         // Process action.
 		add_action( 'admin_init', [ __CLASS__, 'generate_pdf' ] );
 		add_action( 'admin_init', [ __CLASS__, 'send_email' ] );
+
+		// Schedule events.
+		add_action( 'munim_update_estimate_status', [ __CLASS__, 'munim_update_estimate_status' ] );
+		add_action( 'wp', [ __CLASS__, 'munim_schedule_status_update' ] );
     }
 
 
@@ -730,5 +734,51 @@ class Estimates {
 		}
 
 		Helpers::add_admin_notice( 'success', 'Will trigger email request' );
+	}
+
+	/**
+	 * Action hook for estimate status update.
+	 *
+	 * @return void
+	 */
+	public static function munim_update_estimate_status() {
+		// Get all issued estimate.
+		$args = array(
+			'post_type'   => 'munim_estimate',
+			'post_status' => 'publish',
+			'numberposts' => -1,
+		);
+
+		$estimates = get_posts( $args );
+
+		if ( $estimates ) {
+			// Get validity period.
+			$munim_settings_estimate = get_option( 'munim_settings_estimate', [] );
+			$validity_peroid          = trim( $munim_settings_estimate['validity'] );
+
+			// Update status.
+			foreach ( $estimates as $estimate ) {
+				$estimate_date = $estimate->munim_estimate_date;
+				// Check if today is more then estimate date + validity peroid.
+				if ( time() > strtotime( sprintf( '+%s days', $validity_peroid ), $estimate_date ) ) {
+					$post = array(
+						'ID'          => $estimate->ID,
+						'post_status' => 'invalid',
+					);
+					wp_update_post( $post );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Schedule event to updating estimate status.
+	 *
+	 * @return void
+	 */
+	public static function munim_schedule_status_update() {
+		if ( ! wp_next_scheduled( 'munim_update_estimate_status' ) ) {
+			wp_schedule_event( time(), 'daily', 'munim_update_estimate_status' );
+		}
 	}
 }
