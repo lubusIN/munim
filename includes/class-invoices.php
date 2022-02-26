@@ -707,7 +707,7 @@ class Invoices {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $nonce, $action ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'zip' === $_REQUEST['munim_action'] ? 'zip': $action ) ) {
 			wp_die( 'Invalid invoice pdf request.' );
 		}
 
