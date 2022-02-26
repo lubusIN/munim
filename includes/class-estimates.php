@@ -856,6 +856,13 @@ class Estimates {
 		$updated_settings    = wp_parse_args( $last_invoice_number, $settings );
 		update_option( 'munim_settings_invoice', $updated_settings );
 
+		// Update estimate status
+		$estimate = [
+			'ID'          => $estimate_id,
+			'post_status' => 'billed',
+		];
+		wp_update_post( $estimate );
+
 		// Redirect to view invoice pdf
 		wp_redirect($invoice_pdf_url);
 	}
