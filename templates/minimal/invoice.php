@@ -86,7 +86,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 					</ul>
 				</div>
 
-				<div id="client" class="float-right width-60 text-right">
+				<div id="client" class="float-right text-right width-60">
 					<h2><?php esc_html_e( 'Recipient', 'munim' ); ?></h2>
 					<ul class="data-list">
 						<li><?php echo esc_html( $invoice_client_name ); ?></li>
@@ -102,14 +102,14 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 								? esc_html( $invoice_client_data['munim_client_address_2'] ) . '<br />'
 								: '';
 							?>
-							
+
 
 							<?php
 								echo isset( $invoice_client_data['munim_client_city'] )
 								? esc_html( $invoice_client_data['munim_client_city'] ) . ','
 								: '';
 							?>
-								
+
 
 							<?php
 								echo isset( $invoice_client_data['munim_client_state'] )
@@ -229,21 +229,21 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 						if ( ! isset( $bank_info['hide_on_invoice'] ) || ! $bank_info['hide_on_invoice'] ) :
 							?>
 							<li class="bank-info-item">
-								<?php 
+								<?php
 									echo esc_html(
 										sprintf(
 											'%s: %s',
 											$bank_info['name'],
-											$bank_info['value'] 
+											$bank_info['value']
 										)
-									); 
+									);
 								?>
 							</li>
 							<?php
 						endif;
 					endforeach;
 					?>
-					
+
 				</ul>
 			</div>
 			<div id="note" class="float-right width-half">
@@ -253,7 +253,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 					<?php esc_html_e( 'Thank You', 'munim' ); ?>
 				</h2>
 			</div>
-			
+
 			<div id="contact" class="clear-both">
 				<?php
 					echo esc_html(
@@ -264,7 +264,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 							$munim_settings_business['city'],
 							$munim_settings_business['zip'],
 							$munim_settings_business['email'],
-							$munim_settings_business['website'] 
+							$munim_settings_business['website']
 						)
 					);
 				?>
