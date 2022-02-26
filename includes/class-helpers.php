@@ -54,13 +54,14 @@ class Helpers {
 	/**
 	 * Get file name for pdf
 	 *
-	 * @param int $invoice_id invoice post id.
+	 * @param int $id invoice resource id.
+	 * @param int $id invoice resource type.
 	 * @return string
 	 */
-	public static function get_file_name( $invoice_id ) {
-		$invoice_number = get_post_meta( $invoice_id, 'munim_invoice_number', true );
-		$invoice_slug   = get_post_field( 'post_name', $invoice_id );
-		$pdf_filename   = $invoice_number . '.' . $invoice_slug . '.pdf';
+	public static function get_file_name( $id, $type ) {
+		$number = get_post_meta( $id, "munim_{$type}_number", true );
+		$slug   = get_post_field( 'post_name', $id );
+		$pdf_filename   = $number . '.' . $slug . '.pdf';
 		return $pdf_filename;
 	}
 
@@ -155,10 +156,13 @@ class Helpers {
 		$classes = '';
 		switch ( $status ) {
 			case 'outstanding':
+			case 'overdue':
+			case 'invalid':
 					$classes = 'tw-bg-red-100 tw-border-2 tw-border-red-200 tw-text-red-500';
 				break;
 
 			case 'paid':
+			case 'billed':
 					$classes = 'tw-bg-green-100 tw-border-2 tw-border-green-200 tw-text-green-500';
 				break;
 
@@ -166,11 +170,11 @@ class Helpers {
 					$classes = 'tw-bg-orange-100 tw-border-2 tw-border-orange-200 tw-text-orange-500';
 				break;
 
-			case 'overdue':
-					$classes = 'tw-bg-red-100 tw-border-2 tw-border-red-200 tw-text-red-500';
+			case 'approved':
+					$classes = 'tw-bg-blue-100 tw-border-2 tw-border-blue-200 tw-text-blue-500';
 				break;
 
-			case 'cancelled':
+			case 'cancelled':	
 					$classes = 'tw-bg-gray-100 tw-border-2 tw-border-gray-200 tw-text-gray-500';
 				break;
 

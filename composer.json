@@ -52,5 +52,11 @@
 					"alexis-magina/cmb2-field-post-search-ajax"
 			]
 		}
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "composer/installers": true
+    }
   }
 }

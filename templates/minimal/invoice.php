@@ -53,7 +53,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 </head>
 <body>
 	<div id="invoice">
-		<div id="meta">
+		<div id="meta" class="brand-bg-light">
 			<div id="header">
 				<div id="logo" class="float-left width-half">
 					<img src="<?php echo esc_url( $invoice_logo ); ?>" alt="Logo">
