@@ -34,14 +34,16 @@ $estimate_client_name = get_the_title( $estimate_client_id );
 $estimate_items       = maybe_unserialize( $estimate_data['munim_estimate_items'] );
 $estimate_currency    = $estimate_client_data['munim_client_currency'];
 $estimate_tax_items   = isset( $estimate_data['munim_estimate_taxes'] ) ? maybe_unserialize( $estimate_data['munim_estimate_taxes'] ) : [];
-$estimate_logo        = get_attached_file( $munim_settings_business['logo_id'] );
-$estimate_icon        = get_attached_file( $munim_settings_business['secondary_logo_id'] );
+$estimate_logo        = $munim_settings_business['logo'];
+$estimate_icon        = $munim_settings_business['secondary_logo'];
 $estimate_note        = isset( $munim_settings_estimate['note'] ) ? $munim_settings_estimate['note'] : '';
 
 // Totals.
 $estimate_subtotal = array_sum( wp_list_pluck( $estimate_items, 'amount' ) );
 $estimate_tax      = Helpers::get_tax_total( $estimate_tax_items, $estimate_subtotal );
 $estimate_total    = $estimate_subtotal + $estimate_tax;
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,7 +53,7 @@ $estimate_total    = $estimate_subtotal + $estimate_tax;
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title><?php esc_html_e( 'Invoice', 'munim' ); ?></title>
 	<?php // phpcs:ignore ?>
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo MUNIM_PLUGIN_URL; ?>/templates/minimal/style.css">
 </head>
 <body>
 	<div id="estimate">
@@ -236,7 +238,7 @@ $estimate_total    = $estimate_subtotal + $estimate_tax;
 			<div id="note" class="float-right width-half">
 				<p><?php echo esc_html( $estimate_note ); ?></p>
 				<h2>
-					<img id="heart" src="<?php echo MUNIM_PLUGIN_DIR . 'templates/minimal/img/heart.png' ?>" alt="heart">
+					<img id="heart" src="<?php echo MUNIM_PLUGIN_URL . 'templates/minimal/img/heart.png' ?>" alt="heart">
 					<?php esc_html_e( 'Thank You', 'munim' ); ?>
 				</h2>
 			</div>

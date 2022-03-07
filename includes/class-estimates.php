@@ -708,7 +708,10 @@ class Estimates {
 		ob_end_clean();
 
 		// Generate pdf.
-		$dompdf = new DOMPDF(['debugLayout' => false]);
+		$dompdf = new DOMPDF([
+			'debugLayout' => false,
+			'enable_remote' => true
+		]);
 		$dompdf->loadHtml( $html );
 		$dompdf->setPaper( 'A4', 'portrait' );
 		$dompdf->setBasePath( $munim_template_path );
@@ -716,7 +719,7 @@ class Estimates {
 
 		if ( 'save' === $action ) {
 			// phpcs:ignore
-			file_put_contents( MUNIM_PLUGIN_UPLOAD . Helpers::get_file_name( $estimate_id ), $dompdf->output() ); // Save pdf
+			file_put_contents( MUNIM_PLUGIN_UPLOAD . Helpers::get_file_name( $estimate_id, 'estimate' ), $dompdf->output() ); // Save pdf
 		} else {
 			// View or download pdf.
 			$dompdf->stream(
