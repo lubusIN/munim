@@ -2,6 +2,9 @@
     "/assets/css/tailwind.css": "/assets/css/tailwind.css",
     "/assets/css/munim.css": "/assets/css/munim.css",
     "/src/js/clipboard.js": "/src/js/clipboard.js",
+    "/assets/js/clipboard.js": "/assets/js/clipboard.js",
+    "/assets/js/dashboard.js": "/assets/js/dashboard.js",
+    "/assets/js/script.js": "/assets/js/script.js",
     "/assets/js/dashboard.min.js": "/assets/js/dashboard.min.js",
     "/assets/js/script.min.js": "/assets/js/script.min.js",
     "/assets/js/clipboard.min.js": "/assets/js/clipboard.min.js"
