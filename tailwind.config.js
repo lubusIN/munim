@@ -1,6 +1,6 @@
 module.exports = {
   prefix: 'tw-',
-  purge: [
+  content: [
 	  './includes/**/*.php'
   ],
   theme: {
