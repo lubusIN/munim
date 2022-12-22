@@ -89,7 +89,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 				<div id="client" class="float-right text-right width-60">
 					<h2><?php esc_html_e( 'Recipient', 'munim' ); ?></h2>
 					<ul class="data-list">
-						<li><?php echo esc_html( $invoice_client_name ); ?></li>
+						<li><?php echo esc_html( $invoice_client_name ); ?>,</li>
 						<li>
 							<?php
 								echo isset( $invoice_client_data['munim_client_address_1'] )
@@ -113,7 +113,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 
 							<?php
 								echo isset( $invoice_client_data['munim_client_state'] )
-								? esc_html( $invoice_client_data['munim_client_state'] ) . ', <br />'
+								? esc_html( $invoice_client_data['munim_client_state'] ) . ','
 								: '';
 							?>
 
@@ -125,7 +125,7 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 
 							<?php
 								echo isset( $invoice_client_data['munim_client_zip'] )
-								? esc_html( $invoice_client_data['munim_client_zip'] )
+								? esc_html( $invoice_client_data['munim_client_zip'] ) . '.'
 								: '';
 							?>
 						</li>

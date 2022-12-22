@@ -113,7 +113,7 @@ tr.border-bottom th{
 }
 
 #details {
-	padding-top: 20px;
+	padding-top: 10px;
 }
 
 #items{
@@ -158,6 +158,11 @@ span.currency-symbol {
 .bank-info-item, 
 .contact-info-item {
 	font-size: 14px;
+}
+
+#business li,
+#client li {
+	font-size: 15px;
 }
 
 #contact,

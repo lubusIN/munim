@@ -117,7 +117,7 @@ $estimate_total    = $estimate_subtotal + $estimate_tax;
 
 							<?php
 								echo isset( $estimate_client_data['munim_client_state'] )
-								? esc_html( $estimate_client_data['munim_client_state'] ) . ', <br />'
+								? esc_html( $estimate_client_data['munim_client_state'] ) . ','
 								: '';
 							?>
 
