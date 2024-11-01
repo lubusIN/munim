@@ -705,12 +705,20 @@ class Estimates {
 		ob_start();
 		include $munim_template_path . '/estimate.php';
 		$html = ob_get_contents();
+		$html = str_replace('https://lubus.in', '/var/www/htdocs', $html);
 		ob_end_clean();
+
+		// Debug Output
+		global $_dompdf_warnings;
+		$_dompdf_warnings = array();
+		global $_dompdf_show_warnings;
+		$_dompdf_show_warnings = false;
 
 		// Generate pdf.
 		$dompdf = new DOMPDF([
 			'debugLayout' => false,
-			'enable_remote' => true
+			'isRemoteEnabled' => true,
+			'chroot' => '/var/www/htdocs',
 		]);
 		$dompdf->loadHtml( $html );
 		$dompdf->setPaper( 'A4', 'portrait' );
@@ -721,6 +729,13 @@ class Estimates {
 			// phpcs:ignore
 			file_put_contents( MUNIM_PLUGIN_UPLOAD . Helpers::get_file_name( $estimate_id, 'estimate' ), $dompdf->output() ); // Save pdf
 		} else {
+			// Show Debug Log
+			if($_dompdf_show_warnings) {
+				header('Content-type: text/plain');
+				var_dump($_dompdf_warnings);
+				die();
+			}
+			
 			// View or download pdf.
 			$dompdf->stream(
 				Helpers::get_file_name( $estimate_id, 'estimate' ),
