@@ -515,31 +515,6 @@ class Invoices {
 				'before_field' => '%',
 			]
 		);
-
-
-		// Register CMB2 for invoice logs.
-		// $args = [
-		// 	'id'           => self::$meta_prefix . 'work_logs',
-		// 	'title'        => 'Logs',
-		// 	'object_types' => [ 'munim_invoice' ],
-		// ];
-
-		//$invoice_logs = new_cmb2_box( $args );
-
-		// Custom fields for logs.
-		// $invoice_logs->add_field( [
-		// 	'id'      => self::$meta_prefix . 'logs',
-		// 	'type'    => 'wysiwyg',
-		// 	'options' => [
-		// 		'wpautop' => false, // use wpautop?
-	    // 		'media_buttons' => false, // show insert/upload button(s)
-		// 		'textarea_rows' => get_option('default_post_edit_rows', 20), // rows="..."
-		// 		'tabindex' => '',
-		// 		'tinymce' => true, // load TinyMCE, can be used to pass settings directly to TinyMCE using an array()
-		// 	],
-		// ] );
-
-
 	}
 
 	/**
@@ -784,9 +759,9 @@ class Invoices {
 
 		if ( 'save' === $action ) {
 			// phpcs:ignore
-			file_put_contents( 
-				MUNIM_PLUGIN_UPLOAD . Helpers::get_file_name( $invoice_id, 'invoice' ), 
-				$dompdf->output() 
+			file_put_contents(
+				MUNIM_PLUGIN_UPLOAD . Helpers::get_file_name( $invoice_id, 'invoice' ),
+				$dompdf->output()
 			); // Save pdf
 		} else {
 			// Show Debug Log
