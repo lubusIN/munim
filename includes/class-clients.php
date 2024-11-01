@@ -165,6 +165,22 @@ class Clients {
 				'type'             => 'select',
 				'show_option_none' => true,
 				'options'          => get_munim_currencies(),
+				'column'     => [
+					'position' => 2,
+					'name'     => 'Currency',
+				],
+			]
+		);
+
+		$client_details->add_field(
+			[
+				'name' => 'Hourly Rate',
+				'id'   => self::$meta_prefix . 'hourly_rate',
+				'type' => 'text_small',
+				'column'     => [
+					'position' => 3,
+					'name'     => 'Hourly Rate',
+				],
 			]
 		);
 
