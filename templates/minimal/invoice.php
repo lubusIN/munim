@@ -40,6 +40,10 @@ $invoice_note        = isset( $munim_settings_invoice['note'] ) ? $munim_setting
 $invoice_subtotal = array_sum( wp_list_pluck( $invoice_items, 'amount' ) );
 $invoice_tax      = Helpers::get_tax_total( $invoice_tax_items, $invoice_subtotal );
 $invoice_total    = $invoice_subtotal + $invoice_tax;
+
+// Logs 
+$invoice_logs = isset( $invoice_data['munim_invoice_logs'] ) ? $invoice_data['munim_invoice_logs']: false; 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,6 +56,12 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 	<link rel="stylesheet" type="text/css" href="<?php echo MUNIM_PLUGIN_URL; ?>/templates/minimal/style.css">
 </head>
 <body>
+	<?php if('cancelled' === get_post_status($invoice_id)) { ?>
+		<div class="overlay cancelled">
+			Cancelled
+		</div>
+	<?php } ?>
+
 	<div id="invoice">
 		<div id="meta" class="brand-bg-light">
 			<div id="header">
@@ -63,6 +73,11 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 					<h1><?php esc_html_e( 'Tax Invoice', 'munim' ); ?></h1>
 					<ul class="data-list">
 						<li>#<?php echo esc_html( $invoice_data['munim_invoice_number'] ); ?></li>
+						
+						<?php if(isset($invoice_data['munim_invoice_po_number'])):?>
+							<li>PO#<?php echo esc_html( $invoice_data['munim_invoice_po_number'] ); ?></li>
+						<?php endif; ?>
+						
 						<li><?php echo esc_html( $invoice_date ); ?></li>
 					</ul>
 				</div>
@@ -272,5 +287,13 @@ $invoice_total    = $invoice_subtotal + $invoice_tax;
 		</div>
 
 	</div>
+
+
+	<!-- <?php //if($invoice_logs) { ?>
+	<div id="logs">
+		<h1>Logs</h1>
+		<?php //echo $invoice_logs; ?>
+	</div>
+	<?php //} ?> -->
 </body>
 </html>
