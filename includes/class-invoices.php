@@ -357,12 +357,23 @@ class Invoices {
 				'id'         => self::$meta_prefix . 'number',
 				'type'       => 'text_small',
 				'default_cb' => [ __CLASS__, 'get_number' ],
-				'attributes' => array(
-					'readonly' => 'readonly',
-				),
+				// 'attributes' => array(
+				// 	'readonly' => 'readonly',
+				// ),
 				'column'     => [
 					'position' => 1,
 					'name'     => 'Invoice No',
+				],
+			]
+		);
+
+		$invoice_details->add_field(
+			[
+				'name'       => 'PO Number',
+				'id'         => self::$meta_prefix . 'po_number',
+				'type'       => 'text_small',
+				'column'     => [
+					'name'     => 'PO No',
 				],
 			]
 		);
@@ -391,7 +402,7 @@ class Invoices {
 				'type'        => 'text_date_timestamp',
 				'date_format' => isset( $munim_settings_invoice['date_format'] ) ? $munim_settings_invoice['date_format'] : 'd/m/Y',
 				'column'      => [
-					'position' => 3,
+					'position' => 2,
 					'name'     => 'Invoice Date',
 				],
 			]
@@ -504,6 +515,31 @@ class Invoices {
 				'before_field' => '%',
 			]
 		);
+
+
+		// Register CMB2 for invoice logs.
+		// $args = [
+		// 	'id'           => self::$meta_prefix . 'work_logs',
+		// 	'title'        => 'Logs',
+		// 	'object_types' => [ 'munim_invoice' ],
+		// ];
+
+		//$invoice_logs = new_cmb2_box( $args );
+
+		// Custom fields for logs.
+		// $invoice_logs->add_field( [
+		// 	'id'      => self::$meta_prefix . 'logs',
+		// 	'type'    => 'wysiwyg',
+		// 	'options' => [
+		// 		'wpautop' => false, // use wpautop?
+	    // 		'media_buttons' => false, // show insert/upload button(s)
+		// 		'textarea_rows' => get_option('default_post_edit_rows', 20), // rows="..."
+		// 		'tabindex' => '',
+		// 		'tinymce' => true, // load TinyMCE, can be used to pass settings directly to TinyMCE using an array()
+		// 	],
+		// ] );
+
+
 	}
 
 	/**
@@ -713,6 +749,10 @@ class Invoices {
 
 		$invoice_id = sanitize_key( 'save' === $action ? $invoice_id : $_REQUEST['munim_invoice_id'] );
 
+		if(!$invoice_id) {
+			return;
+		}
+
 		// Get template.
 		$munim_settings_template = get_option( 'munim_settings_template', [] );
 		$munim_template_path     = MUNIM_PLUGIN_DIR . 'templates/' . $munim_settings_template['template'];
@@ -721,13 +761,22 @@ class Invoices {
 		ob_start();
 		include $munim_template_path . '/invoice.php';
 		$html = ob_get_contents();
+		$html = str_replace('https://lubus.in', '/var/www/htdocs', $html);
 		ob_end_clean();
+
+		// Debug Output
+		global $_dompdf_warnings;
+		$_dompdf_warnings = array();
+		global $_dompdf_show_warnings;
+		$_dompdf_show_warnings = false;
 
 		// Generate pdf.
 		$dompdf = new DOMPDF([
-			'debugLayout' => false,
-			'enable_remote' => true
+			'debugLayout'   => false,
+			'isRemoteEnabled' => true,
+			'chroot' => '/var/www/htdocs',
 		]);
+
 		$dompdf->loadHtml( $html );
 		$dompdf->setPaper( 'A4', 'portrait' );
 		$dompdf->setBasePath( $munim_template_path );
@@ -735,8 +784,18 @@ class Invoices {
 
 		if ( 'save' === $action ) {
 			// phpcs:ignore
-			file_put_contents( MUNIM_PLUGIN_UPLOAD . Helpers::get_file_name( $invoice_id, 'invoice' ), $dompdf->output() ); // Save pdf
+			file_put_contents( 
+				MUNIM_PLUGIN_UPLOAD . Helpers::get_file_name( $invoice_id, 'invoice' ), 
+				$dompdf->output() 
+			); // Save pdf
 		} else {
+			// Show Debug Log
+			if($_dompdf_show_warnings) {
+				header('Content-type: text/plain');
+				var_dump($_dompdf_warnings);
+				die();
+			}
+
 			// View or download pdf.
 			$dompdf->stream(
 				Helpers::get_file_name( $invoice_id, 'invoice' ),
